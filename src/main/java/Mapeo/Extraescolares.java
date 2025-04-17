@@ -1,0 +1,74 @@
+package Mapeo;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "extraescolares")
+public class Extraescolares {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_extraescolar")
+    private Integer idExtraescolar;
+
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "descripcion")
+    private String descripcion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", nullable = false)
+    private TipoExtraescolar tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_profesor")
+    private Profesores profesor;
+
+    public enum TipoExtraescolar {
+        academico, deportivo, religioso
+    }
+
+    // Getters y Setters
+
+    public Integer getIdExtraescolar() {
+        return idExtraescolar;
+    }
+
+    public void setIdExtraescolar(Integer idExtraescolar) {
+        this.idExtraescolar = idExtraescolar;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public TipoExtraescolar getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoExtraescolar tipo) {
+        this.tipo = tipo;
+    }
+
+    public Profesores getProfesor() {
+        return profesor;
+    }
+
+    public void setProfesor(Profesores profesor) {
+        this.profesor = profesor;
+    }
+}
+

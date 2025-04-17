@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- Datos de la conexión MySQL -->
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/educativa</property>
+        <property name="connection.username">desarrollador</property>
+        <property name="connection.password">root</property>
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.show_sql">false</property>
+
+        <!-- Mapping de las clases con las tablas -->
+        <mapping class="Mapeo.Tutores"/>
+        <mapping class="Mapeo.Profesores"/>
+        <mapping class="Mapeo.Extraescolares"/>
+        <mapping class="Mapeo.Cursos"/>
+        <mapping class="Mapeo.Estudiantes"/>
+        <mapping class="Mapeo.Matriculas"/>
+        <mapping class="Mapeo.HistorialAcademico"/>
+        <mapping class="Mapeo.Asistencia"/>
+        <mapping class="Mapeo.Eventos"/>
+        <mapping class="Mapeo.EstudiantesEventos"/>
+        <mapping class="Mapeo.Horarios"/>
+        <mapping class="Mapeo.Becas"/>
+        <mapping class="Mapeo.Convalidaciones"/>
+        <mapping class="Mapeo.Administradores"/>
+    </session-factory>
+</hibernate-configuration>
