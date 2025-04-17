@@ -58,7 +58,7 @@ public class loginGUI extends JFrame {
                 int height = getHeight();
                 g.setColor(new Color(241, 198, 177));
                 g.fillRect(0, 0, width / 2, height);
-                g.setColor(new Color(0xFBEAE6));
+                g.setColor(Color.WHITE);
                 g.fillRect(width / 2, 0, width / 2, height);
             }
         };
@@ -102,7 +102,7 @@ public class loginGUI extends JFrame {
 
         // Panel derecho (formulario de login)
         rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setBackground(new Color(0xFBEAE6));
+        rightPanel.setBackground(Color.WHITE);
         rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 80, 0, 80));
         mainPanel.add(rightPanel);
 

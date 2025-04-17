@@ -18,6 +18,7 @@ public class GestionEstudiantesAdmin extends JPanel {
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
+    private JTableHeader header;
 
     public GestionEstudiantesAdmin() {
         setLayout(new BorderLayout());
@@ -51,23 +52,21 @@ public class GestionEstudiantesAdmin extends JPanel {
 
         String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
         modelo = new DefaultTableModel(null, columnas);
-// Dentro del constructor de GestionEstudiantesAdmin, después de crear la tabla:
+
         tablaEstudiantes = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
 
-                // Color de fondo para filas alternas
                 if (!isRowSelected(row)) {
                     c.setBackground(row % 2 == 0 ? new Color(255, 255, 255) : new Color(245, 245, 245));
                 }
 
-                // Estilo para celdas seleccionadas
                 if (isRowSelected(row)) {
-                    c.setBackground(new Color(200, 220, 240)); // Azul claro para selección
+                    c.setBackground(new Color(200, 220, 240));
                     c.setForeground(Color.BLACK);
                 } else {
-                    c.setForeground(new Color(70, 70, 70)); // Color de texto general
+                    c.setForeground(new Color(70, 70, 70));
                 }
 
                 return c;
@@ -78,38 +77,23 @@ public class GestionEstudiantesAdmin extends JPanel {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
         tablaEstudiantes.setRowSorter(sorter);
 
-
-// 2. Configurar comparadores para tipos de datos específicos
-        sorter.setComparator(2, (dni1, dni2) -> { // Para columna DNI (String)
-            return ((String)dni1).compareTo((String)dni2);
-        });
-
-        sorter.setComparator(3, (fecha1, fecha2) -> { // Para columna Fecha (String)
-            // Implementa comparación de fechas si es necesario
-            return ((String)fecha1).compareTo((String)fecha2);
-        });
-
-// 3. Personalizar el header para mostrar ícono de orden
-        JTableHeader header = tablaEstudiantes.getTableHeader();
+        header = tablaEstudiantes.getTableHeader();
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                // Estilo del header
-                setBackground(new Color(251, 234, 230));
-                setForeground(new Color(70, 70, 70));
+                setBackground((new Color(241, 198, 177)));
                 setFont(new Font("Arial", Font.BOLD, 14));
                 Border border = BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(210, 180, 170)), // Borde inferior + derecho
-                        BorderFactory.createEmptyBorder(5, 10, 5, 10) // Padding interno
+                        BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(210, 180, 170)),
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
                 );
 
                 setBorder(border);
 
-                // Manejo seguro del ícono de ordenamiento
-                setIcon(null); // Limpiar ícono primero
+                setIcon(null);
 
                 if (sorter != null && !sorter.getSortKeys().isEmpty()) {
                     SortOrder sortOrder = sorter.getSortKeys().get(0).getSortOrder();
@@ -134,11 +118,11 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
-        JTableHeader finalHeader = header;
+
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int column = finalHeader.columnAtPoint(e.getPoint());
+                int column = header.columnAtPoint(e.getPoint());
                 if (column >= 0) {
                     SortOrder sortOrder = sorter.getSortKeys().isEmpty() ||
                             sorter.getSortKeys().get(0).getSortOrder() == SortOrder.DESCENDING ?
@@ -154,49 +138,47 @@ public class GestionEstudiantesAdmin extends JPanel {
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10)); // Padding interno
+                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
                 return this;
             }
         });
 
-// Para hover effect en las filas
         tablaEstudiantes.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int row = tablaEstudiantes.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaEstudiantes.setSelectionBackground(new Color(180, 200, 220)); // Color más claro al pasar el mouse
+                    tablaEstudiantes.setSelectionBackground(new Color(180, 200, 220));
                 }
             }
         });
 
 
-// Configuración de estilos para la tabla
-        tablaEstudiantes.setShowGrid(false); // Eliminar líneas de la cuadrícula
-        tablaEstudiantes.setIntercellSpacing(new Dimension(0, 0)); // Espaciado entre celdas
-        tablaEstudiantes.setRowHeight(30); // Altura de las filas
-        tablaEstudiantes.setSelectionBackground(new Color(200, 220, 240)); // Color de selección
+        tablaEstudiantes.setShowGrid(false);
+        tablaEstudiantes.setIntercellSpacing(new Dimension(0, 0));
+        tablaEstudiantes.setRowHeight(30);
+        tablaEstudiantes.setSelectionBackground(new Color(200, 220, 240));
         tablaEstudiantes.setSelectionForeground(Color.BLACK);
         tablaEstudiantes.setFont(new Font("Arial", Font.PLAIN, 14));
 
-// Personalizar el header de la tabla
+
         header = tablaEstudiantes.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230)); // Usando tu color de panel superior
+        header.setBackground(new Color(251, 234, 230));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)), // Borde inferior
-                BorderFactory.createEmptyBorder(5, 10, 5, 10) // Padding interno
+                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
 
         JScrollPane scroll = new JScrollPane(tablaEstudiantes);
         add(scroll, BorderLayout.CENTER);
-// Personalizar el scroll pane
         scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
-        // Cargar datos
+
+
         cargarEstudiantesAdmin();
 
         popupMenu = new JPopupMenu() {
@@ -205,11 +187,9 @@ public class GestionEstudiantesAdmin extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Fondo semitransparente con esquinas redondeadas
                 g2.setColor(new Color(240, 240, 240, 220));
                 g2.fillRoundRect(0, 0, getWidth()-50, getHeight(), 12, 12);
 
-                // Borde sutil
                 g2.setColor(new Color(200, 200, 200, 150));
                 g2.drawRoundRect(0, 0, getWidth()-50, getHeight()-1, 12, 12);
 
@@ -220,13 +200,12 @@ public class GestionEstudiantesAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        // Configuración de los botones
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
         modificarItembtn.setPreferredSize(new Dimension(150, 30));
-        modificarItembtn.setContentAreaFilled(false);  // Fondo transparente
-        modificarItembtn.setBorderPainted(false);      // Sin bordes
-        modificarItembtn.setFocusPainted(false);       // Sin efecto de foco
-        modificarItembtn.setOpaque(false);             // Componente transparente
+        modificarItembtn.setContentAreaFilled(false);
+        modificarItembtn.setBorderPainted(false);
+        modificarItembtn.setFocusPainted(false);
+        modificarItembtn.setOpaque(false);
 
         Boton eliminarItembtn = new Boton(" Eliminar  ", Boton.ButtonType.DELETE);
         eliminarItembtn.setPreferredSize(new Dimension(150, 30));
@@ -235,23 +214,20 @@ public class GestionEstudiantesAdmin extends JPanel {
         eliminarItembtn.setFocusPainted(false);
         eliminarItembtn.setOpaque(false);
 
-        // Configurar acciones
         modificarItembtn.setActionCommand("Modificar");
         eliminarItembtn.setActionCommand("Eliminar");
         modificarItembtn.addActionListener(e -> modificarEstudiante());
         eliminarItembtn.addActionListener(e -> eliminarEstudiante());
 
-        // Añadir al popup menu con separación
         popupMenu.add(modificarItembtn);
-        popupMenu.add(Box.createVerticalStrut(5));  // Separador transparente
+        popupMenu.add(Box.createVerticalStrut(5));
         popupMenu.add(eliminarItembtn);
 
-        // Estilo adicional para el popup (opcional)
         UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
 
         tablaEstudiantes.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 int row = tablaEstudiantes.rowAtPoint(e.getPoint());
                 tablaEstudiantes.setRowSelectionInterval(row, row);
                 if (SwingUtilities.isRightMouseButton(e)) {
@@ -280,7 +256,7 @@ public class GestionEstudiantesAdmin extends JPanel {
 
     private void cargarEstudiantesAdmin(){
 
-            modelo.setRowCount(0); // Limpiar tabla antes de cargar
+            modelo.setRowCount(0);
 
             for (Estudiantes estudiante : listaEstudiantes) {
                 Object[] fila = {
