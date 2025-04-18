@@ -21,7 +21,7 @@ public class HistorialAcademico {
     private Cursos curso;
 
     @Column(name = "nota_final")
-    private BigDecimal notaFinal;
+    private double notaFinal;
 
     @Column(name = "fecha_aprobacion")
     private Date fechaAprobacion;
@@ -55,11 +55,11 @@ public class HistorialAcademico {
         this.curso = curso;
     }
 
-    public BigDecimal getNotaFinal() {
+    public double getNotaFinal() {
         return notaFinal;
     }
 
-    public void setNotaFinal(BigDecimal notaFinal) {
+    public void setNotaFinal(double notaFinal) {
         this.notaFinal = notaFinal;
     }
 

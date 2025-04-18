@@ -2,6 +2,7 @@ package Vista.Admin;
 
 import Mapeo.Estudiantes;
 import Vista.Boton;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.*;
@@ -22,124 +23,30 @@ public class GestionEstudiantesAdmin extends JPanel {
 
     public GestionEstudiantesAdmin() {
         setLayout(new BorderLayout());
+        initGUI();
+        initEventos();
+        cargarEstudiantesAdmin();
+    }
 
-        JPanel panelSuperior = new JPanel(new BorderLayout());
-        panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
-        titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        panelSuperior.add(titulo, BorderLayout.NORTH);
-        panelSuperior.setBackground(new Color(251, 234, 230));
+    private void initGUI() {
+        initPanelSuperior();
+        initTabla();
+        initPopupMenu();
+    }
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelBoton.setOpaque(false);
-
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-
-        btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        btnAgregar.addActionListener(e -> {
-            new FormularioEstudiantesAdmin(null);
-        });
-
-        panelBoton.add(btnAgregar);
-        panelSuperior.add(panelBoton, BorderLayout.SOUTH);
-
-        add(panelSuperior, BorderLayout.NORTH);
-
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
-        modelo = new DefaultTableModel(null, columnas);
-
-        tablaEstudiantes = new JTable(modelo) {
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component c = super.prepareRenderer(renderer, row, column);
-
-                if (!isRowSelected(row)) {
-                    c.setBackground(row % 2 == 0 ? new Color(255, 255, 255) : new Color(245, 245, 245));
-                }
-
-                if (isRowSelected(row)) {
-                    c.setBackground(new Color(200, 220, 240));
-                    c.setForeground(Color.BLACK);
-                } else {
-                    c.setForeground(new Color(70, 70, 70));
-                }
-
-                return c;
-            }
-
-
-        };
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelo);
-        tablaEstudiantes.setRowSorter(sorter);
-
-        header = tablaEstudiantes.getTableHeader();
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setBackground((new Color(241, 198, 177)));
-                setFont(new Font("Arial", Font.BOLD, 14));
-                Border border = BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(210, 180, 170)),
-                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
-                );
-
-                setBorder(border);
-
-                setIcon(null);
-
-                if (sorter != null && !sorter.getSortKeys().isEmpty()) {
-                    SortOrder sortOrder = sorter.getSortKeys().get(0).getSortOrder();
-                    int modelColumn = table.convertColumnIndexToModel(column);
-
-                    if (sorter.getSortKeys().get(0).getColumn() == modelColumn) {
-                        switch (sortOrder) {
-                            case ASCENDING:
-                                setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/up.png"))));
-                                break;
-                            case DESCENDING:
-                                setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/down.png"))));
-                                break;
-                        }
-                    }
-                }
-
-                setHorizontalTextPosition(SwingConstants.LEFT);
-                setIconTextGap(10);
-
-                return this;
-            }
-        });
-
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioEstudiantesAdmin(null));
 
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int column = header.columnAtPoint(e.getPoint());
-                if (column >= 0) {
-                    SortOrder sortOrder = sorter.getSortKeys().isEmpty() ||
-                            sorter.getSortKeys().get(0).getSortOrder() == SortOrder.DESCENDING ?
-                            SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, sortOrder)));
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEstudiantes.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
                 }
-            }
-        });
-
-        tablaEstudiantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-                return this;
             }
         });
 
@@ -153,6 +60,70 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
+        tablaEstudiantes.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
+                tablaEstudiantes.setRowSelectionInterval(row, row);
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
+                }
+            }
+        });
+    }
+
+    private void initPanelSuperior() {
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        panelSuperior.setBackground(new Color(251, 234, 230));
+
+        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
+        panelSuperior.add(titulo, BorderLayout.NORTH);
+
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton.setOpaque(false);
+
+        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+
+        btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
+        btnAgregar.setIcon(icono);
+        btnAgregar.setPreferredSize(new Dimension(180, 30));
+        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        panelBoton.add(btnAgregar);
+        panelSuperior.add(panelBoton, BorderLayout.SOUTH);
+
+        add(panelSuperior, BorderLayout.NORTH);
+    }
+
+    private void initTabla() {
+        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
+        modelo = new DefaultTableModel(null, columnas);
+
+        tablaEstudiantes = new JTable(modelo) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    c.setBackground(row % 2 == 0 ? new Color(255, 255, 255) : new Color(245, 245, 245));
+                }
+                c.setForeground(isRowSelected(row) ? Color.BLACK : new Color(70, 70, 70));
+                return c;
+            }
+        };
+
+        tablaEstudiantes.setRowSorter(new TableRowSorter<>(modelo));
+        tablaEstudiantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                return this;
+            }
+        });
 
         tablaEstudiantes.setShowGrid(false);
         tablaEstudiantes.setIntercellSpacing(new Dimension(0, 0));
@@ -160,7 +131,6 @@ public class GestionEstudiantesAdmin extends JPanel {
         tablaEstudiantes.setSelectionBackground(new Color(200, 220, 240));
         tablaEstudiantes.setSelectionForeground(Color.BLACK);
         tablaEstudiantes.setFont(new Font("Arial", Font.PLAIN, 14));
-
 
         header = tablaEstudiantes.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
@@ -171,16 +141,19 @@ public class GestionEstudiantesAdmin extends JPanel {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-
         JScrollPane scroll = new JScrollPane(tablaEstudiantes);
-        add(scroll, BorderLayout.CENTER);
-        scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
+        JPanel panelConMargen = new JPanel(new BorderLayout());
+        panelConMargen.setBackground(new Color(0xFBEAE6));
+        panelConMargen.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 10));
+        panelConMargen.add(scroll, BorderLayout.CENTER);
 
-        cargarEstudiantesAdmin();
+        add(panelConMargen, BorderLayout.CENTER);
+    }
 
+    private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -188,35 +161,22 @@ public class GestionEstudiantesAdmin extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 g2.setColor(new Color(240, 240, 240, 220));
-                g2.fillRoundRect(0, 0, getWidth()-50, getHeight(), 12, 12);
+                g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
 
                 g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawRoundRect(0, 0, getWidth()-50, getHeight()-1, 12, 12);
-
+                g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
                 g2.dispose();
             }
         };
-
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        modificarItembtn.setPreferredSize(new Dimension(150, 30));
-        modificarItembtn.setContentAreaFilled(false);
-        modificarItembtn.setBorderPainted(false);
-        modificarItembtn.setFocusPainted(false);
-        modificarItembtn.setOpaque(false);
-
-        Boton eliminarItembtn = new Boton(" Eliminar  ", Boton.ButtonType.DELETE);
-        eliminarItembtn.setPreferredSize(new Dimension(150, 30));
-        eliminarItembtn.setContentAreaFilled(false);
-        eliminarItembtn.setBorderPainted(false);
-        eliminarItembtn.setFocusPainted(false);
-        eliminarItembtn.setOpaque(false);
-
-        modificarItembtn.setActionCommand("Modificar");
-        eliminarItembtn.setActionCommand("Eliminar");
+        configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarEstudiante());
+
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarEstudiante());
 
         popupMenu.add(modificarItembtn);
@@ -225,16 +185,14 @@ public class GestionEstudiantesAdmin extends JPanel {
 
         UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
+    }
 
-        tablaEstudiantes.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
-                tablaEstudiantes.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
-                }
-            }
-        });
+    private void configurarBotonPopup(Boton boton) {
+        boton.setPreferredSize(new Dimension(150, 30));
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setFocusPainted(false);
+        boton.setOpaque(false);
     }
 
     private void modificarEstudiante() {
@@ -254,25 +212,23 @@ public class GestionEstudiantesAdmin extends JPanel {
         }
     }
 
-    private void cargarEstudiantesAdmin(){
-
-            modelo.setRowCount(0);
-
-            for (Estudiantes estudiante : listaEstudiantes) {
-                Object[] fila = {
-                        estudiante.getNombre(),
-                        estudiante.getApellido(),
-                        estudiante.getDni(),
-                        estudiante.getFechaNacimiento().toString(),
-                        estudiante.getDireccion(),
-                        estudiante.getTelefono(),
-                        estudiante.getEmail(),
-                        estudiante.getFechaMatricula().toString(),
-                        estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
-                        estudiante.getUsuario(),
-                        estudiante.getEstado()
-                };
-                modelo.addRow(fila);
-            }
+    private void cargarEstudiantesAdmin() {
+        modelo.setRowCount(0);
+        for (Estudiantes estudiante : listaEstudiantes) {
+            Object[] fila = {
+                    estudiante.getNombre(),
+                    estudiante.getApellido(),
+                    estudiante.getDni(),
+                    estudiante.getFechaNacimiento().toString(),
+                    estudiante.getDireccion(),
+                    estudiante.getTelefono(),
+                    estudiante.getEmail(),
+                    estudiante.getFechaMatricula().toString(),
+                    estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
+                    estudiante.getUsuario(),
+                    estudiante.getEstado()
+            };
+            modelo.addRow(fila);
+        }
     }
 }

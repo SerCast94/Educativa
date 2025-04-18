@@ -124,4 +124,6 @@ public class Profesores {
     public void setEstado(EstadoProfesor estado) {
         this.estado = estado;
     }
+
+
 }

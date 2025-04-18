@@ -4,6 +4,7 @@ import Vista.Boton;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -26,6 +27,17 @@ public class MenuLateralAdmin extends JPanel {
 
         JLabel logoLabel = new JLabel(new ImageIcon( Objects.requireNonNull(getClass().getResource("/img/logomini.png"))));
         logoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        logoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Dashboard"));
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                logoLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        });
         panelLogo.setLayout(new BorderLayout());
         panelLogo.add(logoLabel, BorderLayout.CENTER);
 
