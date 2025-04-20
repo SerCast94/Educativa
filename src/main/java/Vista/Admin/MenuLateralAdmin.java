@@ -54,6 +54,7 @@ public class MenuLateralAdmin extends JPanel {
                 {"   Profesores", "teacher"},
                 {"   Matriculas", "book"},
                 {"   Cursos", "course"},
+                {"   Asignaturas", "asignatura"},
                 {"   Historial Académico", "history"},
                 {"   Asistencia", "attendance"},
                 {"   Eventos", "event"},

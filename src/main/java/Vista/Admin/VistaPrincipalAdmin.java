@@ -41,76 +41,84 @@ public class VistaPrincipalAdmin extends JFrame {
 
     private void mostrarVistaProfesores() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionProfesoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
     private void mostrarVistaMatriculas() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionMatriculasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaCursos() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionCursosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
+    private void mostrarAsignaturas(){
+        contentPanel.removeAll();
+        contentPanel.add(new GestionAsignaturasAdmin());
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+
     private void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionHistorialAcademicoAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaAsistencia() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionAsistenciaAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaEventos() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionEventosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaHorarios() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionHorarioAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaActividadesExtraescolares() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionExtraescolaresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaTutores() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionTutoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaBecas() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionBecasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
     private void mostrarVistaConvalidaciones() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new GestionConvalidacionesAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
@@ -121,6 +129,8 @@ public class VistaPrincipalAdmin extends JFrame {
         contentPanel.revalidate();
         contentPanel.repaint();
     }
+
+
 
     private class MenuListener implements ActionListener {
         @Override
@@ -146,6 +156,9 @@ public class VistaPrincipalAdmin extends JFrame {
                         break;
                     case "Cursos":
                         mostrarVistaCursos();
+                        break;
+                    case "Asignaturas":
+                        mostrarAsignaturas();
                         break;
                     case "Historial Académico":
                         mostrarVistaHistorialAcademico();

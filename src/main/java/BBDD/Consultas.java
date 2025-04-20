@@ -36,6 +36,11 @@ public class Consultas {
         return query.getResultList();
     }
 
+    public static List<Asignaturas> selectAsignaturas() {
+        Query<Asignaturas> query = session.createQuery("FROM Asignaturas", Asignaturas.class);
+        return query.getResultList();
+    }
+
     public static List<Estudiantes> selectEstudiantes() {
         Query<Estudiantes> query = session.createQuery("FROM Estudiantes", Estudiantes.class);
         return query.getResultList();

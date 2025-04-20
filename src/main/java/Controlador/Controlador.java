@@ -14,6 +14,7 @@ public class Controlador {
     static public List<Profesores> listaProfesores;
     static public List<Extraescolares> listaExtraescolares;
     static public List<Cursos> listaCursos;
+    static public List<Asignaturas> listaAsignaturas;
     static public List<Estudiantes> listaEstudiantes;
     static public List<Matriculas> listaMatriculas;
     static public List<HistorialAcademico> listaHistorialAcademico;
@@ -39,6 +40,7 @@ public class Controlador {
         listaProfesores = Consultas.selectProfesores();
         listaExtraescolares = Consultas.selectExtraescolares();
         listaCursos = Consultas.selectCursos();
+        listaAsignaturas = Consultas.selectAsignaturas();
         listaEstudiantes = Consultas.selectEstudiantes();
         listaMatriculas = Consultas.selectMatriculas();
         listaHistorialAcademico = Consultas.selectHistorialAcademico();
@@ -173,4 +175,21 @@ public class Controlador {
     public static void setListaAdministradores(List<Administradores> listaAdministradores) {
         Controlador.listaAdministradores = listaAdministradores;
     }
+
+    public static List<Asignaturas> getListaAsignaturas() {
+        return listaAsignaturas;
+    }
+
+    public static void setListaAsignaturas(List<Asignaturas> listaAsignaturas) {
+        Controlador.listaAsignaturas = listaAsignaturas;
+    }
+
+
+    /**
+     * Metodo rollback para deshacer los cambios en la base de datos
+     */
+    public static void rollback() {
+        session.getTransaction().rollback();
+    }
+
 }

@@ -1,6 +1,6 @@
 package Vista.Admin;
 
-import Mapeo.Estudiantes;
+import Mapeo.Matriculas;
 import Vista.Boton;
 
 import javax.swing.*;
@@ -12,20 +12,20 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static Controlador.Controlador.listaEstudiantes;
+import static Controlador.Controlador.listaMatriculas;
 
-public class GestionEstudiantesAdmin extends JPanel {
-    private JTable tablaEstudiantes;
+public class GestionMatriculasAdmin extends JPanel {
+    private JTable tablaMatriculas;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionEstudiantesAdmin() {
+    public GestionMatriculasAdmin() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarEstudiantesAdmin();
+        cargarMatriculasAdmin();
     }
 
     private void initGUI() {
@@ -35,13 +35,13 @@ public class GestionEstudiantesAdmin extends JPanel {
     }
 
     private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioEstudiantesAdmin());
+       // btnAgregar.addActionListener(e -> new FormularioMatriculasAdmin(null));
 
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEstudiantes.getRowSorter();
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaMatriculas.getRowSorter();
                 if (column >= 0 && sorter != null) {
                     SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
                     SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
@@ -50,22 +50,12 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
-        tablaEstudiantes.addMouseMotionListener(new MouseAdapter() {
+        tablaMatriculas.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
+                int row = tablaMatriculas.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaEstudiantes.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaEstudiantes.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
-                tablaEstudiantes.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
+                    tablaMatriculas.setSelectionBackground(new Color(245, 156, 107, 204));
                 }
             }
         });
@@ -87,7 +77,7 @@ public class GestionEstudiantesAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Matrícula", Boton.ButtonType.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -99,23 +89,23 @@ public class GestionEstudiantesAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
+        String[] columnas = {"Estudiante", "Curso", "Fecha de Matrícula", "Estado"};
         modelo = new DefaultTableModel(null, columnas);
 
-        tablaEstudiantes = new JTable(modelo) {
+        tablaMatriculas = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
                 if (!isRowSelected(row)) {
-                    c.setBackground(row % 2 == 0 ? new Color(255, 255, 255) : new Color(245, 245, 245));
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
                 }
                 c.setForeground(isRowSelected(row) ? Color.BLACK : new Color(70, 70, 70));
                 return c;
             }
         };
 
-        tablaEstudiantes.setRowSorter(new TableRowSorter<>(modelo));
-        tablaEstudiantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        tablaMatriculas.setRowSorter(new TableRowSorter<>(modelo));
+        tablaMatriculas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
@@ -125,14 +115,14 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
-        tablaEstudiantes.setShowGrid(false);
-        tablaEstudiantes.setIntercellSpacing(new Dimension(0, 0));
-        tablaEstudiantes.setRowHeight(30);
-        tablaEstudiantes.setSelectionBackground(new Color(200, 220, 240));
-        tablaEstudiantes.setSelectionForeground(Color.BLACK);
-        tablaEstudiantes.setFont(new Font("Arial", Font.PLAIN, 14));
+        tablaMatriculas.setShowGrid(false);
+        tablaMatriculas.setIntercellSpacing(new Dimension(0, 0));
+        tablaMatriculas.setRowHeight(30);
+        tablaMatriculas.setSelectionBackground(new Color(200, 220, 240));
+        tablaMatriculas.setSelectionForeground(Color.BLACK);
+        tablaMatriculas.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        header = tablaEstudiantes.getTableHeader();
+        header = tablaMatriculas.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBackground(new Color(251, 234, 230));
         header.setForeground(new Color(70, 70, 70));
@@ -141,7 +131,7 @@ public class GestionEstudiantesAdmin extends JPanel {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        JScrollPane scroll = new JScrollPane(tablaEstudiantes);
+        JScrollPane scroll = new JScrollPane(tablaMatriculas);
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
@@ -191,10 +181,8 @@ public class GestionEstudiantesAdmin extends JPanel {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
                 g2.setColor(new Color(240, 240, 240, 220));
                 g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
-
                 g2.setColor(new Color(200, 200, 200, 150));
                 g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
                 g2.dispose();
@@ -205,11 +193,11 @@ public class GestionEstudiantesAdmin extends JPanel {
 
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
         configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarEstudiante());
+        modificarItembtn.addActionListener(e -> modificarMatricula());
 
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarEstudiante());
+        eliminarItembtn.addActionListener(e -> eliminarMatricula());
 
         popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
@@ -227,38 +215,31 @@ public class GestionEstudiantesAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarEstudiante() {
-        int fila = tablaEstudiantes.getSelectedRow();
+    private void modificarMatricula() {
+        int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
-            //new FormularioEstudiantesAdmin(modelo.getDataVector().elementAt(fila));
+            //new FormularioMatriculasAdmin(modelo.getDataVector().elementAt(fila));
         }
     }
 
-    private void eliminarEstudiante() {
-        int fila = tablaEstudiantes.getSelectedRow();
+    private void eliminarMatricula() {
+        int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar estudiante?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar matrícula?", "Confirmar", JOptionPane.YES_NO_OPTION);
             if (confirmar == JOptionPane.YES_OPTION) {
                 modelo.removeRow(fila);
             }
         }
     }
 
-    private void cargarEstudiantesAdmin() {
+    private void cargarMatriculasAdmin() {
         modelo.setRowCount(0);
-        for (Estudiantes estudiante : listaEstudiantes) {
+        for (Matriculas matricula : listaMatriculas) {
             Object[] fila = {
-                    estudiante.getNombre(),
-                    estudiante.getApellido(),
-                    estudiante.getDni(),
-                    estudiante.getFechaNacimiento().toString(),
-                    estudiante.getDireccion(),
-                    estudiante.getTelefono(),
-                    estudiante.getEmail(),
-                    estudiante.getFechaMatricula().toString(),
-                    estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
-                    estudiante.getUsuario(),
-                    estudiante.getEstado()
+                    matricula.getEstudiante().getNombre() + " " + matricula.getEstudiante().getApellido(),
+                    matricula.getCurso().getNombre(), // Asumiendo que el curso tiene un método getNombre()
+                    matricula.getFechaMatricula().toString(),
+                    matricula.getEstado().name()
             };
             modelo.addRow(fila);
         }

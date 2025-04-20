@@ -94,5 +94,7 @@ public class Horarios {
     public void setProfesor(Profesores profesor) {
         this.profesor = profesor;
     }
+
+
 }
 

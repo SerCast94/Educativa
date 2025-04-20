@@ -1,6 +1,6 @@
 package Vista.Admin;
 
-import Mapeo.Estudiantes;
+import Mapeo.Tutores;
 import Vista.Boton;
 
 import javax.swing.*;
@@ -12,20 +12,20 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static Controlador.Controlador.listaEstudiantes;
+import static Controlador.Controlador.listaTutores;
 
-public class GestionEstudiantesAdmin extends JPanel {
-    private JTable tablaEstudiantes;
+public class GestionTutoresAdmin extends JPanel {
+    private JTable tablaTutores;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionEstudiantesAdmin() {
+    public GestionTutoresAdmin() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarEstudiantesAdmin();
+        cargarTutoresAdmin();
     }
 
     private void initGUI() {
@@ -35,13 +35,13 @@ public class GestionEstudiantesAdmin extends JPanel {
     }
 
     private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioEstudiantesAdmin());
+      //  btnAgregar.addActionListener(e -> new FormularioTutoresAdmin(null));
 
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEstudiantes.getRowSorter();
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaTutores.getRowSorter();
                 if (column >= 0 && sorter != null) {
                     SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
                     SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
@@ -50,22 +50,22 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
-        tablaEstudiantes.addMouseMotionListener(new MouseAdapter() {
+        tablaTutores.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
+                int row = tablaTutores.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaEstudiantes.setSelectionBackground(new Color(245, 156, 107, 204));
+                    tablaTutores.setSelectionBackground(new Color(245, 156, 107, 204));
                 }
             }
         });
 
-        tablaEstudiantes.addMouseListener(new MouseAdapter() {
+        tablaTutores.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                int row = tablaEstudiantes.rowAtPoint(e.getPoint());
-                tablaEstudiantes.setRowSelectionInterval(row, row);
+                int row = tablaTutores.rowAtPoint(e.getPoint());
+                tablaTutores.setRowSelectionInterval(row, row);
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
+                    popupMenu.show(tablaTutores, e.getX(), e.getY());
                 }
             }
         });
@@ -87,7 +87,7 @@ public class GestionEstudiantesAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Tutor", Boton.ButtonType.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -99,10 +99,10 @@ public class GestionEstudiantesAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
+        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Usuario", "Estado"};
         modelo = new DefaultTableModel(null, columnas);
 
-        tablaEstudiantes = new JTable(modelo) {
+        tablaTutores = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -114,8 +114,8 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         };
 
-        tablaEstudiantes.setRowSorter(new TableRowSorter<>(modelo));
-        tablaEstudiantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        tablaTutores.setRowSorter(new TableRowSorter<>(modelo));
+        tablaTutores.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
@@ -125,14 +125,14 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         });
 
-        tablaEstudiantes.setShowGrid(false);
-        tablaEstudiantes.setIntercellSpacing(new Dimension(0, 0));
-        tablaEstudiantes.setRowHeight(30);
-        tablaEstudiantes.setSelectionBackground(new Color(200, 220, 240));
-        tablaEstudiantes.setSelectionForeground(Color.BLACK);
-        tablaEstudiantes.setFont(new Font("Arial", Font.PLAIN, 14));
+        tablaTutores.setShowGrid(false);
+        tablaTutores.setIntercellSpacing(new Dimension(0, 0));
+        tablaTutores.setRowHeight(30);
+        tablaTutores.setSelectionBackground(new Color(200, 220, 240));
+        tablaTutores.setSelectionForeground(Color.BLACK);
+        tablaTutores.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        header = tablaEstudiantes.getTableHeader();
+        header = tablaTutores.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBackground(new Color(251, 234, 230));
         header.setForeground(new Color(70, 70, 70));
@@ -141,7 +141,7 @@ public class GestionEstudiantesAdmin extends JPanel {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        JScrollPane scroll = new JScrollPane(tablaEstudiantes);
+        JScrollPane scroll = new JScrollPane(tablaTutores);
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
@@ -205,11 +205,11 @@ public class GestionEstudiantesAdmin extends JPanel {
 
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
         configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarEstudiante());
+        modificarItembtn.addActionListener(e -> modificarTutor());
 
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarEstudiante());
+        eliminarItembtn.addActionListener(e -> eliminarTutor());
 
         popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
@@ -227,38 +227,34 @@ public class GestionEstudiantesAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarEstudiante() {
-        int fila = tablaEstudiantes.getSelectedRow();
+    private void modificarTutor() {
+        int fila = tablaTutores.getSelectedRow();
         if (fila != -1) {
-            //new FormularioEstudiantesAdmin(modelo.getDataVector().elementAt(fila));
+           // new FormularioTutoresAdmin(modelo.getDataVector().elementAt(fila));
         }
     }
 
-    private void eliminarEstudiante() {
-        int fila = tablaEstudiantes.getSelectedRow();
+    private void eliminarTutor() {
+        int fila = tablaTutores.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar estudiante?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar tutor?", "Confirmar", JOptionPane.YES_NO_OPTION);
             if (confirmar == JOptionPane.YES_OPTION) {
                 modelo.removeRow(fila);
             }
         }
     }
 
-    private void cargarEstudiantesAdmin() {
+    private void cargarTutoresAdmin() {
         modelo.setRowCount(0);
-        for (Estudiantes estudiante : listaEstudiantes) {
+        for (Tutores tutor : listaTutores) {
             Object[] fila = {
-                    estudiante.getNombre(),
-                    estudiante.getApellido(),
-                    estudiante.getDni(),
-                    estudiante.getFechaNacimiento().toString(),
-                    estudiante.getDireccion(),
-                    estudiante.getTelefono(),
-                    estudiante.getEmail(),
-                    estudiante.getFechaMatricula().toString(),
-                    estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
-                    estudiante.getUsuario(),
-                    estudiante.getEstado()
+                    tutor.getNombre(),
+                    tutor.getApellido(),
+                    tutor.getDni(),
+                    tutor.getEmail(),
+                    tutor.getTelefono() != null ? tutor.getTelefono() : "No especificado",
+                    tutor.getUsuario(),
+                    tutor.getEstado().toString()
             };
             modelo.addRow(fila);
         }

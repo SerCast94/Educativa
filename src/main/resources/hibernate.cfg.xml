@@ -17,6 +17,7 @@
         <mapping class="Mapeo.Profesores"/>
         <mapping class="Mapeo.Extraescolares"/>
         <mapping class="Mapeo.Cursos"/>
+        <mapping class="Mapeo.Asignaturas"/>
         <mapping class="Mapeo.Estudiantes"/>
         <mapping class="Mapeo.Matriculas"/>
         <mapping class="Mapeo.HistorialAcademico"/>
