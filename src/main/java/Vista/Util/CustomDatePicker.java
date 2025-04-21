@@ -1,15 +1,13 @@
-package Util;
+package Vista.Util;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.CalendarPanel;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.lang.reflect.Field;
 
 public class CustomDatePicker extends DatePicker {
 
@@ -26,6 +24,50 @@ public class CustomDatePicker extends DatePicker {
         settings.setFormatForDatesCommonEra("MM/dd/yyyy");
         settings.setFontValidDate(new Font("Arial", Font.PLAIN, 14));
         settings.setFontInvalidDate(new Font("Arial", Font.PLAIN, 14));
+
+        Color fondoBase = new Color(251, 234, 230);
+        Color bordeNaranja = new Color(245, 156, 107);
+        Color textoPrincipal = Color.BLACK;
+        Color fondoSeleccion = new Color(245, 156, 107);
+        Color fechaSeleccionada = new Color(245, 156, 107);
+
+        settings.setColor(DatePickerSettings.DateArea.BackgroundClearLabel, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundMonthAndYearMenuLabels, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundMonthAndYearNavigationButtons, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundCalendarPanelLabelsOnHover, fondoSeleccion);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundOverallCalendarPanel, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundTodayLabel, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.BackgroundTopLeftLabelAboveWeekNumbers, fondoSeleccion);
+
+        settings.setColor(DatePickerSettings.DateArea.CalendarBackgroundNormalDates, Color.WHITE);
+        settings.setColor(DatePickerSettings.DateArea.CalendarBackgroundSelectedDate, fechaSeleccionada);
+        settings.setColor(DatePickerSettings.DateArea.CalendarBackgroundVetoedDates, Color.LIGHT_GRAY);
+        settings.setColor(DatePickerSettings.DateArea.CalendarBorderSelectedDate, bordeNaranja);
+        settings.setColor(DatePickerSettings.DateArea.CalendarDefaultBackgroundHighlightedDates, fondoSeleccion);
+        settings.setColor(DatePickerSettings.DateArea.CalendarDefaultTextHighlightedDates, textoPrincipal);
+        settings.setColorBackgroundWeekNumberLabels(bordeNaranja,false );
+        settings.setColorBackgroundWeekdayLabels(bordeNaranja,false);
+        settings.setColor(DatePickerSettings.DateArea.CalendarTextNormalDates, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.CalendarTextWeekdays, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.CalendarTextWeekNumbers, textoPrincipal);
+
+        settings.setColor(DatePickerSettings.DateArea.TextClearLabel, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.TextMonthAndYearMenuLabels, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.TextMonthAndYearNavigationButtons, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.TextTodayLabel, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.TextCalendarPanelLabelsOnHover, textoPrincipal);
+
+        settings.setColor(DatePickerSettings.DateArea.TextFieldBackgroundDisallowedEmptyDate, fondoBase);
+        settings.setColor(DatePickerSettings.DateArea.TextFieldBackgroundInvalidDate, Color.WHITE);
+        settings.setColor(DatePickerSettings.DateArea.TextFieldBackgroundValidDate, Color.WHITE);
+        settings.setColor(DatePickerSettings.DateArea.TextFieldBackgroundVetoedDate, Color.WHITE);
+        settings.setColor(DatePickerSettings.DateArea.TextFieldBackgroundDisabled, fondoBase);
+
+        settings.setColor(DatePickerSettings.DateArea.DatePickerTextInvalidDate, Color.RED);
+        settings.setColor(DatePickerSettings.DateArea.DatePickerTextValidDate, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.DatePickerTextVetoedDate, textoPrincipal);
+        settings.setColor(DatePickerSettings.DateArea.DatePickerTextDisabled, fondoBase);
+
         return settings;
     }
 
@@ -112,23 +154,23 @@ public class CustomDatePicker extends DatePicker {
 
             // Header
             JTableHeader header = table.getTableHeader();
-            header.setBackground(new Color(245, 156, 107));
-            header.setForeground(Color.WHITE);
-            header.setFont(new Font("Arial", Font.BOLD, 13));
-
-            // Renderer para las celdas
-            table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            header.setDefaultRenderer(new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value,
                                                                boolean isSelected, boolean hasFocus,
                                                                int row, int column) {
-                    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    c.setBackground(new Color(251, 234, 230));
-                    c.setForeground(new Color(50, 50, 50));
-                    setHorizontalAlignment(SwingConstants.CENTER);
-                    return c;
+                    JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    label.setOpaque(true); // <- ¡esto es clave!
+                    label.setBackground(new Color(245, 156, 107));  // Fondo anaranjado
+                    label.setForeground(Color.WHITE);               // Texto blanco
+                    label.setFont(new Font("Arial", Font.BOLD, 13));
+                    label.setHorizontalAlignment(SwingConstants.CENTER);
+                    label.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, new Color(230, 130, 90))); // Opcional: bordes entre columnas
+                    return label;
                 }
             });
+            header.setOpaque(false);
+
         }
     }
 
@@ -143,4 +185,5 @@ public class CustomDatePicker extends DatePicker {
         }
         return null;
     }
+
 }

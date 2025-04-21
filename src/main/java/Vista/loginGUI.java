@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-import static Util.Encriptador.encryptMD5;
+import static BackUtil.Encriptador.encryptMD5;
 
 public class loginGUI extends JFrame {
     private JFrame frame;
@@ -163,7 +163,7 @@ public class loginGUI extends JFrame {
         botonIngresar = new JButton("Ingresar");
         botonIngresar.setFont(new Font("Arial", Font.BOLD, 16));
         botonIngresar.setBackground(new Color(230, 108, 81));
-        botonIngresar.setForeground(Color.WHITE);
+        botonIngresar.setForeground(Color.BLACK);
         botonIngresar.setFocusPainted(false);
         botonIngresar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         rightPanel.add(botonIngresar, gbc);

@@ -1,18 +1,14 @@
 package Vista.Admin;
 
 import Mapeo.HistorialAcademico;
-import Mapeo.Cursos;
-import Mapeo.Estudiantes;
-import Vista.Boton;
+import Vista.Util.Boton;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHistorialAcademico;

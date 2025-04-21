@@ -70,5 +70,13 @@ public class Cursos {
     public void setEstado(EstadoCurso estado) {
         this.estado = estado;
     }
+
+
+    //ToString
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
 

@@ -2,24 +2,26 @@ package Vista.Admin;
 
 import Controlador.Controlador;
 import Mapeo.Cursos;
-import Util.CustomDatePicker;
-import Vista.Boton;
+import Vista.Util.CustomDatePicker;
+
+
+import Vista.Util.Boton;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.util.Date;
 import java.util.List;
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
+import static Vista.Util.EstiloComponentes.*;
 
 
 public class FormularioEstudiantesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -30,13 +32,13 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblDireccion = new JLabel("Dirección: ");
     private JLabel lblEstado = new JLabel("Estado: ");
-    private JTextField txtDNI = new JTextField(30);
-    private JTextField txtNombre = new JTextField(30);
-    private JTextField txtApellido = new JTextField(30);
-    private JPasswordField txtPassword = new JPasswordField(30);
-    private JTextField txtEmail = new JTextField(30);
-    private JTextField txtTelefono = new JTextField(30);
-    private JTextField txtDireccion = new JTextField(30);
+    private JTextField txtDNI = crearTextField();
+    private JTextField txtNombre = crearTextField();
+    private JTextField txtApellido = crearTextField();
+    private JPasswordField txtPassword = crearPasswordField();
+    private JTextField txtEmail = crearTextField();
+    private JTextField txtTelefono = crearTextField();
+    private JTextField txtDireccion = crearTextField();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
@@ -61,7 +63,6 @@ public class FormularioEstudiantesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Agregar título centrado
         JLabel titulo = new JLabel("Agregar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -70,79 +71,72 @@ public class FormularioEstudiantesAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        // Personalizar el JComboBox
-        cmbEstado.setBackground(new Color(245, 156, 107));  // Fondo color similar al de los botones
-        cmbEstado.setForeground(Color.WHITE); // Texto blanco
-        cmbEstado.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmbEstado.setOpaque(true); // Hacer el fondo opaco
-
-        cmbCurso.setBackground(new Color(245, 156, 107));  // Fondo color similar al de los botones
-        cmbCurso.setForeground(Color.WHITE); // Texto blanco
-        cmbCurso.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmbCurso.setOpaque(true); // Hacer el fondo opaco
-
+        customizeComboBox(cmbEstado);
+        customizeComboBox(cmbCurso);
 
         // Agregar los componentes con el método `agregarComponente`
         agregarComponente(lblDNI, 1, 0);
+        setBordeNaranja(txtDNI);
         agregarComponente(txtDNI, 1, 1);
         agregarComponente(lblNombre, 2, 0);
+        setBordeNaranja(txtNombre);
         agregarComponente(txtNombre, 2, 1);
         agregarComponente(lblApellido, 3, 0);
+        setBordeNaranja(txtApellido);
         agregarComponente(txtApellido, 3, 1);
         agregarComponente(lblPassword, 4, 0);
+        setBordeNaranja(txtPassword);
         agregarComponente(txtPassword, 4, 1);
         agregarComponente(lblFechaNacimiento, 5, 0);
 
-
-        DatePickerSettings settings = new DatePickerSettings();
-        settings.setFormatForDatesCommonEra("MM/dd/yyyy");  // Formato
-        settings.setFontValidDate(new Font("Arial", Font.PLAIN, 14));
-        settings.setFontInvalidDate(new Font("Arial", Font.PLAIN, 14));
-
-        datePicker.setSettings(settings);
-
+        // Obtener el JTextField del DatePicker (campo donde se muestra la fecha seleccionada)
         JTextField dateTextField = datePicker.getComponentDateTextField();
         dateTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        dateTextField.setEditable(false); // Hacer que el campo no sea editable
         dateTextField.setBackground(Color.WHITE);
         dateTextField.setForeground(new Color(50, 50, 50));
-        dateTextField.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));
+        dateTextField.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));  // Borde naranja
 
-        JButton calendarButton = datePicker.getComponentToggleCalendarButton();
-        calendarButton.setBackground(new Color(245, 156, 107)); // Naranja pastel
-        calendarButton.setForeground(Color.WHITE);
-        calendarButton.setFocusPainted(false);
-        calendarButton.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));
+        // Crear un PlainDocument para espacio antes de la fecha
+        PlainDocument doc = new PlainDocument() {
+            @Override
+            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+                super.insertString(offset, "  " + str, a);
+            }
+        };
+        // Asignar el PlainDocument al JTextField
 
-        datePicker.getComponentDateTextField().setBackground(Color.WHITE);
-        datePicker.getComponentDateTextField().setFont(new Font("Arial", Font.PLAIN, 14));
-        datePicker.getComponentDateTextField().setForeground(Color.DARK_GRAY);
-
-        calendarButton = datePicker.getComponentToggleCalendarButton();
-        calendarButton.setBackground(new Color(245, 156, 107));
-        calendarButton.setForeground(Color.WHITE);
-        calendarButton.setFocusPainted(false);
-        calendarButton.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));
+        dateTextField.setDocument(doc);
 
         agregarComponente(datePicker, 5, 1);
-
         agregarComponente(lblEmail, 6, 0);
+        setBordeNaranja(txtEmail);
         agregarComponente(txtEmail, 6, 1);
         agregarComponente(lblIDCurso, 7, 0);
+        setBordeNaranja(cmbCurso);
         agregarComponente(cmbCurso, 7, 1);
         agregarComponente(lblTelefono, 8, 0);
+        setBordeNaranja(txtTelefono);
         agregarComponente(txtTelefono, 8, 1);
         agregarComponente(lblDireccion, 9, 0);
+        setBordeNaranja(txtDireccion);
         agregarComponente(txtDireccion, 9, 1);
         agregarComponente(lblEstado, 10, 0);
+        setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 10, 1);
-        agregarComponente(btnAceptar, 11, 0);
-        agregarComponente(btnCancelar, 11, 1);
 
-        // Cambiar color de los botones
-        btnAceptar.setBackground(new Color(245, 156, 107));  // Fondo del botón Aceptar
-        btnAceptar.setForeground(Color.WHITE);  // Texto blanco
-        btnCancelar.setBackground(new Color(220, 90, 90));  // Fondo del botón Cancelar
-        btnCancelar.setForeground(Color.WHITE);  // Texto blanco
+        JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(new Color(251, 234, 230));
+        panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        btnAceptar.setPreferredSize(new Dimension(100, 40));
+        btnCancelar.setPreferredSize(new Dimension(100, 40));
+        panelBotones.add(btnAceptar);
+        panelBotones.add(btnCancelar);
+
+        gbc.gridx = 0;
+        gbc.gridy = 11;
+        gbc.gridwidth = 2;
+        panel.add(panelBotones, gbc);
 
         setVisible(true);
     }
@@ -151,6 +145,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
+
     }
 
     private void initEventos() {
@@ -161,7 +156,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
                     txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
                     txtPassword.getPassword().length == 0 ||
-                    datePicker.getDate() == null ||  // Verificar si se ha seleccionado una fecha
+                    datePicker.getDate() == null ||
                     txtEmail.getText().trim().isEmpty() ||
                     txtTelefono.getText().trim().isEmpty() ||
                     txtDireccion.getText().trim().isEmpty() || cmbCurso.getSelectedItem() == null) {
@@ -170,8 +165,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
             }
 
             Cursos curso = (Cursos) cmbCurso.getSelectedItem();
-            Date fechaNacimiento = java.sql.Date.valueOf(datePicker.toString());  // Convertir la fecha seleccionada a Date
-
+            Date fechaNacimiento = java.sql.Date.valueOf(datePicker.toString());
             String dni = txtDNI.getText().trim();
             String nombre = txtNombre.getText().trim();
             String apellido = txtApellido.getText().trim();
@@ -188,19 +182,11 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private void cargarCursos() {
         List<Cursos> cursos = Controlador.getListaCursos();
 
-        // Limpiar el ComboBox antes de cargar los nuevos datos
         cmbCurso.removeAllItems();
 
-        // Cargar los cursos en el ComboBox
         for (Cursos curso : cursos) {
-            //cmbCurso.addItem(curso);
+            cmbCurso.addItem(curso);
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            FormularioEstudiantesAdmin formulario = new FormularioEstudiantesAdmin();
-            formulario.setVisible(true);
-        });
-    }
 }

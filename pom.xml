@@ -37,7 +37,12 @@
         <dependency>
             <groupId>com.github.lgooddatepicker</groupId>
             <artifactId>LGoodDatePicker</artifactId>
-            <version>11.2.1</version> <!-- versión más reciente hasta ahora -->
+            <version>11.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.2</version>
         </dependency>
     </dependencies>
 

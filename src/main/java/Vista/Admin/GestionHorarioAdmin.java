@@ -1,13 +1,9 @@
 package Vista.Admin;
 
 import Mapeo.Horarios;
-import Mapeo.Cursos;
-import Mapeo.Extraescolares;
-import Mapeo.Profesores;
-import Vista.Boton;
+import Vista.Util.Boton;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

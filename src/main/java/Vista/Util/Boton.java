@@ -1,4 +1,4 @@
-package Vista;
+package Vista.Util;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,7 +17,7 @@ public class Boton extends JButton {
         setFont(new Font("Segoe UI", Font.BOLD, 14));
         setFocusPainted(false);
         setBorder(new RoundedBorder(12));
-        setForeground(Color.WHITE);
+        setForeground(Color.BLACK);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setContentAreaFilled(false);
         setOpaque(false);
