@@ -159,6 +159,10 @@ public class Estudiantes {
         this.estado = estado;
     }
 
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 
 }
 

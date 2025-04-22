@@ -70,5 +70,10 @@ public class Extraescolares {
     public void setProfesor(Profesores profesor) {
         this.profesor = profesor;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " (" + tipo + ")";
+    }
 }
 

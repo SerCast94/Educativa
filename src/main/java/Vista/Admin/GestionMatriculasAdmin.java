@@ -34,7 +34,7 @@ public class GestionMatriculasAdmin extends JPanel {
     }
 
     private void initEventos() {
-       // btnAgregar.addActionListener(e -> new FormularioMatriculasAdmin(null));
+       btnAgregar.addActionListener(e -> new FormularioMatriculasAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

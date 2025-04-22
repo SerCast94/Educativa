@@ -114,4 +114,9 @@ public class Tutores {
     public void setEstado(EstadoTutor estado) {
         this.estado = estado;
     }
+
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 }

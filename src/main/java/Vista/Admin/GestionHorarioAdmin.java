@@ -34,7 +34,7 @@ public class GestionHorarioAdmin extends JPanel {
     }
 
     private void initEventos() {
-        //btnAgregar.addActionListener(e -> new FormularioHorariosAdmin(null));
+        btnAgregar.addActionListener(e -> new FormularioHorariosAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

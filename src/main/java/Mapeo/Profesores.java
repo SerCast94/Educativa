@@ -125,5 +125,8 @@ public class Profesores {
         this.estado = estado;
     }
 
-
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 }

@@ -34,7 +34,7 @@ public class GestionCursosAdmin extends JPanel {
     }
 
     private void initEventos() {
-       // btnAgregar.addActionListener(e -> new FormularioCursosAdmin(null));
+       btnAgregar.addActionListener(e -> new FormularioCursoAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

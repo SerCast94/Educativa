@@ -2,7 +2,11 @@ package Vista.Util;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.util.Objects;
 
 public class EstiloComponentes {
 
@@ -97,5 +101,27 @@ public class EstiloComponentes {
                 g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);  // Esquinas redondeadas
             }
         });
+    }
+
+        public static void EspaciadoEnDatePicker(CustomDatePicker datePicker) {
+        JTextField dateTextField = datePicker.getComponentDateTextField();
+        dateTextField.setFont(new Font("Arial", Font.PLAIN, 14));
+        dateTextField.setEditable(false);
+        dateTextField.setBackground(Color.WHITE);
+        dateTextField.setForeground(new Color(50, 50, 50));
+        dateTextField.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));
+
+        PlainDocument doc = new PlainDocument() {
+            @Override
+            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+                super.insertString(offset, "  " + str, a);
+            }
+        };
+        dateTextField.setDocument(doc);
+    }
+
+    public static void checkPersonalizado(JCheckBox checkBox){
+        checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoff.png"))));
+        checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkon.png"))));
     }
 }

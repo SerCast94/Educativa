@@ -34,7 +34,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
     }
 
     private void initEventos() {
-        //btnAgregar.addActionListener(e -> new FormularioExtraescolaresAdmin(null));
+        btnAgregar.addActionListener(e -> new FormularioExtraescolaresAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

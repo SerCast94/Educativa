@@ -34,7 +34,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     }
 
     private void initEventos() {
-       // btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin(null));
+       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

@@ -34,7 +34,7 @@ public class GestionBecasAdmin extends JPanel {
     }
 
     private void initEventos() {
-        //btnAgregar.addActionListener(e -> new FormularioBecasAdmin(null));
+        btnAgregar.addActionListener(e -> new FormularioBecasAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

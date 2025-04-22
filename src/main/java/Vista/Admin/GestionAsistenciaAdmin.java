@@ -33,7 +33,7 @@ public class GestionAsistenciaAdmin extends JPanel {
     }
 
     private void initEventos() {
-        //btnAgregar.addActionListener(e -> new FormularioAsistenciaAdmin(null));
+        btnAgregar.addActionListener(e -> new FormularioAsistenciaAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override

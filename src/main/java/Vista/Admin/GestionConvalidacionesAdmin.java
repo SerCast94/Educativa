@@ -34,7 +34,7 @@ public class GestionConvalidacionesAdmin extends JPanel {
     }
 
     private void initEventos() {
-        //btnAgregar.addActionListener(e -> new FormularioConvalidacionAdmin(null));
+        btnAgregar.addActionListener(e -> new FormularioConvalidacionesAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override
