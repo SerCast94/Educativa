@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 public class VistaPrincipalAdmin extends JFrame {
     private MenuLateralAdmin menu;
     private JPanel contentPanel;
+    private static VistaPrincipalAdmin instancia;
+
 
     public VistaPrincipalAdmin() {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
@@ -22,7 +24,12 @@ public class VistaPrincipalAdmin extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
         menu.setVisible(true);
         mostrarVistaDashboardAdmin();
+        instancia = this;
         setVisible(true);
+    }
+
+    public static JFrame getVistaPrincipal() {
+        return instancia;
     }
 
     private void mostrarVistaDashboardAdmin() {
@@ -32,91 +39,90 @@ public class VistaPrincipalAdmin extends JFrame {
         contentPanel.repaint();
     }
 
-    private void mostrarVistaEstudiantes() {
+    void mostrarVistaEstudiantes() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEstudiantesAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaProfesores() {
+    void mostrarVistaProfesores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionProfesoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
-    private void mostrarVistaMatriculas() {
+    void mostrarVistaMatriculas() {
         contentPanel.removeAll();
         contentPanel.add(new GestionMatriculasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaCursos() {
+    void mostrarVistaCursos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionCursosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarAsignaturas(){
+    void mostrarVistaAsignaturas(){
         contentPanel.removeAll();
         contentPanel.add(new GestionAsignaturasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-
-    private void mostrarVistaHistorialAcademico() {
+    void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHistorialAcademicoAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaAsistencia() {
+    void mostrarVistaAsistencia() {
         contentPanel.removeAll();
         contentPanel.add(new GestionAsistenciaAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaEventos() {
+    void mostrarVistaEventos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEventosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaHorarios() {
+    void mostrarVistaHorarios() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHorarioAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaActividadesExtraescolares() {
+    void mostrarVistaActividadesExtraescolares() {
         contentPanel.removeAll();
         contentPanel.add(new GestionExtraescolaresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaTutores() {
+    void mostrarVistaTutores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionTutoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaBecas() {
+    void mostrarVistaBecas() {
         contentPanel.removeAll();
         contentPanel.add(new GestionBecasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaConvalidaciones() {
+    void mostrarVistaConvalidaciones() {
         contentPanel.removeAll();
         contentPanel.add(new GestionConvalidacionesAdmin());
         contentPanel.revalidate();
@@ -158,7 +164,7 @@ public class VistaPrincipalAdmin extends JFrame {
                         mostrarVistaCursos();
                         break;
                     case "Asignaturas":
-                        mostrarAsignaturas();
+                        mostrarVistaAsignaturas();
                         break;
                     case "Historial Académico":
                         mostrarVistaHistorialAcademico();

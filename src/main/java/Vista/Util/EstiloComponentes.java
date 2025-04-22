@@ -8,6 +8,8 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.util.Objects;
 
+import static javax.swing.text.StyleConstants.setBackground;
+
 public class EstiloComponentes {
 
     public static void setBordeNaranja(JComponent componente) {
@@ -123,5 +125,6 @@ public class EstiloComponentes {
     public static void checkPersonalizado(JCheckBox checkBox){
         checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoff.png"))));
         checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkon.png"))));
+        checkBox.setBackground(new Color(251, 234, 230));
     }
 }

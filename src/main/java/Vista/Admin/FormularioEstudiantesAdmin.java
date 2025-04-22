@@ -2,17 +2,23 @@ package Vista.Admin;
 
 import Controlador.Controlador;
 import Mapeo.Cursos;
+import Mapeo.Estudiantes;
 import Mapeo.Tutores;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import org.hibernate.NonUniqueObjectException;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.sql.Date;
 import java.util.List;
 
+import static BBDD.Inserciones.insertarEstudiante;
+import static BackUtil.Encriptador.encryptMD5;
+import static Controlador.Controlador.insertarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioEstudiantesAdmin extends JFrame {
@@ -162,6 +168,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
+
             if (txtDNI.getText().trim().isEmpty() ||
                     txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
@@ -178,7 +185,34 @@ public class FormularioEstudiantesAdmin extends JFrame {
                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            // Aquí iría el código para guardar el estudiante con todos los campos
+            Estudiantes nuevoEstudiante = new Estudiantes(
+                    txtNombre.getText(),
+                    txtApellido.getText(),
+                    txtDNI.getText(),
+                    java.sql.Date.valueOf(datePickerNacimiento.getDate()),
+                    txtDireccion.getText(),
+                    txtTelefono.getText(),
+                    txtEmail.getText(),
+                    java.sql.Date.valueOf(datePickerMatricula.getDate()),
+                    (Tutores) cmbTutor.getSelectedItem(),
+                    txtUsuario.getText(),
+                    encryptMD5(new String(txtPassword.getPassword())),
+                    Estudiantes.EstadoEstudiante.activo
+            );
+
+            try {
+                insertarControladorEstudiante(nuevoEstudiante);
+                Controlador.actualizarListaEstudiantes();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaEstudiantes();
+
+                JOptionPane.showMessageDialog(null, "Estudiante agregado correctamente");
+                dispose();
+            } catch (NonUniqueObjectException ex) {
+                JOptionPane.showMessageDialog(null, "Error al añadir estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

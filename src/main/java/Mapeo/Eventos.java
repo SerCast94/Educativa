@@ -34,6 +34,19 @@ public class Eventos {
         academico, deportivo, religioso
     }
 
+    // Constructor
+    public Eventos() {
+    }
+
+    public Eventos(String nombre, String descripcion, Date fechaInicio, Date fechaFin, String ubicacion, TipoEvento tipoEvento) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.ubicacion = ubicacion;
+        this.tipoEvento = tipoEvento;
+    }
+
     // Getters y Setters
 
     public Integer getIdEvento() {

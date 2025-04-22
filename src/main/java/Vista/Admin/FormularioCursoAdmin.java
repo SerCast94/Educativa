@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static Controlador.Controlador.actualizarListaCursos;
+import static Controlador.Controlador.insertarControladorCurso;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioCursoAdmin extends JFrame {
@@ -107,18 +109,30 @@ public class FormularioCursoAdmin extends JFrame {
                     cmbProfesor.getSelectedItem() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            Cursos curso = new Cursos();
-            curso.setNombre(txtNombre.getText().trim());
-            curso.setDescripcion(txtDescripcion.getText().trim());
-            curso.setProfesor((Profesores) cmbProfesor.getSelectedItem());
-            curso.setEstado(Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString()));
+            Cursos nuevoCurso = new Cursos(
+                    txtNombre.getText().trim(),
+                    txtDescripcion.getText().trim(),
+                    (Profesores) cmbProfesor.getSelectedItem(),
+                    Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString())
+            );
 
-            // Guardar el curso en la base de datos
+            try {
+                insertarControladorCurso(nuevoCurso);
+                actualizarListaCursos();
 
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaCursos();
+
+                JOptionPane.showMessageDialog(null, "Curso registrado correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el curso.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

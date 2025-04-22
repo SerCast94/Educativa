@@ -29,6 +29,17 @@ public class Extraescolares {
         academico, deportivo, religioso
     }
 
+    // Constructor
+    public Extraescolares() {
+    }
+
+    public Extraescolares(String nombre, String descripcion, TipoExtraescolar tipo, Profesores profesor) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.tipo = tipo;
+        this.profesor = profesor;
+    }
+
     // Getters y Setters
 
     public Integer getIdExtraescolar() {

@@ -29,6 +29,18 @@ public class HistorialAcademico {
     @Column(name = "comentarios")
     private String comentarios;
 
+    // Constructor
+    public HistorialAcademico() {
+    }
+
+    public HistorialAcademico(Estudiantes estudiante, Cursos curso, double notaFinal, Date fechaAprobacion, String comentarios) {
+        this.estudiante = estudiante;
+        this.curso = curso;
+        this.notaFinal = notaFinal;
+        this.fechaAprobacion = fechaAprobacion;
+        this.comentarios = comentarios;
+    }
+
     // Getters y Setters
 
     public Integer getIdHistorial() {

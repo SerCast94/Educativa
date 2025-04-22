@@ -29,6 +29,17 @@ public class Cursos {
         activo, inactivo
     }
 
+    // Constructor
+    public Cursos() {
+    }
+
+    public Cursos(String nombre, String descripcion, Profesores profesor, EstadoCurso estado) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.profesor = profesor;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdCurso() {

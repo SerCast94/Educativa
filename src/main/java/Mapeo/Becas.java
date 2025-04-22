@@ -21,7 +21,7 @@ public class Becas {
     private TipoBeca tipoBeca;
 
     @Column(name = "monto", nullable = false)
-    private BigDecimal monto;
+    private Double monto;
 
     @Column(name = "fecha_asignacion", nullable = false)
     private Date fechaAsignacion;
@@ -39,6 +39,18 @@ public class Becas {
 
     public enum EstadoBeca {
         activo, inactivo
+    }
+    // Constructor
+    public Becas() {
+    }
+
+    public Becas(Estudiantes estudiante, TipoBeca tipoBeca, Double monto, Date fechaAsignacion, EstadoBeca estadoBeca, String comentarios) {
+        this.estudiante = estudiante;
+        this.tipoBeca = tipoBeca;
+        this.monto = monto;
+        this.fechaAsignacion = fechaAsignacion;
+        this.estadoBeca = estadoBeca;
+        this.comentarios = comentarios;
     }
 
     // Getters y Setters
@@ -67,11 +79,11 @@ public class Becas {
         this.tipoBeca = tipoBeca;
     }
 
-    public BigDecimal getMonto() {
+    public Double getMonto() {
         return monto;
     }
 
-    public void setMonto(BigDecimal monto) {
+    public void setMonto(Double monto) {
         this.monto = monto;
     }
 

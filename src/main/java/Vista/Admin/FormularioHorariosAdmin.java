@@ -14,6 +14,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static Controlador.Controlador.insertarControladorHorario;
 import static Vista.Util.CustomSpinnerDate.crearHoraSpinner;
 import static Vista.Util.EstiloComponentes.*;
 
@@ -130,11 +131,36 @@ public class FormularioHorariosAdmin extends JFrame {
                     spnHoraFin.getValue() == null ||
                     cmbProfesor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // agregar horario a la base de datos
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                Time horaInicio = new Time(sdf.parse(spnHoraInicio.getValue().toString()).getTime());
+                Time horaFin = new Time(sdf.parse(spnHoraFin.getValue().toString()).getTime());
+
+                Horarios nuevoHorario = new Horarios(
+                        (Cursos) cmbCurso.getSelectedItem(),
+                        (Extraescolares) cmbExtraescolar.getSelectedItem(),
+                        (Horarios.DiaSemana) cmbDiaSemana.getSelectedItem(),
+                        horaInicio,
+                        horaFin,
+                        (Profesores) cmbProfesor.getSelectedItem()
+                );
+
+                insertarControladorHorario(nuevoHorario);
+                Controlador.actualizarListaHorarios();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaHorarios();
+
+                JOptionPane.showMessageDialog(null, "Horario registrado correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el horario.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

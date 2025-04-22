@@ -1,11 +1,14 @@
 package Vista.Admin;
 
+import Controlador.Controlador;
 import Mapeo.Profesores;
 import Vista.Util.Boton;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static Controlador.Controlador.actualizarListaProfesores;
+import static Controlador.Controlador.insertarControladorProfesor;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioProfesoresAdmin extends JFrame {
@@ -131,23 +134,42 @@ public class FormularioProfesoresAdmin extends JFrame {
                     txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
                     txtEmail.getText().trim().isEmpty() ||
+                    txtTelefono.getText().trim().isEmpty() ||
+                    txtDireccion.getText().trim().isEmpty() ||
                     txtUsuario.getText().trim().isEmpty() ||
-                    txtContrasena.getPassword().length == 0) {
-                JOptionPane.showMessageDialog(null, "Los campos obligatorios no pueden estar vacíos.", "Error", JOptionPane.ERROR_MESSAGE);
+                    new String(txtContrasena.getPassword()).trim().isEmpty() ||
+                    cmbEstado.getSelectedItem() == null) {
+
+                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            String dni = txtDNI.getText().trim();
-            String nombre = txtNombre.getText().trim();
-            String apellido = txtApellido.getText().trim();
-            String email = txtEmail.getText().trim();
-            String telefono = txtTelefono.getText().trim();
-            String direccion = txtDireccion.getText().trim();
-            String usuario = txtUsuario.getText().trim();
-            String contrasena = new String(txtContrasena.getPassword());
-            Profesores.EstadoProfesor estado = (Profesores.EstadoProfesor) cmbEstado.getSelectedItem();
+            try {
+                Profesores nuevoProfesor = new Profesores(
+                        txtDNI.getText().trim(),
+                        txtNombre.getText().trim(),
+                        txtApellido.getText().trim(),
+                        txtEmail.getText().trim(),
+                        txtTelefono.getText().trim(),
+                        txtDireccion.getText().trim(),
+                        txtUsuario.getText().trim(),
+                        new String(txtContrasena.getPassword()).trim(),
+                        (Profesores.EstadoProfesor) cmbEstado.getSelectedItem()
+                );
 
-            // Aquí se agregaría la lógica para guardar el profesor en la base de datos
+                insertarControladorProfesor(nuevoProfesor);
+                actualizarListaProfesores();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaProfesores();
+
+                JOptionPane.showMessageDialog(null, "Profesor registrado correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el profesor.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
+
     }
 }

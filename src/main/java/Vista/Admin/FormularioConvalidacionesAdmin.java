@@ -2,6 +2,7 @@ package Vista.Admin;
 
 import Controlador.Controlador;
 import Mapeo.Convalidaciones;
+import Mapeo.Convalidaciones.EstadoConvalidacion;
 import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Vista.Util.CustomDatePicker;
@@ -38,9 +39,9 @@ public class FormularioConvalidacionesAdmin extends JFrame {
 
     public FormularioConvalidacionesAdmin() {
         initGUI();
-        initEventos();
         cargarEstudiantes();
         cargarCursos();
+        initEventos();
     }
 
     private void initGUI() {
@@ -113,7 +114,27 @@ public class FormularioConvalidacionesAdmin extends JFrame {
                 return;
             }
 
-            //agregar convalidación
+            try {
+                Convalidaciones nuevaConvalidacion = new Convalidaciones(
+                        (Estudiantes) cmbEstudiante.getSelectedItem(),
+                        (Cursos) cmbCursoOriginal.getSelectedItem(),
+                        java.sql.Date.valueOf(datePickerConvalidacion.getDate()),
+                        (EstadoConvalidacion)cmbEstado.getSelectedItem(),
+                        txtComentarios.getText().trim()
+                );
+
+                Controlador.insertarControladorConvalidacion(nuevaConvalidacion);
+                Controlador.actualizarListaConvalidaciones();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaConvalidaciones();
+
+                JOptionPane.showMessageDialog(this, "Convalidación registrada correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al registrar la convalidación.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

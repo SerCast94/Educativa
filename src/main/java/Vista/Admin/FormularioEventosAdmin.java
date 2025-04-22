@@ -10,6 +10,8 @@ import java.awt.*;
 import java.sql.Date;
 import java.util.List;
 
+import static Controlador.Controlador.actualizarListaEventos;
+import static Controlador.Controlador.insertarControladorEvento;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioEventosAdmin extends JFrame {
@@ -61,10 +63,8 @@ public class FormularioEventosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        // Customize ComboBox
         customizeComboBox(cmbTipoEvento);
 
-        // Add components
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);
         agregarComponente(txtNombre, 1, 1);
@@ -117,16 +117,38 @@ public class FormularioEventosAdmin extends JFrame {
         btnAceptar.addActionListener(e -> {
             if (txtNombre.getText().trim().isEmpty() ||
                     txtDescripcion.getText().trim().isEmpty() ||
-                    txtUbicacion.getText().trim().isEmpty() ||
                     datePickerInicio.getDate() == null ||
-                    datePickerFin.getDate() == null) {
+                    datePickerFin.getDate() == null ||
+                    txtUbicacion.getText().trim().isEmpty() ||
+                    cmbTipoEvento.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // agregar a la base de datos
+            try {
+                Eventos nuevoEvento = new Eventos(
+                        txtNombre.getText().trim(),
+                        txtDescripcion.getText().trim(),
+                        Date.valueOf(datePickerInicio.getDate()),
+                        Date.valueOf(datePickerFin.getDate()),
+                        txtUbicacion.getText().trim(),
+                        (Eventos.TipoEvento) cmbTipoEvento.getSelectedItem()
+                );
 
+                insertarControladorEvento(nuevoEvento);
+                actualizarListaEventos();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaEventos();
+
+                JOptionPane.showMessageDialog(null, "Evento registrado correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
+
     }
 }

@@ -12,6 +12,8 @@ import java.awt.*;
 import java.sql.Date;
 import java.util.List;
 
+import static Controlador.Controlador.actualizarListaMatriculas;
+import static Controlador.Controlador.insertarControladorMatricula;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioMatriculasAdmin extends JFrame {
@@ -108,11 +110,30 @@ public class FormularioMatriculasAdmin extends JFrame {
                     datePickerMatricula.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
 
-            //METODO PARA REGISTRAR MATRÍCULA BBDD
-            //boolean exito = Controlador.registrarMatricula(matricula);
+            try {
+                Matriculas nuevaMatricula = new Matriculas(
+                        (Estudiantes) cmbEstudiantes.getSelectedItem(),
+                        (Cursos) cmbCursos.getSelectedItem(),
+                        Date.valueOf(datePickerMatricula.getDate()),
+                        Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString())
+                );
+
+                insertarControladorMatricula(nuevaMatricula);
+                actualizarListaMatriculas();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaMatriculas();
+
+                JOptionPane.showMessageDialog(null, "Matrícula registrada correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar la matrícula.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

@@ -39,6 +39,21 @@ public class Administradores {
         activo, inactivo
     }
 
+    // Constructor
+    public Administradores() {
+    }
+
+    public Administradores(String nombre, String apellido, String dni, String email, String telefono, String usuario, String contrasena, EstadoAdministrador estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdAdministrador() {

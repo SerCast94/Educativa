@@ -14,6 +14,15 @@ public class CursosAsignaturas {
     @JoinColumn(name = "id_asignatura", nullable = false, foreignKey = @ForeignKey(name = "FK_asignatura_curso"))
     private Asignaturas asignatura;
 
+    // Constructor
+    public CursosAsignaturas() {
+    }
+
+    public CursosAsignaturas(Cursos curso, Asignaturas asignatura) {
+        this.curso = curso;
+        this.asignatura = asignatura;
+    }
+
     // Getters y Setters
 
     public Cursos getCurso() {

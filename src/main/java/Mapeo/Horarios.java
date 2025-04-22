@@ -37,6 +37,19 @@ public class Horarios {
         lunes, martes, miercoles, jueves, viernes, sabado, domingo
     }
 
+    // Constructor
+    public Horarios() {
+    }
+
+    public Horarios(Cursos curso, Extraescolares extraescolar, DiaSemana diaSemana, Time horaInicio, Time horaFin, Profesores profesor) {
+        this.curso = curso;
+        this.extraescolar = extraescolar;
+        this.diaSemana = diaSemana;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.profesor = profesor;
+    }
+
     // Getters y Setters
 
     public Integer getIdHorario() {

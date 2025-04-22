@@ -40,7 +40,6 @@ public class CustomSpinnerDate extends BasicSpinnerUI {
     @Override
     public void installUI(JComponent c) {
         super.installUI(c);
-        // opcional: cambiar también el borde del editor
         c.setBorder(BorderFactory.createLineBorder(color, 2));
     }
 

@@ -102,14 +102,35 @@ public class FormularioExtraescolaresAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().isEmpty() || txtDescripcion.getText().isEmpty() ||
-                    cmbTipo.getSelectedItem() == null || cmbProfesor.getSelectedItem() == null) {
+            if (txtNombre.getText().trim().isEmpty() ||
+                    txtDescripcion.getText().trim().isEmpty() ||
+                    cmbTipo.getSelectedItem() == null ||
+                    cmbProfesor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // guardar extraescolar bbdd
+            try {
+                Extraescolares nuevaExtraescolar = new Extraescolares(
+                        txtNombre.getText().trim(),
+                        txtDescripcion.getText().trim(),
+                        (Extraescolares.TipoExtraescolar) cmbTipo.getSelectedItem(),
+                        (Profesores) cmbProfesor.getSelectedItem()
+                );
+
+                Controlador.insertarControladorExtraescolar(nuevaExtraescolar);
+                Controlador.actualizarListaExtraescolares();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaActividadesExtraescolares();
+
+                JOptionPane.showMessageDialog(null, "Actividad extraescolar registrada correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar la actividad extraescolar.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

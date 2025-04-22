@@ -21,6 +21,17 @@ public class EstudiantesEventos {
     @Column(name = "confirmado")
     private Boolean confirmado;
 
+    // Constructor
+    public EstudiantesEventos() {
+    }
+
+    public EstudiantesEventos(Estudiantes estudiante, Eventos evento, String comentario, Boolean confirmado) {
+        this.estudiante = estudiante;
+        this.evento = evento;
+        this.comentario = comentario;
+        this.confirmado = confirmado;
+    }
+
     // Getters y Setters
 
     public Estudiantes getEstudiante() {

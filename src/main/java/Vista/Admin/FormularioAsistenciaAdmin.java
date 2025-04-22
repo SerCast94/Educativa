@@ -16,6 +16,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
+import static Controlador.Controlador.actualizarListaAsistencia;
+import static Controlador.Controlador.insertarControladorAsistencia;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioAsistenciaAdmin extends JFrame {
@@ -122,8 +124,27 @@ public class FormularioAsistenciaAdmin extends JFrame {
                 return;
             }
 
+            Asistencia nuevaAsistencia = new Asistencia(
+                    (Estudiantes) cmbEstudiante.getSelectedItem(),
+                    (Cursos) cmbCurso.getSelectedItem(),
+                    Date.valueOf(datePicker.getDate()),
+                    chkAsistio.isSelected(),
+                    txtMotivoAusencia.getText().trim()
+            );
 
-            // Guardar asistencia en la base de datos
+            try {
+                insertarControladorAsistencia(nuevaAsistencia);
+                actualizarListaAsistencia();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaAsistencia();
+
+                JOptionPane.showMessageDialog(null, "Asistencia registrada correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar la asistencia.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

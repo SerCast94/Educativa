@@ -86,7 +86,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Registro", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Historial", Boton.ButtonType.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));

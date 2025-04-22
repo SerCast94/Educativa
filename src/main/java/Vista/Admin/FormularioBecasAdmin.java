@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static Controlador.Controlador.actualizarListaBecas;
+import static Controlador.Controlador.insertarControladorBeca;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioBecasAdmin extends JFrame {
@@ -121,7 +123,32 @@ public class FormularioBecasAdmin extends JFrame {
                 JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Guardar Beca
+
+            try {
+                double monto = Double.parseDouble(txtMonto.getText().trim());
+                Becas nuevaBeca = new Becas(
+                        (Estudiantes) cmbEstudiantes.getSelectedItem(),
+                        (Becas.TipoBeca) cmbTipoBeca.getSelectedItem(),
+                        monto,
+                        java.sql.Date.valueOf(datePickerAsignacion.getDate()),
+                        (Becas.EstadoBeca) cmbEstadoBeca.getSelectedItem(),
+                        txtComentarios.getText().trim()
+                );
+
+                insertarControladorBeca(nuevaBeca);
+                actualizarListaBecas();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaBecas();
+
+                JOptionPane.showMessageDialog(null, "Beca asignada correctamente.");
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "El monto debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al asignar la beca.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

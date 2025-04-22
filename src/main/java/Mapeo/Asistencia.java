@@ -28,6 +28,18 @@ public class Asistencia {
     @Column(name = "motivo_ausencia")
     private String motivoAusencia;
 
+    // Constructor
+    public Asistencia() {
+    }
+
+    public Asistencia(Estudiantes estudiante, Cursos curso, Date fecha, Boolean asistio, String motivoAusencia) {
+        this.estudiante = estudiante;
+        this.curso = curso;
+        this.fecha = fecha;
+        this.asistio = asistio;
+        this.motivoAusencia = motivoAusencia;
+    }
+
     // Getters y Setters
 
     public Integer getIdAsistencia() {

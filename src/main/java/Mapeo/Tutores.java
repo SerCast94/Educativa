@@ -36,9 +36,23 @@ public class Tutores {
     @Enumerated(EnumType.STRING)
     private EstadoTutor estado;
 
-    // Enum interno
     public enum EstadoTutor {
         activo, inactivo
+    }
+
+    // Constructor
+    public Tutores() {
+    }
+
+    public Tutores(String nombre, String apellido, String dni, String email, String telefono, String usuario, String contrasena, EstadoTutor estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.estado = estado;
     }
 
     // Getters y Setters

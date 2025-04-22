@@ -1,6 +1,8 @@
 package Controlador;
 
+import BBDD.Actualizaciones;
 import BBDD.Conexion;
+import BBDD.Inserciones;
 import org.hibernate.Session;
 import java.util.List;
 import Mapeo.*;
@@ -50,6 +52,68 @@ public class Controlador {
         listaHorarios = Consultas.selectHorarios();
         listaBecas = Consultas.selectBecas();
         listaConvalidaciones = Consultas.selectConvalidaciones();
+        listaAdministradores = Consultas.selectAdministradores();
+    }
+
+    //Actualizar listas
+
+    public static void actualizarListaEstudiantes() {
+        listaEstudiantes = Consultas.selectEstudiantes();
+    }
+
+    public static void actualizarListaTutores() {
+        listaTutores = Consultas.selectTutores();
+    }
+
+    public static void actualizarListaProfesores() {
+        listaProfesores = Consultas.selectProfesores();
+    }
+
+    public static void actualizarListaExtraescolares() {
+        listaExtraescolares = Consultas.selectExtraescolares();
+    }
+
+    public static void actualizarListaCursos() {
+        listaCursos = Consultas.selectCursos();
+    }
+
+    public static void actualizarListaAsignaturas() {
+        listaAsignaturas = Consultas.selectAsignaturas();
+    }
+
+    public static void actualizarListaMatriculas() {
+        listaMatriculas = Consultas.selectMatriculas();
+    }
+
+    public static void actualizarListaHistorialAcademico() {
+        listaHistorialAcademico = Consultas.selectHistorialAcademico();
+    }
+
+    public static void actualizarListaAsistencia() {
+        listaAsistencia = Consultas.selectAsistencia();
+    }
+
+    public static void actualizarListaEventos() {
+        listaEventos = Consultas.selectEventos();
+    }
+
+    public static void actualizarListaEstudiantesEventos() {
+        listaEstudiantesEventos = Consultas.selectEstudiantesEventos();
+    }
+
+    public static void actualizarListaHorarios() {
+        listaHorarios = Consultas.selectHorarios();
+    }
+
+    public static void actualizarListaBecas() {
+        listaBecas = Consultas.selectBecas();
+    }
+
+    public static void actualizarListaConvalidaciones() {
+        listaConvalidaciones = Consultas.selectConvalidaciones();
+    }
+
+    public static void actualizarListaAdministradores() {
         listaAdministradores = Consultas.selectAdministradores();
     }
 
@@ -184,6 +248,128 @@ public class Controlador {
         Controlador.listaAsignaturas = listaAsignaturas;
     }
 
+
+    // Métodos de inserción
+
+    public static void insertarControladorEstudiante(Estudiantes nuevoEstudiante) {
+        Inserciones.insertarEstudiante(session,nuevoEstudiante);
+    }
+
+    public static void insertarControladorTutor(Tutores nuevoTutor) {
+        Inserciones.insertarTutores(session, nuevoTutor);
+    }
+
+    public static void insertarControladorProfesor(Profesores nuevoProfesor) {
+        Inserciones.insertarProfesor(session, nuevoProfesor);
+    }
+
+    public static void insertarControladorExtraescolar(Extraescolares nuevoExtraescolar) {
+        Inserciones.insertarExtraescolares(session, nuevoExtraescolar);
+    }
+
+    public static void insertarControladorCurso(Cursos nuevoCurso) {
+        Inserciones.insertarCurso(session, nuevoCurso);
+    }
+
+    public static void insertarControladorAsignatura(Asignaturas nuevaAsignatura) {
+        Inserciones.insertarAsignatura(session, nuevaAsignatura);
+    }
+
+    public static void insertarControladorMatricula(Matriculas nuevaMatricula) {
+        Inserciones.insertarMatricula(session, nuevaMatricula);
+    }
+
+    public static void insertarControladorHistorialAcademico(HistorialAcademico nuevoHistorial) {
+        Inserciones.insertarHistorialAcademico(session, nuevoHistorial);
+    }
+
+    public static void insertarControladorAsistencia(Asistencia nuevaAsistencia) {
+        Inserciones.insertarAsistencia(session, nuevaAsistencia);
+    }
+
+    public static void insertarControladorEvento(Eventos nuevoEvento) {
+        Inserciones.insertarEventos(session, nuevoEvento);
+    }
+
+    public static void insertarControladorEstudianteEvento(EstudiantesEventos nuevoEstEv) {
+        Inserciones.insertarEstudiantesEventos(session, nuevoEstEv);
+    }
+
+    public static void insertarControladorHorario(Horarios nuevoHorario) {
+        Inserciones.insertarHorarios(session, nuevoHorario);
+    }
+
+    public static void insertarControladorBeca(Becas nuevaBeca) {
+        Inserciones.insertarBeca(session, nuevaBeca);
+    }
+
+    public static void insertarControladorConvalidacion(Convalidaciones nuevaConvalidacion) {
+        Inserciones.insertarConvalidacion(session, nuevaConvalidacion);
+    }
+
+
+
+    //Metodos de actualización
+
+    public static void actualizarControladorEstudiante(Estudiantes nuevoEstudiante) {
+        Actualizaciones.actualizarEstudiante(session,nuevoEstudiante);
+    }
+
+    public static void actualizarControladorTutor(Tutores tutorActualizado) {
+        Actualizaciones.actualizarTutor(session, tutorActualizado);
+    }
+
+    public static void actualizarControladorProfesor(Profesores profesorActualizado) {
+        Actualizaciones.actualizarProfesor(session, profesorActualizado);
+    }
+
+    public static void actualizarControladorExtraescolar(Extraescolares extraescolarActualizado) {
+        Actualizaciones.actualizarExtraescolar(session, extraescolarActualizado);
+    }
+
+    public static void actualizarControladorCurso(Cursos cursoActualizado) {
+        Actualizaciones.actualizarCurso(session, cursoActualizado);
+    }
+
+    public static void actualizarControladorAsignatura(Asignaturas asignaturaActualizada) {
+        Actualizaciones.actualizarAsignatura(session, asignaturaActualizada);
+    }
+
+    public static void actualizarControladorMatricula(Matriculas matriculaActualizada) {
+        Actualizaciones.actualizarMatricula(session, matriculaActualizada);
+    }
+
+    public static void actualizarControladorHistorialAcademico(HistorialAcademico historialActualizado) {
+        Actualizaciones.actualizarHistorialAcademico(session, historialActualizado);
+    }
+
+    public static void actualizarControladorAsistencia(Asistencia asistenciaActualizada) {
+        Actualizaciones.actualizarAsistencia(session, asistenciaActualizada);
+    }
+
+    public static void actualizarControladorEvento(Eventos eventoActualizado) {
+        Actualizaciones.actualizarEvento(session, eventoActualizado);
+    }
+
+    public static void actualizarControladorEstudianteEvento(EstudiantesEventos estEvActualizado) {
+        Actualizaciones.actualizarEstudianteEvento(session, estEvActualizado);
+    }
+
+    public static void actualizarControladorHorario(Horarios horarioActualizado) {
+        Actualizaciones.actualizarHorario(session, horarioActualizado);
+    }
+
+    public static void actualizarControladorBeca(Becas becaActualizada) {
+        Actualizaciones.actualizarBeca(session, becaActualizada);
+    }
+
+    public static void actualizarControladorConvalidacion(Convalidaciones convalidacionActualizada) {
+        Actualizaciones.actualizarConvalidacion(session, convalidacionActualizada);
+    }
+
+    public static void actualizarControladorAdministrador(Administradores administradorActualizado) {
+        Actualizaciones.actualizarAdministrador(session, administradorActualizado);
+    }
 
     /**
      * Metodo rollback para deshacer los cambios en la base de datos

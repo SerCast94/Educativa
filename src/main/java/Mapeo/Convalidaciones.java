@@ -33,6 +33,19 @@ public class Convalidaciones {
         Aprobada, Pendiente, Rechazada
     }
 
+    // Constructor
+    public Convalidaciones() {
+    }
+
+    public Convalidaciones(Estudiantes estudiante, Cursos cursoOriginal, Date fechaConvalidacion, EstadoConvalidacion estadoConvalidacion, String comentarios) {
+        this.estudiante = estudiante;
+        this.cursoOriginal = cursoOriginal;
+        this.fechaConvalidacion = fechaConvalidacion;
+        this.estadoConvalidacion = estadoConvalidacion;
+        this.comentarios = comentarios;
+    }
+
+
     // Getters y Setters
 
     public Integer getIdConvalidacion() {

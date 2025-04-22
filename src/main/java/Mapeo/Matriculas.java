@@ -31,6 +31,17 @@ public class Matriculas {
         activo, inactivo
     }
 
+    // Constructor
+    public Matriculas() {
+    }
+
+    public Matriculas(Estudiantes estudiante, Cursos curso, Date fechaMatricula, EstadoMatricula estado) {
+        this.estudiante = estudiante;
+        this.curso = curso;
+        this.fechaMatricula = fechaMatricula;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdMatricula() {

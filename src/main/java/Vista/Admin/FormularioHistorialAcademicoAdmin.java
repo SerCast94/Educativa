@@ -3,6 +3,7 @@ package Vista.Admin;
 import Controlador.Controlador;
 import Mapeo.Cursos;
 import Mapeo.Estudiantes;
+import Mapeo.HistorialAcademico;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 
@@ -111,13 +112,36 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
             if (cmbEstudiante.getSelectedItem() == null ||
                     cmbCurso.getSelectedItem() == null ||
                     txtNotaFinal.getText().trim().isEmpty() ||
-                    dateAprobacion == null) {
+                    dateAprobacion.getText().trim().isEmpty() ||
+                    txtComentarios.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // agregar historial academico
+            try {
+                HistorialAcademico nuevoHistorial = new HistorialAcademico(
+                        (Estudiantes) cmbEstudiante.getSelectedItem(),
+                        (Cursos) cmbCurso.getSelectedItem(),
+                        Double.parseDouble(txtNotaFinal.getText().trim()),
+                        java.sql.Date.valueOf(dateAprobacion.getDate()),
+                        txtComentarios.getText().trim()
+                );
+
+                Controlador.insertarControladorHistorialAcademico(nuevoHistorial);
+                Controlador.actualizarListaHistorialAcademico();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaHistorialAcademico();
+
+                JOptionPane.showMessageDialog(null, "Historial académico registrado correctamente.");
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "La calificación debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el historial académico.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 

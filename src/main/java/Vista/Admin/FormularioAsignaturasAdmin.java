@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import static Controlador.Controlador.actualizarListaAsignaturas;
+import static Controlador.Controlador.insertarControladorAsignatura;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioAsignaturasAdmin extends JFrame {
@@ -111,13 +113,27 @@ public class FormularioAsignaturasAdmin extends JFrame {
                 return;
             }
 
-            Asignaturas asignatura = new Asignaturas();
-            asignatura.setNombre(txtNombre.getText().trim());
-            asignatura.setDescripcion(txtDescripcion.getText().trim());
-            asignatura.setProfesor((Profesores) cmbProfesor.getSelectedItem());
-            asignatura.setEstado(Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString()));
+            Asignaturas asignatura = new Asignaturas(
+                    txtNombre.getText().trim(),
+                    txtDescripcion.getText().trim(),
+                    (Profesores) cmbProfesor.getSelectedItem(),
+                    Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString())
+            );
 
-            // Guardar la asignatura en la base de datos
+            try {
+                insertarControladorAsignatura(asignatura);
+                actualizarListaAsignaturas();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaAsignaturas();
+
+                JOptionPane.showMessageDialog(null, "Asignatura agregada correctamente");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al añadir asignatura", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
+
         });
     }
 

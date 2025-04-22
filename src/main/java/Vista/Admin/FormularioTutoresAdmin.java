@@ -1,11 +1,14 @@
 package Vista.Admin;
 
+import Controlador.Controlador;
 import Mapeo.Tutores;
 import Vista.Util.Boton;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static Controlador.Controlador.actualizarListaTutores;
+import static Controlador.Controlador.insertarControladorTutor;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioTutoresAdmin extends JFrame {
@@ -107,19 +110,40 @@ public class FormularioTutoresAdmin extends JFrame {
             if (txtDNI.getText().trim().isEmpty() ||
                     txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
+                    txtEmail.getText().trim().isEmpty() ||
+                    txtTelefono.getText().trim().isEmpty() ||
                     txtUsuario.getText().trim().isEmpty() ||
-                    txtPassword.getPassword().length == 0 ||
-                    txtEmail.getText().trim().isEmpty()) {
+                    new String(txtPassword.getPassword()).trim().isEmpty() ||
+                    cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Aquí se puede construir un objeto Tutor y guardarlo
-            // Ejemplo:
-            // Tutores tutor = new Tutores();
-            // tutor.setDni(txtDNI.getText().trim());
-            // ...
+            try {
+                Tutores nuevoTutor = new Tutores(
+                        txtDNI.getText().trim(),
+                        txtNombre.getText().trim(),
+                        txtApellido.getText().trim(),
+                        txtEmail.getText().trim(),
+                        txtTelefono.getText().trim(),
+                        txtUsuario.getText().trim(),
+                        new String(txtPassword.getPassword()).trim(),
+                        (Tutores.EstadoTutor) cmbEstado.getSelectedItem()
+                );
+
+                insertarControladorTutor(nuevoTutor);
+                actualizarListaTutores();
+
+                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaTutores();
+
+                JOptionPane.showMessageDialog(null, "Tutor registrado correctamente.");
+                dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al registrar el tutor.", "Error", JOptionPane.ERROR_MESSAGE);
+                Controlador.rollback();
+            }
         });
     }
 }

@@ -43,6 +43,23 @@ public class Profesores {
         activo, inactivo
     }
 
+    // Constructor
+
+    public Profesores() {
+    }
+
+    public Profesores(String nombre, String apellido, String dni, String email, String telefono, String direccion, String usuario, String contrasena, EstadoProfesor estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdProfesor() {

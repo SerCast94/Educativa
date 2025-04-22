@@ -14,7 +14,7 @@ public class ControladorDashBoard {
 
     public static int becasInactivas() {
         int contador = 0;
-        for (int i = 0; i < Controlador.getListaEstudiantes().size(); i++) {
+        for (int i = 0; i < Controlador.getListaBecas().size(); i++) {
             if (Controlador.getListaBecas().get(i).getEstadoBeca().toString().trim().equalsIgnoreCase("inactivo")) {
                 contador++;
             }
