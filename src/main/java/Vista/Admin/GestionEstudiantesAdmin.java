@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaEstudiantes;
+import static java.lang.Float.NaN;
 
 public class GestionEstudiantesAdmin extends JPanel {
     private JTable tablaEstudiantes;
@@ -62,9 +63,18 @@ public class GestionEstudiantesAdmin extends JPanel {
         tablaEstudiantes.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaEstudiantes.rowAtPoint(e.getPoint());
-                tablaEstudiantes.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaEstudiantes.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaEstudiantes.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaEstudiantes, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaEstudiantes, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -98,7 +108,7 @@ public class GestionEstudiantesAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado"};
+        String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado","Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaEstudiantes = new JTable(modelo) {
@@ -113,14 +123,23 @@ public class GestionEstudiantesAdmin extends JPanel {
             }
         };
 
+
+        TableColumn columnaOculta = tablaEstudiantes.getColumnModel().getColumn(tablaEstudiantes.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
+
         tablaEstudiantes.setRowSorter(new TableRowSorter<>(modelo));
+
         tablaEstudiantes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-                return this;
+                if (value instanceof Estudiantes && column == 0) {
+                    value = ((Estudiantes) value).getNombre();
+                }
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             }
         });
 
@@ -229,7 +248,9 @@ public class GestionEstudiantesAdmin extends JPanel {
     private void modificarEstudiante() {
         int fila = tablaEstudiantes.getSelectedRow();
         if (fila != -1) {
-            //new FormularioEstudiantesAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaEstudiantes.convertRowIndexToModel(fila);
+            Estudiantes estudianteSeleccionado = (Estudiantes) modelo.getValueAt(filaModelo, tablaEstudiantes.getColumnCount()-1);
+            new ActualizarEstudiantesAdmin(estudianteSeleccionado);
         }
     }
 
@@ -257,7 +278,8 @@ public class GestionEstudiantesAdmin extends JPanel {
                     estudiante.getFechaMatricula().toString(),
                     estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
                     estudiante.getUsuario(),
-                    estudiante.getEstado()
+                    estudiante.getEstado(),
+                    estudiante
             };
             modelo.addRow(fila);
         }

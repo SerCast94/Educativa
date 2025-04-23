@@ -2,9 +2,11 @@ package Vista.Admin;
 
 import Mapeo.Asignaturas;
 import Mapeo.Cursos;
+import Mapeo.Estudiantes;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -64,9 +66,18 @@ public class GestionAsignaturasAdmin extends JPanel {
         tablaAsignaturas.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaAsignaturas.rowAtPoint(e.getPoint());
-                tablaAsignaturas.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaAsignaturas, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaAsignaturas.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaAsignaturas.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaAsignaturas, e.getX(), e.getY() -80);
+                        } else {
+                            popupMenu.show(tablaAsignaturas, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -100,7 +111,7 @@ public class GestionAsignaturasAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Descripción", "Profesor", "Curso", "Estado"};
+        String[] columnas = {"Nombre", "Descripción", "Profesor", "Curso", "Estado", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaAsignaturas = new JTable(modelo) {
@@ -114,6 +125,12 @@ public class GestionAsignaturasAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaAsignaturas.getColumnModel().getColumn(tablaAsignaturas.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaAsignaturas.setRowSorter(new TableRowSorter<>(modelo));
         tablaAsignaturas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -148,7 +165,7 @@ public class GestionAsignaturasAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -231,7 +248,9 @@ public class GestionAsignaturasAdmin extends JPanel {
     private void modificarAsignatura() {
         int fila = tablaAsignaturas.getSelectedRow();
         if (fila != -1) {
-           // new FormularioAsignaturasAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaAsignaturas.convertRowIndexToModel(fila);
+            Asignaturas asignaturaSeleccionada = (Asignaturas) modelo.getValueAt(filaModelo, tablaAsignaturas.getColumnCount()-1);
+           new ActualizarAsignaturasAdmin(asignaturaSeleccionada);
         }
     }
 
@@ -262,7 +281,8 @@ public class GestionAsignaturasAdmin extends JPanel {
                     asignatura.getDescripcion(),
                     asignatura.getProfesor().getNombre(),
                     nombreAsignatura,
-                    asignatura.getEstado().toString()
+                    asignatura.getEstado().toString(),
+                    asignatura
             };
             modelo.addRow(fila);
         }

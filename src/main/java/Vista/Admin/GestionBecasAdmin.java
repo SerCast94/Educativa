@@ -4,6 +4,7 @@ import Mapeo.Becas;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -58,6 +59,25 @@ public class GestionBecasAdmin extends JPanel {
                 }
             }
         });
+
+        tablaBecas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaBecas.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaBecas.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaBecas.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaBecas, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaBecas, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initPanelSuperior() {
@@ -88,7 +108,7 @@ public class GestionBecasAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Tipo de Beca", "Monto", "Fecha Asignación", "Estado", "Comentarios"};
+        String[] columnas = {"Estudiante", "Tipo de Beca", "Monto", "Fecha Asignación", "Estado", "Comentarios", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaBecas = new JTable(modelo) {
@@ -113,6 +133,12 @@ public class GestionBecasAdmin extends JPanel {
             }
         });
 
+        TableColumn columnaOculta = tablaBecas.getColumnModel().getColumn(tablaBecas.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
+
         tablaBecas.setShowGrid(false);
         tablaBecas.setIntercellSpacing(new Dimension(0, 0));
         tablaBecas.setRowHeight(30);
@@ -134,7 +160,7 @@ public class GestionBecasAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -236,7 +262,8 @@ public class GestionBecasAdmin extends JPanel {
                     beca.getMonto(),
                     beca.getFechaAsignacion().toString(),
                     beca.getEstadoBeca().toString(),
-                    beca.getComentarios()
+                    beca.getComentarios(),
+                    beca
             };
             modelo.addRow(fila);
         }

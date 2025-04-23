@@ -54,6 +54,16 @@ public class Administradores {
         this.estado = estado;
     }
 
+    public Administradores(String nombre, String apellido, String dni, String email, String telefono, String usuario, EstadoAdministrador estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.usuario = usuario;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdAdministrador() {

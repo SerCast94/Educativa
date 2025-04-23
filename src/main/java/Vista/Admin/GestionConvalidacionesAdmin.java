@@ -4,6 +4,7 @@ import Mapeo.Convalidaciones;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -58,6 +59,24 @@ public class GestionConvalidacionesAdmin extends JPanel {
                 }
             }
         });
+
+        tablaConvalidaciones.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaConvalidaciones.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaConvalidaciones.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaConvalidaciones.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaConvalidaciones, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaConvalidaciones, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initPanelSuperior() {
@@ -88,7 +107,7 @@ public class GestionConvalidacionesAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Curso Original", "Fecha Convalidación", "Estado", "Comentarios"};
+        String[] columnas = {"Estudiante", "Curso Original", "Fecha Convalidación", "Estado", "Comentarios", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaConvalidaciones = new JTable(modelo) {
@@ -102,6 +121,12 @@ public class GestionConvalidacionesAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaConvalidaciones.getColumnModel().getColumn(tablaConvalidaciones.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaConvalidaciones.setRowSorter(new TableRowSorter<>(modelo));
         tablaConvalidaciones.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -135,7 +160,7 @@ public class GestionConvalidacionesAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -240,7 +265,8 @@ public class GestionConvalidacionesAdmin extends JPanel {
                     convalidacion.getCursoOriginal().getNombre(),
                     convalidacion.getFechaConvalidacion(),
                     convalidacion.getEstadoConvalidacion(),
-                    convalidacion.getComentarios()
+                    convalidacion.getComentarios(),
+                    convalidacion
             };
             modelo.addRow(fila);
         }

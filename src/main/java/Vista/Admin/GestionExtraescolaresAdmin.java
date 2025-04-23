@@ -4,6 +4,7 @@ import Mapeo.Extraescolares;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -62,9 +63,18 @@ public class GestionExtraescolaresAdmin extends JPanel {
         tablaExtraescolares.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaExtraescolares.rowAtPoint(e.getPoint());
-                tablaExtraescolares.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaExtraescolares, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaExtraescolares.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaExtraescolares.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaExtraescolares, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaExtraescolares, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -98,7 +108,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Descripción", "Tipo", "Profesor Responsable"};
+        String[] columnas = {"Nombre", "Descripción", "Tipo", "Profesor Responsable","Objecto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaExtraescolares = new JTable(modelo) {
@@ -112,6 +122,12 @@ public class GestionExtraescolaresAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaExtraescolares.getColumnModel().getColumn(tablaExtraescolares.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaExtraescolares.setRowSorter(new TableRowSorter<>(modelo));
         tablaExtraescolares.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -146,7 +162,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -254,7 +270,8 @@ public class GestionExtraescolaresAdmin extends JPanel {
                     extraescolar.getNombre(),
                     extraescolar.getDescripcion(),
                     extraescolar.getTipo().toString(),
-                    profesor
+                    profesor,
+                    extraescolar
             };
             modelo.addRow(fila);
         }

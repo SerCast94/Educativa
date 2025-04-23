@@ -4,6 +4,7 @@ import Mapeo.Matriculas;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -58,6 +59,24 @@ public class GestionMatriculasAdmin extends JPanel {
                 }
             }
         });
+
+        tablaMatriculas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaMatriculas.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaMatriculas.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaMatriculas.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaMatriculas, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaMatriculas, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initPanelSuperior() {
@@ -88,7 +107,7 @@ public class GestionMatriculasAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Curso", "Fecha de Matrícula", "Estado"};
+        String[] columnas = {"Estudiante", "Curso", "Fecha de Matrícula", "Estado", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaMatriculas = new JTable(modelo) {
@@ -102,6 +121,12 @@ public class GestionMatriculasAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaMatriculas.getColumnModel().getColumn(tablaMatriculas.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaMatriculas.setRowSorter(new TableRowSorter<>(modelo));
         tablaMatriculas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -136,7 +161,7 @@ public class GestionMatriculasAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -238,7 +263,8 @@ public class GestionMatriculasAdmin extends JPanel {
                     matricula.getEstudiante().getNombre() + " " + matricula.getEstudiante().getApellido(),
                     matricula.getCurso().getNombre(), // Asumiendo que el curso tiene un método getNombre()
                     matricula.getFechaMatricula().toString(),
-                    matricula.getEstado().name()
+                    matricula.getEstado().name(),
+                    matricula
             };
             modelo.addRow(fila);
         }

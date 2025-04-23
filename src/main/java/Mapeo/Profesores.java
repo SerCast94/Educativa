@@ -60,6 +60,17 @@ public class Profesores {
         this.estado = estado;
     }
 
+    public Profesores(String nombre, String apellido, String dni, String email, String telefono, String direccion, String usuario, EstadoProfesor estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.usuario = usuario;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdProfesor() {

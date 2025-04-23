@@ -1,27 +1,18 @@
 package Vista.Admin;
 
 import Controlador.Controlador;
-import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Mapeo.Tutores;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
-import org.hibernate.NonUniqueObjectException;
-
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.sql.Date;
 import java.util.List;
-
-import static BBDD.Inserciones.insertarEstudiante;
 import static BackUtil.Encriptador.encryptMD5;
-import static Controlador.Controlador.insertarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
-public class FormularioEstudiantesAdmin extends JFrame {
+public class ActualizarEstudiantesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
@@ -56,14 +47,32 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private CustomDatePicker datePickerNacimiento = new CustomDatePicker();
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
 
-    public FormularioEstudiantesAdmin() {
+    private Estudiantes estudiante;
+
+    public ActualizarEstudiantesAdmin(Estudiantes estudiante) {
+        this.estudiante = estudiante;
         initGUI();
         initEventos();
         cargarTutores();
+        cargarDatosEstudiante();
+    }
+    private void cargarDatosEstudiante() {
+        txtDNI.setText(estudiante.getDni());
+        txtNombre.setText(estudiante.getNombre());
+        txtApellido.setText(estudiante.getApellido());
+        txtUsuario.setText(estudiante.getUsuario());
+        txtPassword.setText("");
+        datePickerNacimiento.setDate(estudiante.getFechaNacimiento().toLocalDate());
+        datePickerMatricula.setDate(estudiante.getFechaMatricula().toLocalDate());
+        txtEmail.setText(estudiante.getEmail());
+        txtTelefono.setText(estudiante.getTelefono());
+        txtDireccion.setText(estudiante.getDireccion());
+        cmbEstado.setSelectedItem(estudiante.getEstado().name().toLowerCase());
+        cmbTutor.setSelectedItem(estudiante.getTutor());
     }
 
     private void initGUI() {
-        setTitle("Agregar Estudiante");
+        setTitle("Actualizar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 700);
         setLocationRelativeTo(null);
@@ -119,8 +128,6 @@ public class FormularioEstudiantesAdmin extends JFrame {
         setBordeNaranja(txtEmail);
         agregarComponente(txtEmail, 8, 1);
 
-
-
         agregarComponente(lblTutor, 10, 0);
         setBordeNaranja(cmbTutor);
         agregarComponente(cmbTutor, 10, 1);
@@ -162,13 +169,12 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
+        btnAceptar.setText("Actualizar");
         btnAceptar.addActionListener(e -> {
-
             if (txtDNI.getText().trim().isEmpty() ||
                     txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
                     txtUsuario.getText().trim().isEmpty() ||
-                    txtPassword.getPassword().length == 0 ||
                     datePickerNacimiento.getDate() == null ||
                     datePickerMatricula.getDate() == null ||
                     txtEmail.getText().trim().isEmpty() ||
@@ -179,37 +185,67 @@ public class FormularioEstudiantesAdmin extends JFrame {
                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            Estudiantes nuevoEstudiante = new Estudiantes(
-                    txtNombre.getText(),
-                    txtApellido.getText(),
-                    txtDNI.getText(),
-                    java.sql.Date.valueOf(datePickerNacimiento.getDate()),
-                    txtDireccion.getText(),
-                    txtTelefono.getText(),
-                    txtEmail.getText(),
-                    java.sql.Date.valueOf(datePickerMatricula.getDate()),
-                    (Tutores) cmbTutor.getSelectedItem(),
-                    txtUsuario.getText(),
-                    encryptMD5(new String(txtPassword.getPassword())),
-                    Estudiantes.EstadoEstudiante.activo
-            );
+            String nuevaPassword = new String(txtPassword.getPassword());
 
-            try {
-                insertarControladorEstudiante(nuevoEstudiante);
-                Controlador.actualizarListaEstudiantes();
+            if (!nuevaPassword.isEmpty()) {
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEstudiantes();
+                estudiante.setNombre(txtNombre.getText().trim());
+                estudiante.setApellido(txtApellido.getText().trim());
+                estudiante.setDni(txtDNI.getText().trim());
+                estudiante.setFechaNacimiento(Date.valueOf(datePickerNacimiento.getDate()));
+                estudiante.setDireccion(txtDireccion.getText().trim());
+                estudiante.setTelefono(txtTelefono.getText().trim());
+                estudiante.setEmail(txtEmail.getText().trim());
+                estudiante.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
+                estudiante.setTutor((Tutores) cmbTutor.getSelectedItem());
+                estudiante.setUsuario(txtUsuario.getText().trim());
+                estudiante.setContrasena(encryptMD5(nuevaPassword));
+                estudiante.setEstado(Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString()));
 
-                JOptionPane.showMessageDialog(null, "Estudiante agregado correctamente");
-                dispose();
-            } catch (NonUniqueObjectException ex) {
-                JOptionPane.showMessageDialog(null, "Error al añadir estudiante", "Error", JOptionPane.ERROR_MESSAGE);
-                Controlador.rollback();
+                try {
+                    Controlador.actualizarControladorEstudiante(estudiante);
+                    Controlador.actualizarListaEstudiantes();
+
+                    VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                    vistaPrincipal.mostrarVistaEstudiantes();
+
+                    JOptionPane.showMessageDialog(null, "Estudiante actualizado correctamente");
+                    dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al actualizar estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                    Controlador.rollback();
+                }
+
+            }else{
+                estudiante.setNombre(txtNombre.getText().trim());
+                estudiante.setApellido(txtApellido.getText().trim());
+                estudiante.setDni(txtDNI.getText().trim());
+                estudiante.setFechaNacimiento(Date.valueOf(datePickerNacimiento.getDate()));
+                estudiante.setDireccion(txtDireccion.getText().trim());
+                estudiante.setTelefono(txtTelefono.getText().trim());
+                estudiante.setEmail(txtEmail.getText().trim());
+                estudiante.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
+                estudiante.setTutor((Tutores) cmbTutor.getSelectedItem());
+                estudiante.setUsuario(txtUsuario.getText().trim());
+                estudiante.setEstado(Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString()));
+
+                try {
+                    Controlador.actualizarControladorEstudiante(estudiante);
+                    Controlador.actualizarListaEstudiantes();
+
+                    VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                    vistaPrincipal.mostrarVistaEstudiantes();
+
+                    JOptionPane.showMessageDialog(null, "Estudiante actualizado correctamente");
+                    dispose();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error al actualizar estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                    Controlador.rollback();
+                }
             }
+
         });
     }
-
 
     private void cargarTutores() {
         List<Tutores> tutores = Controlador.getListaTutores();

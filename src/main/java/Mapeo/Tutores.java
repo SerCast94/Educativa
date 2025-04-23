@@ -55,6 +55,16 @@ public class Tutores {
         this.estado = estado;
     }
 
+    public Tutores(String nombre, String apellido, String dni, String email, String telefono, String usuario, EstadoTutor estado) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.email = email;
+        this.telefono = telefono;
+        this.usuario = usuario;
+        this.estado = estado;
+    }
+
     // Getters y Setters
 
     public Integer getIdTutor() {

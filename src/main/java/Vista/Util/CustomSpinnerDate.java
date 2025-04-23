@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 import java.awt.*;
+import java.util.Date;
 
 public class CustomSpinnerDate extends BasicSpinnerUI {
 
@@ -44,7 +45,7 @@ public class CustomSpinnerDate extends BasicSpinnerUI {
     }
 
     public static JSpinner crearHoraSpinner() {
-        SpinnerDateModel model = new SpinnerDateModel();
+        SpinnerDateModel model = new SpinnerDateModel(new Date(), null, null, java.util.Calendar.HOUR_OF_DAY);
         JSpinner spinner = new JSpinner(model);
         spinner.setUI(new CustomSpinnerDate());
         JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm");

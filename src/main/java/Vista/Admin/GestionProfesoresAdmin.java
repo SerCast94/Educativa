@@ -1,5 +1,6 @@
 package Vista.Admin;
 
+import Mapeo.Estudiantes;
 import Mapeo.Profesores;
 import Vista.Util.Boton;
 
@@ -68,6 +69,24 @@ public class GestionProfesoresAdmin extends JPanel {
                 }
             }
         });
+
+        tablaProfesores.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaProfesores.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaProfesores.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaProfesores.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaProfesores, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaProfesores, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void initPanelSuperior() {
@@ -98,7 +117,7 @@ public class GestionProfesoresAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Dirección", "Usuario", "Estado"};
+        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Dirección", "Usuario", "Estado","Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaProfesores = new JTable(modelo) {
@@ -112,6 +131,12 @@ public class GestionProfesoresAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaProfesores.getColumnModel().getColumn(tablaProfesores.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaProfesores.setRowSorter(new TableRowSorter<>(modelo));
         tablaProfesores.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -229,7 +254,8 @@ public class GestionProfesoresAdmin extends JPanel {
     private void modificarProfesor() {
         int fila = tablaProfesores.getSelectedRow();
         if (fila != -1) {
-        //    new FormularioProfesoresAdmin(modelo.getDataVector().elementAt(fila));
+            Profesores profesorSeleccionado = (Profesores) modelo.getValueAt(fila, tablaProfesores.getColumnCount()-1);
+            new ActualizarProfesoresAdmin(profesorSeleccionado);
         }
     }
 
@@ -254,7 +280,8 @@ public class GestionProfesoresAdmin extends JPanel {
                     profesor.getTelefono(),
                     profesor.getDireccion(),
                     profesor.getUsuario(),
-                    profesor.getEstado().name()
+                    profesor.getEstado().name(),
+                    profesor
             };
             modelo.addRow(fila);
         }

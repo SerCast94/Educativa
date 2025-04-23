@@ -3,6 +3,7 @@ package Vista.Admin;
 import Mapeo.Eventos;
 import Vista.Util.Boton;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -61,12 +62,22 @@ public class GestionEventosAdmin extends JPanel {
         tablaEventos.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaEventos.rowAtPoint(e.getPoint());
-                tablaEventos.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaEventos, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaEventos.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaEventos.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaEventos, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
+
     }
 
     private void initPanelSuperior() {
@@ -97,7 +108,7 @@ public class GestionEventosAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo"};
+        String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo","Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaEventos = new JTable(modelo) {
@@ -111,6 +122,12 @@ public class GestionEventosAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaEventos.getColumnModel().getColumn(tablaEventos.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaEventos.setRowSorter(new TableRowSorter<>(modelo));
         tablaEventos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -145,7 +162,7 @@ public class GestionEventosAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -251,7 +268,8 @@ public class GestionEventosAdmin extends JPanel {
                     evento.getFechaInicio().toString(),
                     evento.getFechaFin().toString(),
                     evento.getUbicacion() != null ? evento.getUbicacion() : "-",
-                    evento.getTipoEvento().toString().toUpperCase()
+                    evento.getTipoEvento().toString().toUpperCase(),
+                    evento
             };
             modelo.addRow(fila);
         }

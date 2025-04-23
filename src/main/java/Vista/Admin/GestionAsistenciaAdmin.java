@@ -3,6 +3,7 @@ package Vista.Admin;
 import Mapeo.Asistencia;
 import Vista.Util.Boton;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -61,9 +62,17 @@ public class GestionAsistenciaAdmin extends JPanel {
         tablaAsistencias.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                tablaAsistencias.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaAsistencias, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaAsistencias.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaAsistencias.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -97,7 +106,7 @@ public class GestionAsistenciaAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Curso", "Fecha", "Asistió", "Motivo de ausencia"};
+        String[] columnas = {"Estudiante", "Curso", "Fecha", "Asistió", "Motivo de ausencia", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaAsistencias = new JTable(modelo) {
@@ -111,6 +120,12 @@ public class GestionAsistenciaAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaAsistencias.getColumnModel().getColumn(tablaAsistencias.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaAsistencias.setRowSorter(new TableRowSorter<>(modelo));
         tablaAsistencias.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -145,7 +160,7 @@ public class GestionAsistenciaAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -250,7 +265,8 @@ public class GestionAsistenciaAdmin extends JPanel {
                     asistencia.getCurso().getNombre(),
                     asistencia.getFecha().toString(),
                     asistencia.getAsistio() ? "Sí" : "No",
-                    asistencia.getMotivoAusencia() != null ? asistencia.getMotivoAusencia() : "-"
+                    asistencia.getMotivoAusencia() != null ? asistencia.getMotivoAusencia() : "-",
+                    asistencia
             };
             modelo.addRow(fila);
         }

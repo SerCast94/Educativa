@@ -62,9 +62,17 @@ public class GestionTutoresAdmin extends JPanel {
         tablaTutores.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaTutores.rowAtPoint(e.getPoint());
-                tablaTutores.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaTutores, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaTutores.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaTutores.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaTutores, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaTutores, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -98,7 +106,7 @@ public class GestionTutoresAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Usuario", "Estado"};
+        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Usuario", "Estado", "Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaTutores = new JTable(modelo) {
@@ -113,16 +121,11 @@ public class GestionTutoresAdmin extends JPanel {
             }
         };
 
-        tablaTutores.setRowSorter(new TableRowSorter<>(modelo));
-        tablaTutores.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-                return this;
-            }
-        });
+        TableColumn columnaOculta = tablaTutores.getColumnModel().getColumn(tablaTutores.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaTutores.setShowGrid(false);
         tablaTutores.setIntercellSpacing(new Dimension(0, 0));
@@ -253,7 +256,8 @@ public class GestionTutoresAdmin extends JPanel {
                     tutor.getEmail(),
                     tutor.getTelefono() != null ? tutor.getTelefono() : "No especificado",
                     tutor.getUsuario(),
-                    tutor.getEstado().toString()
+                    tutor.getEstado().toString(),
+                    tutor
             };
             modelo.addRow(fila);
         }

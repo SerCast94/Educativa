@@ -4,6 +4,7 @@ import Mapeo.Horarios;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -62,9 +63,17 @@ public class GestionHorarioAdmin extends JPanel {
         tablaHorarios.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaHorarios.rowAtPoint(e.getPoint());
-                tablaHorarios.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaHorarios, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaHorarios.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaHorarios.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -98,7 +107,7 @@ public class GestionHorarioAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Curso", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor", "Actividad Extraescolar"};
+        String[] columnas = {"Curso", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor", "Actividad Extraescolar","Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaHorarios = new JTable(modelo) {
@@ -112,6 +121,12 @@ public class GestionHorarioAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaHorarios.getColumnModel().getColumn(tablaHorarios.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaHorarios.setRowSorter(new TableRowSorter<>(modelo));
         tablaHorarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -146,7 +161,7 @@ public class GestionHorarioAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -252,7 +267,8 @@ public class GestionHorarioAdmin extends JPanel {
                     horario.getHoraInicio().toString(),
                     horario.getHoraFin().toString(),
                     horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
-                    horario.getExtraescolar() != null && horario.getExtraescolar().getNombre() != null ? horario.getExtraescolar().getNombre() : "-"
+                    horario.getExtraescolar() != null && horario.getExtraescolar().getNombre() != null ? horario.getExtraescolar().getNombre() : "-",
+                    horario
             };
             modelo.addRow(fila);
         }

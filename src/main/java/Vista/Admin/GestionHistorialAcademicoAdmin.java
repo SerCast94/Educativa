@@ -4,6 +4,7 @@ import Mapeo.HistorialAcademico;
 import Vista.Util.Boton;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -62,9 +63,17 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         tablaHistorial.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int row = tablaHistorial.rowAtPoint(e.getPoint());
-                tablaHistorial.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaHistorial, e.getX(), e.getY());
+                if (row >= 0) {
+                    tablaHistorial.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaHistorial.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaHistorial, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaHistorial, e.getX(), e.getY());
+                        }
+                    }
                 }
             }
         });
@@ -98,7 +107,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"ID", "Estudiante", "Curso", "Nota Final", "Fecha Aprobación", "Comentarios"};
+        String[] columnas = {"Estudiante", "Curso", "Nota Final", "Fecha Aprobación", "Comentarios","Objeto"};
         modelo = new DefaultTableModel(null, columnas);
 
         tablaHistorial = new JTable(modelo) {
@@ -112,6 +121,12 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
                 return c;
             }
         };
+
+        TableColumn columnaOculta = tablaHistorial.getColumnModel().getColumn(tablaHistorial.getColumnCount()-1);
+        columnaOculta.setMinWidth(0);
+        columnaOculta.setMaxWidth(0);
+        columnaOculta.setPreferredWidth(0);
+        columnaOculta.setResizable(false);
 
         tablaHistorial.setRowSorter(new TableRowSorter<>(modelo));
         tablaHistorial.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
@@ -146,7 +161,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
 
         // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+        verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -247,12 +262,12 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {
             Object[] fila = {
-                    historial.getIdHistorial(),
                     historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
                     historial.getCurso().getNombre(),
                     historial.getNotaFinal(),
                     historial.getFechaAprobacion().toString(),
-                    historial.getComentarios()
+                    historial.getComentarios(),
+                    historial
             };
             modelo.addRow(fila);
         }

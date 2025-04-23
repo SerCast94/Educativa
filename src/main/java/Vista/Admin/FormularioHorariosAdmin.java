@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static Controlador.Controlador.insertarControladorHorario;
@@ -136,9 +138,21 @@ public class FormularioHorariosAdmin extends JFrame {
             }
 
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                Time horaInicio = new Time(sdf.parse(spnHoraInicio.getValue().toString()).getTime());
-                Time horaFin = new Time(sdf.parse(spnHoraFin.getValue().toString()).getTime());
+                java.util.Date horaInicioDate = (java.util.Date) spnHoraInicio.getValue();
+                java.util.Date horaFinDate = (java.util.Date) spnHoraFin.getValue();
+                Calendar calendar = Calendar.getInstance();
+
+                // Configurar horaInicio con segundos en 00
+                calendar.setTime(horaInicioDate);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Time horaInicio = new Time(calendar.getTimeInMillis());
+
+                // Configurar horaFin con segundos en 00
+                calendar.setTime(horaFinDate);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Time horaFin = new Time(calendar.getTimeInMillis());
 
                 Horarios nuevoHorario = new Horarios(
                         (Cursos) cmbCurso.getSelectedItem(),

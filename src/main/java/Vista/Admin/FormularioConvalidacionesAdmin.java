@@ -119,7 +119,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
                         (Estudiantes) cmbEstudiante.getSelectedItem(),
                         (Cursos) cmbCursoOriginal.getSelectedItem(),
                         java.sql.Date.valueOf(datePickerConvalidacion.getDate()),
-                        (EstadoConvalidacion)cmbEstado.getSelectedItem(),
+                        EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()),
                         txtComentarios.getText().trim()
                 );
 
@@ -131,8 +131,10 @@ public class FormularioConvalidacionesAdmin extends JFrame {
 
                 JOptionPane.showMessageDialog(this, "Convalidación registrada correctamente.");
                 dispose();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "El estado seleccionado no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al registrar la convalidación.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al registrar la convalidación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 Controlador.rollback();
             }
         });
