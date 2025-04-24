@@ -4,6 +4,7 @@ import Controlador.Controlador;
 import Mapeo.Becas;
 import Mapeo.Estudiantes;
 import Vista.Util.Boton;
+import Vista.Util.CustomDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,21 +13,27 @@ import java.util.List;
 import static Vista.Util.EstiloComponentes.*;
 
 public class ActualizarBecasAdmin extends JFrame {
+
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblTipo = new JLabel("Tipo:");
-    private JLabel lblMonto = new JLabel("Monto:");
-    private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblEstudiante = new JLabel("Estudiante: ");
+    private JLabel lblTipoBeca = new JLabel("Tipo de Beca: ");
+    private JLabel lblMonto = new JLabel("Monto: ");
+    private JLabel lblFechaAsignacion = new JLabel("Fecha de Asignación: ");
+    private JLabel lblEstadoBeca = new JLabel("Estado de Beca: ");
+    private JLabel lblComentarios = new JLabel("Comentarios: ");
 
-    private JTextField txtTipo = crearTextField();
+    private JComboBox<Estudiantes> cmbEstudiantes = new JComboBox<>();
+    private JComboBox<Becas.TipoBeca> cmbTipoBeca = new JComboBox<>(Becas.TipoBeca.values());
+    private JComboBox<Becas.EstadoBeca> cmbEstadoBeca = new JComboBox<>(Becas.EstadoBeca.values());
     private JTextField txtMonto = crearTextField();
-    private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activa", "inactiva"});
+    private JTextField txtComentarios = crearTextField();
+    private CustomDatePicker datePickerAsignacion = new CustomDatePicker();
 
     private Becas beca;
 
@@ -38,17 +45,10 @@ public class ActualizarBecasAdmin extends JFrame {
         cargarDatosBeca();
     }
 
-    private void cargarDatosBeca() {
-//        txtTipo.setText(beca.getTipo());
-//        txtMonto.setText(String.valueOf(beca.getMonto()));
-//        cmbEstado.setSelectedItem(beca.getEstado().name());
-//        cmbEstudiante.setSelectedItem(beca.getEstudiante());
-    }
-
     private void initGUI() {
         setTitle("Actualizar Beca");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 550);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -67,24 +67,22 @@ public class ActualizarBecasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbEstudiante);
+        customizeComboBox(cmbEstudiantes);
+        customizeComboBox(cmbTipoBeca);
+        customizeComboBox(cmbEstadoBeca);
 
-        agregarComponente(lblTipo, 1, 0);
-        setBordeNaranja(txtTipo);
-        agregarComponente(txtTipo, 1, 1);
-
-        agregarComponente(lblMonto, 2, 0);
-        setBordeNaranja(txtMonto);
-        agregarComponente(txtMonto, 2, 1);
-
-        agregarComponente(lblEstudiante, 3, 0);
-        setBordeNaranja(cmbEstudiante);
-        agregarComponente(cmbEstudiante, 3, 1);
-
-        agregarComponente(lblEstado, 4, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 4, 1);
+        agregarComponente(lblEstudiante, 1, 0);
+        agregarComponente(cmbEstudiantes, 1, 1);
+        agregarComponente(lblTipoBeca, 2, 0);
+        agregarComponente(cmbTipoBeca, 2, 1);
+        agregarComponente(lblMonto, 3, 0);
+        agregarComponente(txtMonto, 3, 1);
+        agregarComponente(lblFechaAsignacion, 4, 0);
+        agregarComponente(datePickerAsignacion, 4, 1);
+        agregarComponente(lblEstadoBeca, 5, 0);
+        agregarComponente(cmbEstadoBeca, 5, 1);
+        agregarComponente(lblComentarios, 6, 0);
+        agregarComponente(txtComentarios, 6, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -95,7 +93,7 @@ public class ActualizarBecasAdmin extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
         panel.add(panelBotones, gbc);
 
@@ -112,20 +110,24 @@ public class ActualizarBecasAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (txtTipo.getText().trim().isEmpty() ||
+            if (cmbEstudiantes.getSelectedItem() == null ||
+                    cmbTipoBeca.getSelectedItem() == null ||
                     txtMonto.getText().trim().isEmpty() ||
-                    cmbEstudiante.getSelectedItem() == null) {
+                    datePickerAsignacion.getDate() == null ||
+                    cmbEstadoBeca.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-//            beca.setTipo(txtTipo.getText().trim());
-//            beca.setMonto(Double.parseDouble(txtMonto.getText().trim()));
-//            beca.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-//            beca.setEstado(Becas.EstadoBeca.valueOf(cmbEstado.getSelectedItem().toString()));
-
             try {
+                beca.setEstudiante((Estudiantes) cmbEstudiantes.getSelectedItem());
+                beca.setTipoBeca((Becas.TipoBeca) cmbTipoBeca.getSelectedItem());
+                beca.setMonto(Double.parseDouble(txtMonto.getText().trim()));
+                beca.setFechaAsignacion(java.sql.Date.valueOf(datePickerAsignacion.getDate()));
+                beca.setEstadoBeca((Becas.EstadoBeca) cmbEstadoBeca.getSelectedItem());
+                beca.setComentarios(txtComentarios.getText().trim());
+
                 Controlador.actualizarControladorBeca(beca);
                 Controlador.actualizarListaBecas();
 
@@ -134,8 +136,10 @@ public class ActualizarBecasAdmin extends JFrame {
 
                 JOptionPane.showMessageDialog(null, "Beca actualizada correctamente");
                 dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "El monto debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar beca", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al actualizar la beca.", "Error", JOptionPane.ERROR_MESSAGE);
                 Controlador.rollback();
             }
         });
@@ -143,9 +147,20 @@ public class ActualizarBecasAdmin extends JFrame {
 
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
-        cmbEstudiante.removeAllItems();
-        for (Estudiantes estudiante : estudiantes) {
-            cmbEstudiante.addItem(estudiante);
+        cmbEstudiantes.removeAllItems();
+        for (Estudiantes est : estudiantes) {
+            cmbEstudiantes.addItem(est);
         }
+    }
+
+    private void cargarDatosBeca() {
+        cmbEstudiantes.setSelectedItem(beca.getEstudiante());
+        cmbTipoBeca.setSelectedItem(beca.getTipoBeca());
+        txtMonto.setText(String.valueOf(beca.getMonto()));
+        if (beca.getFechaAsignacion() != null) {
+            datePickerAsignacion.setDate(beca.getFechaAsignacion().toLocalDate());
+        }
+        cmbEstadoBeca.setSelectedItem(beca.getEstadoBeca());
+        txtComentarios.setText(beca.getComentarios());
     }
 }

@@ -3,10 +3,13 @@ package Vista.Admin;
 import Controlador.Controlador;
 import Mapeo.Convalidaciones;
 import Mapeo.Estudiantes;
+import Mapeo.Cursos;
 import Vista.Util.Boton;
+import Vista.Util.CustomDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
 import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
@@ -15,16 +18,23 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblAsignatura = new JLabel("Asignatura:");
     private JLabel lblEstudiante = new JLabel("Estudiante:");
+    private JLabel lblCursoOriginal = new JLabel("Curso Original:");
+    private JLabel lblFecha = new JLabel("Fecha de Convalidación:");
     private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblComentarios = new JLabel("Comentarios:");
 
-    private JTextField txtAsignatura = crearTextField();
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"pendiente", "aprobada", "rechazada"});
+    private JComboBox<Cursos> cmbCursoOriginal = new JComboBox<>();
+    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
+
+    private JTextField txtComentarios = crearTextField();
+    private JScrollPane scrollComentarios = new JScrollPane(txtComentarios);
+    private CustomDatePicker datePickerConvalidacion = new CustomDatePicker();
 
     private Convalidaciones convalidacion;
 
@@ -33,13 +43,16 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         initGUI();
         initEventos();
         cargarEstudiantes();
+        cargarCursos();
         cargarDatosConvalidacion();
     }
 
     private void cargarDatosConvalidacion() {
-//        txtAsignatura.setText(convalidacion.getAsignatura());
-//        cmbEstado.setSelectedItem(convalidacion.getEstado().name());
-//        cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
+        cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
+        cmbCursoOriginal.setSelectedItem(convalidacion.getCursoOriginal());
+        datePickerConvalidacion.setDate(convalidacion.getFechaConvalidacion().toLocalDate());
+        cmbEstado.setSelectedItem(convalidacion.getEstadoConvalidacion().name());
+        txtComentarios.setText(convalidacion.getComentarios());
     }
 
     private void initGUI() {
@@ -66,18 +79,23 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
 
         customizeComboBox(cmbEstado);
         customizeComboBox(cmbEstudiante);
+        customizeComboBox(cmbCursoOriginal);
 
-        agregarComponente(lblAsignatura, 1, 0);
-        setBordeNaranja(txtAsignatura);
-        agregarComponente(txtAsignatura, 1, 1);
+        agregarComponente(lblEstudiante, 1, 0);
+        agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblEstudiante, 2, 0);
-        setBordeNaranja(cmbEstudiante);
-        agregarComponente(cmbEstudiante, 2, 1);
+        agregarComponente(lblCursoOriginal, 2, 0);
+        agregarComponente(cmbCursoOriginal, 2, 1);
 
-        agregarComponente(lblEstado, 3, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 3, 1);
+        agregarComponente(lblFecha, 3, 0);
+        EspaciadoEnDatePicker(datePickerConvalidacion);
+        agregarComponente(datePickerConvalidacion, 3, 1);
+
+        agregarComponente(lblEstado, 4, 0);
+        agregarComponente(cmbEstado, 4, 1);
+
+        agregarComponente(lblComentarios, 5, 0);
+        agregarComponente(txtComentarios, 5, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -88,7 +106,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         panel.add(panelBotones, gbc);
 
@@ -105,26 +123,34 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (txtAsignatura.getText().trim().isEmpty() || cmbEstudiante.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (cmbEstudiante.getSelectedItem() == null ||
+                    cmbCursoOriginal.getSelectedItem() == null ||
+                    datePickerConvalidacion.getDate() == null ||
+                    cmbEstado.getSelectedItem() == null) {
+
+                JOptionPane.showMessageDialog(this, "Todos los campos obligatorios deben completarse.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-//            convalidacion.setAsignatura(txtAsignatura.getText().trim());
-//            convalidacion.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-//            convalidacion.setEstado(Convalidaciones.EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()));
-
             try {
+                convalidacion.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
+                convalidacion.setCursoOriginal((Cursos) cmbCursoOriginal.getSelectedItem());
+                convalidacion.setFechaConvalidacion(Date.valueOf(datePickerConvalidacion.getDate()));
+                convalidacion.setEstadoConvalidacion(Convalidaciones.EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()));
+                convalidacion.setComentarios(txtComentarios.getText().trim());
+
                 Controlador.actualizarControladorConvalidacion(convalidacion);
                 Controlador.actualizarListaConvalidaciones();
 
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaConvalidaciones();
 
-                JOptionPane.showMessageDialog(null, "Convalidación actualizada correctamente");
+                JOptionPane.showMessageDialog(this, "Convalidación actualizada correctamente.");
                 dispose();
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "El estado seleccionado no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar convalidación", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al actualizar la convalidación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 Controlador.rollback();
             }
         });
@@ -135,6 +161,14 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         cmbEstudiante.removeAllItems();
         for (Estudiantes estudiante : estudiantes) {
             cmbEstudiante.addItem(estudiante);
+        }
+    }
+
+    private void cargarCursos() {
+        List<Cursos> cursos = Controlador.getListaCursos();
+        cmbCursoOriginal.removeAllItems();
+        for (Cursos curso : cursos) {
+            cmbCursoOriginal.addItem(curso);
         }
     }
 }

@@ -2,8 +2,9 @@ package Vista.Admin;
 
 import Controlador.Controlador;
 import Mapeo.Extraescolares;
-import Mapeo.Estudiantes;
+import Mapeo.Profesores;
 import Vista.Util.Boton;
+import Vista.Util.JTextFieldConMargen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,15 +19,15 @@ public class ActualizarExtraescolaresAdmin extends JFrame {
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblNombre = new JLabel("Nombre:");
-    private JLabel lblDescripcion = new JLabel("Descripción:");
-    private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblNombre = new JLabel("Nombre: ");
+    private JLabel lblDescripcion = new JLabel("Descripción: ");
+    private JLabel lblTipo = new JLabel("Tipo: ");
+    private JLabel lblProfesor = new JLabel("Profesor: ");
 
     private JTextField txtNombre = crearTextField();
     private JTextField txtDescripcion = crearTextField();
-    private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
+    private JComboBox<Extraescolares.TipoExtraescolar> cmbTipo = new JComboBox<>(Extraescolares.TipoExtraescolar.values());
+    private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
 
     private Extraescolares extraescolar;
 
@@ -34,21 +35,14 @@ public class ActualizarExtraescolaresAdmin extends JFrame {
         this.extraescolar = extraescolar;
         initGUI();
         initEventos();
-        cargarEstudiantes();
+        cargarProfesores();
         cargarDatosExtraescolar();
-    }
-
-    private void cargarDatosExtraescolar() {
-//        txtNombre.setText(extraescolar.getNombre());
-//        txtDescripcion.setText(extraescolar.getDescripcion());
-//        cmbEstado.setSelectedItem(extraescolar.getEstado().name());
-//        cmbEstudiante.setSelectedItem(extraescolar.getEstudiante());
     }
 
     private void initGUI() {
         setTitle("Actualizar Extraescolar");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 550);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -59,16 +53,16 @@ public class ActualizarExtraescolaresAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Extraescolar", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Actualizar Actividad Extraescolar", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         gbc.gridwidth = 2;
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbEstudiante);
+        customizeComboBox(cmbTipo);
+        customizeComboBox(cmbProfesor);
 
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);
@@ -78,13 +72,13 @@ public class ActualizarExtraescolaresAdmin extends JFrame {
         setBordeNaranja(txtDescripcion);
         agregarComponente(txtDescripcion, 2, 1);
 
-        agregarComponente(lblEstudiante, 3, 0);
-        setBordeNaranja(cmbEstudiante);
-        agregarComponente(cmbEstudiante, 3, 1);
+        agregarComponente(lblTipo, 3, 0);
+        setBordeNaranja(cmbTipo);
+        agregarComponente(cmbTipo, 3, 1);
 
-        agregarComponente(lblEstado, 4, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 4, 1);
+        agregarComponente(lblProfesor, 4, 0);
+        setBordeNaranja(cmbProfesor);
+        agregarComponente(cmbProfesor, 4, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -114,38 +108,46 @@ public class ActualizarExtraescolaresAdmin extends JFrame {
         btnAceptar.addActionListener(e -> {
             if (txtNombre.getText().trim().isEmpty() ||
                     txtDescripcion.getText().trim().isEmpty() ||
-                    cmbEstudiante.getSelectedItem() == null) {
+                    cmbTipo.getSelectedItem() == null ||
+                    cmbProfesor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            extraescolar.setNombre(txtNombre.getText().trim());
-            extraescolar.setDescripcion(txtDescripcion.getText().trim());
-//            extraescolar.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-//            extraescolar.setEstado(Extraescolares.EstadoExtraescolar.valueOf(cmbEstado.getSelectedItem().toString()));
-
             try {
+                extraescolar.setNombre(txtNombre.getText().trim());
+                extraescolar.setDescripcion(txtDescripcion.getText().trim());
+                extraescolar.setTipo((Extraescolares.TipoExtraescolar) cmbTipo.getSelectedItem());
+                extraescolar.setProfesor((Profesores) cmbProfesor.getSelectedItem());
+
                 Controlador.actualizarControladorExtraescolar(extraescolar);
                 Controlador.actualizarListaExtraescolares();
 
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                //vistaPrincipal.mostrarVistaExtraescolares();
+                vistaPrincipal.mostrarVistaActividadesExtraescolares();
 
-                JOptionPane.showMessageDialog(null, "Extraescolar actualizado correctamente");
+                JOptionPane.showMessageDialog(null, "Actividad extraescolar actualizada correctamente.");
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar extraescolar", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al actualizar la actividad extraescolar.", "Error", JOptionPane.ERROR_MESSAGE);
                 Controlador.rollback();
             }
         });
     }
 
-    private void cargarEstudiantes() {
-        List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
-        cmbEstudiante.removeAllItems();
-        for (Estudiantes estudiante : estudiantes) {
-            cmbEstudiante.addItem(estudiante);
+    private void cargarProfesores() {
+        List<Profesores> profesores = Controlador.getListaProfesores();
+        cmbProfesor.removeAllItems();
+        for (Profesores profesor : profesores) {
+            cmbProfesor.addItem(profesor);
         }
+    }
+
+    private void cargarDatosExtraescolar() {
+        txtNombre.setText(extraescolar.getNombre());
+        txtDescripcion.setText(extraescolar.getDescripcion());
+        cmbTipo.setSelectedItem(extraescolar.getTipo());
+        cmbProfesor.setSelectedItem(extraescolar.getProfesor());
     }
 }

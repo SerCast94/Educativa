@@ -9,6 +9,7 @@ import Vista.Util.CustomDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
 import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
@@ -20,11 +21,11 @@ public class ActualizarAsistenciaAdmin extends JFrame {
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblCurso = new JLabel("Curso:");
-    private JLabel lblFecha = new JLabel("Fecha:");
-    private JLabel lblAsistio = new JLabel("Asistió:");
-    private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia:");
+    private JLabel lblEstudiante = new JLabel("Estudiante: ");
+    private JLabel lblCurso = new JLabel("Curso: ");
+    private JLabel lblFecha = new JLabel("Fecha: ");
+    private JLabel lblAsistio = new JLabel("Asistió: ");
+    private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia: ");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
@@ -44,17 +45,17 @@ public class ActualizarAsistenciaAdmin extends JFrame {
     }
 
     private void cargarDatosAsistencia() {
-//        cmbEstudiante.setSelectedItem(asistencia.getEstudiante());
-//        cmbCurso.setSelectedItem(asistencia.getCurso());
-//        datePicker.setDate(asistencia.getFecha().toLocalDate());
-//        chkAsistio.setSelected(asistencia.isAsistio());
-//        txtMotivoAusencia.setText(asistencia.getMotivoAusencia());
+        cmbEstudiante.setSelectedItem(asistencia.getEstudiante());
+        cmbCurso.setSelectedItem(asistencia.getCurso());
+        datePicker.setDate(asistencia.getFecha().toLocalDate());
+        chkAsistio.setSelected(asistencia.getAsistio());
+        txtMotivoAusencia.setText(asistencia.getMotivoAusencia());
     }
 
     private void initGUI() {
         setTitle("Actualizar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -67,8 +68,8 @@ public class ActualizarAsistenciaAdmin extends JFrame {
 
         JLabel titulo = new JLabel("Actualizar Asistencia", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         gbc.gridwidth = 2;
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
@@ -87,6 +88,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         agregarComponente(lblFecha, 3, 0);
         agregarComponente(datePicker, 3, 1);
 
+        checkPersonalizado(chkAsistio);
         agregarComponente(lblAsistio, 4, 0);
         agregarComponente(chkAsistio, 4, 1);
 
@@ -129,16 +131,15 @@ public class ActualizarAsistenciaAdmin extends JFrame {
 
             asistencia.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
             asistencia.setCurso((Cursos) cmbCurso.getSelectedItem());
-            asistencia.setFecha(java.sql.Date.valueOf(datePicker.getDate()));
+            asistencia.setFecha(Date.valueOf(datePicker.getDate()));
             asistencia.setAsistio(chkAsistio.isSelected());
             asistencia.setMotivoAusencia(txtMotivoAusencia.getText().trim());
 
             try {
                 Controlador.actualizarControladorAsistencia(asistencia);
-                //Controlador.actualizarListaAsistencias();
 
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                //vistaPrincipal.mostrarVistaAsistencias();
+                vistaPrincipal.mostrarVistaAsistencia();
 
                 JOptionPane.showMessageDialog(null, "Asistencia actualizada correctamente.");
                 dispose();

@@ -243,7 +243,9 @@ public class GestionCursosAdmin extends JPanel {
     private void modificarCurso() {
         int fila = tablaCursos.getSelectedRow();
         if (fila != -1) {
-            //new FormularioCursosAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaCursos.convertRowIndexToModel(fila);
+            Cursos cursoSeleccionado = (Cursos) modelo.getValueAt(filaModelo, tablaCursos.getColumnCount() - 1);
+            new ActualizarCursosAdmin(cursoSeleccionado);
         }
     }
 

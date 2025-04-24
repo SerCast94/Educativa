@@ -11,12 +11,10 @@ import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
 
-public class ActualizarCursoAdmin extends JFrame {
+public class ActualizarCursosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblDescripcion = new JLabel("Descripción:");
@@ -28,9 +26,12 @@ public class ActualizarCursoAdmin extends JFrame {
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
 
+    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+
     private Cursos curso;
 
-    public ActualizarCursoAdmin(Cursos curso) {
+    public ActualizarCursosAdmin(Cursos curso) {
         this.curso = curso;
         initGUI();
         initEventos();
@@ -48,7 +49,7 @@ public class ActualizarCursoAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Curso");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -57,38 +58,38 @@ public class ActualizarCursoAdmin extends JFrame {
         gbc = new GridBagConstraints();
         panel.setLayout(gLayout);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 10, 10, 10); // Coincide con FormularioCursoAdmin
 
         JLabel titulo = new JLabel("Actualizar Curso", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         gbc.gridwidth = 2;
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
         customizeComboBox(cmbProfesor);
+        customizeComboBox(cmbEstado);
+
+        setBordeNaranja(txtNombre);
+        setBordeNaranja(txtDescripcion);
+        setBordeNaranja(cmbProfesor);
+        setBordeNaranja(cmbEstado);
 
         agregarComponente(lblNombre, 1, 0);
-        setBordeNaranja(txtNombre);
         agregarComponente(txtNombre, 1, 1);
 
         agregarComponente(lblDescripcion, 2, 0);
-        setBordeNaranja(txtDescripcion);
         agregarComponente(txtDescripcion, 2, 1);
 
         agregarComponente(lblProfesor, 3, 0);
-        setBordeNaranja(cmbProfesor);
         agregarComponente(cmbProfesor, 3, 1);
 
         agregarComponente(lblEstado, 4, 0);
-        setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 4, 1);
 
-        JPanel panelBotones = new JPanel();
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
-        panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
         panelBotones.add(btnAceptar);
@@ -114,7 +115,8 @@ public class ActualizarCursoAdmin extends JFrame {
         btnAceptar.addActionListener(e -> {
             if (txtNombre.getText().trim().isEmpty() ||
                     txtDescripcion.getText().trim().isEmpty() ||
-                    cmbProfesor.getSelectedItem() == null) {
+                    cmbProfesor.getSelectedItem() == null ||
+                    cmbEstado.getSelectedItem() == null) {
 
                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;

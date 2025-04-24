@@ -243,7 +243,9 @@ public class GestionAsistenciaAdmin extends JPanel {
     private void modificarAsistencia() {
         int fila = tablaAsistencias.getSelectedRow();
         if (fila != -1) {
-           // new FormularioAsistenciaAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaAsistencias.convertRowIndexToModel(fila);
+            Asistencia asistenciaSeleccionada = (Asistencia) modelo.getValueAt(filaModelo, tablaAsistencias.getColumnCount() - 1);
+            new ActualizarAsistenciaAdmin(asistenciaSeleccionada);
         }
     }
 

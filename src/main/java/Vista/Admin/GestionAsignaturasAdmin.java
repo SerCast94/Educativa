@@ -279,7 +279,7 @@ public class GestionAsignaturasAdmin extends JPanel {
             Object[] fila = {
                     asignatura.getNombre(),
                     asignatura.getDescripcion(),
-                    asignatura.getProfesor().getNombre(),
+                    asignatura.getProfesor().toString(),
                     nombreAsignatura,
                     asignatura.getEstado().toString(),
                     asignatura

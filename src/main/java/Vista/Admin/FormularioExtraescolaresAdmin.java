@@ -25,7 +25,7 @@ public class FormularioExtraescolaresAdmin extends JFrame {
     private JLabel lblProfesor = new JLabel("Profesor: ");
 
     private JTextField txtNombre = crearTextField();
-    private JTextArea txtDescripcion = new JTextArea(5, 20);
+    private JTextField txtDescripcion = crearTextField();
     private JComboBox<Extraescolares.TipoExtraescolar> cmbTipo = new JComboBox<>(Extraescolares.TipoExtraescolar.values());
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
 
@@ -66,7 +66,7 @@ public class FormularioExtraescolaresAdmin extends JFrame {
 
         agregarComponente(lblDescripcion, 2, 0);
         setBordeNaranja(txtDescripcion);
-        agregarComponente(new JScrollPane(txtDescripcion), 2, 1);
+        agregarComponente(txtDescripcion, 2, 1);
 
         agregarComponente(lblTipo, 3, 0);
         setBordeNaranja(cmbTipo);

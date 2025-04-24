@@ -34,8 +34,7 @@ public class FormularioBecasAdmin extends JFrame {
     private JComboBox<Becas.TipoBeca> cmbTipoBeca = new JComboBox<>(Becas.TipoBeca.values());
     private JComboBox<Becas.EstadoBeca> cmbEstadoBeca = new JComboBox<>(Becas.EstadoBeca.values());
     private JTextField txtMonto = crearTextField();
-    private JTextArea txtComentarios = new JTextArea(3, 20);
-    private JScrollPane scrollComentarios = new JScrollPane(txtComentarios);
+    private JTextField txtComentarios = crearTextField();
     private CustomDatePicker datePickerAsignacion = new CustomDatePicker();
 
     public FormularioBecasAdmin() {
@@ -82,10 +81,7 @@ public class FormularioBecasAdmin extends JFrame {
         agregarComponente(cmbEstadoBeca, 5, 1);
 
         agregarComponente(lblComentarios, 6, 0);
-        txtComentarios.setLineWrap(true);
-        txtComentarios.setWrapStyleWord(true);
-        setBordeNaranja(scrollComentarios);
-        agregarComponente(scrollComentarios, 6, 1);
+        agregarComponente(txtComentarios, 6, 1);
 
         // Panel de botones
         JPanel panelBotones = new JPanel();

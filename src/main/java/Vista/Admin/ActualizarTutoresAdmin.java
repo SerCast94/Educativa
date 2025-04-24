@@ -6,26 +6,35 @@ import Vista.Util.Boton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
+import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 
 public class ActualizarTutoresAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblNombre = new JLabel("Nombre:");
-    private JLabel lblApellido = new JLabel("Apellido:");
-    private JLabel lblTelefono = new JLabel("Teléfono:");
-    private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblDNI = new JLabel("DNI: ");
+    private JLabel lblNombre = new JLabel("Nombre: ");
+    private JLabel lblApellido = new JLabel("Apellido: ");
+    private JLabel lblUsuario = new JLabel("Usuario: ");
+    private JLabel lblPassword = new JLabel("Contraseña: ");
+    private JLabel lblEmail = new JLabel("Email: ");
+    private JLabel lblTelefono = new JLabel("Teléfono: ");
+    private JLabel lblEstado = new JLabel("Estado: ");
 
+    private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
+    private JTextField txtUsuario = crearTextField();
+    private JPasswordField txtPassword = crearPasswordField();
+    private JTextField txtEmail = crearTextField();
     private JTextField txtTelefono = crearTextField();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
+    private JComboBox<Tutores.EstadoTutor> cmbEstado = new JComboBox<>(Tutores.EstadoTutor.values());
 
     private Tutores tutor;
 
@@ -37,16 +46,20 @@ public class ActualizarTutoresAdmin extends JFrame {
     }
 
     private void cargarDatosTutor() {
+        txtDNI.setText(tutor.getDni());
         txtNombre.setText(tutor.getNombre());
         txtApellido.setText(tutor.getApellido());
+        txtUsuario.setText(tutor.getUsuario());
+        txtPassword.setText(""); // No cargar la contraseña
+        txtEmail.setText(tutor.getEmail());
         txtTelefono.setText(tutor.getTelefono());
-        cmbEstado.setSelectedItem(tutor.getEstado().name());
+        cmbEstado.setSelectedItem(tutor.getEstado());
     }
 
     private void initGUI() {
         setTitle("Actualizar Tutor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 550);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -67,21 +80,14 @@ public class ActualizarTutoresAdmin extends JFrame {
 
         customizeComboBox(cmbEstado);
 
-        agregarComponente(lblNombre, 1, 0);
-        setBordeNaranja(txtNombre);
-        agregarComponente(txtNombre, 1, 1);
-
-        agregarComponente(lblApellido, 2, 0);
-        setBordeNaranja(txtApellido);
-        agregarComponente(txtApellido, 2, 1);
-
-        agregarComponente(lblTelefono, 3, 0);
-        setBordeNaranja(txtTelefono);
-        agregarComponente(txtTelefono, 3, 1);
-
-        agregarComponente(lblEstado, 4, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 4, 1);
+        agregarCampo(lblDNI, txtDNI, 1);
+        agregarCampo(lblNombre, txtNombre, 2);
+        agregarCampo(lblApellido, txtApellido, 3);
+        agregarCampo(lblUsuario, txtUsuario, 4);
+        agregarCampo(lblPassword, txtPassword, 5);
+        agregarCampo(lblEmail, txtEmail, 6);
+        agregarCampo(lblTelefono, txtTelefono, 7);
+        agregarCampo(lblEstado, cmbEstado, 8);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -92,11 +98,17 @@ public class ActualizarTutoresAdmin extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 9;
         gbc.gridwidth = 2;
         panel.add(panelBotones, gbc);
 
         setVisible(true);
+    }
+
+    private void agregarCampo(JLabel label, Component campo, int fila) {
+        agregarComponente(label, fila, 0);
+        setBordeNaranja((JComponent) campo);
+        agregarComponente(campo, fila, 1);
     }
 
     private void agregarComponente(Component componente, int fila, int columna) {
@@ -109,18 +121,30 @@ public class ActualizarTutoresAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
+            if (txtDNI.getText().trim().isEmpty() ||
+                    txtNombre.getText().trim().isEmpty() ||
                     txtApellido.getText().trim().isEmpty() ||
+                    txtUsuario.getText().trim().isEmpty() ||
+                    txtEmail.getText().trim().isEmpty() ||
                     txtTelefono.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            tutor.setDni(txtDNI.getText().trim());
             tutor.setNombre(txtNombre.getText().trim());
             tutor.setApellido(txtApellido.getText().trim());
+            tutor.setUsuario(txtUsuario.getText().trim());
+            tutor.setEmail(txtEmail.getText().trim());
             tutor.setTelefono(txtTelefono.getText().trim());
-            tutor.setEstado(Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString()));
+            tutor.setEstado((Tutores.EstadoTutor) cmbEstado.getSelectedItem());
+
+            String nuevaPassword = new String(txtPassword.getPassword()).trim();
+
+            if (!nuevaPassword.isEmpty()) {
+                tutor.setContrasena(encryptMD5(nuevaPassword));
+            }
 
             try {
                 Controlador.actualizarControladorTutor(tutor);
@@ -129,7 +153,7 @@ public class ActualizarTutoresAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaTutores();
 
-                JOptionPane.showMessageDialog(null, "Tutor actualizado correctamente");
+                JOptionPane.showMessageDialog(null, "Tutor actualizado correctamente.");
                 dispose();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error al actualizar tutor", "Error", JOptionPane.ERROR_MESSAGE);

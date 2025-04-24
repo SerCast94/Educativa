@@ -85,7 +85,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Agregar Estudiante", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));

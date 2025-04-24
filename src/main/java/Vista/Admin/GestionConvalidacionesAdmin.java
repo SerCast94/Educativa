@@ -243,7 +243,9 @@ public class GestionConvalidacionesAdmin extends JPanel {
     private void modificarConvalidacion() {
         int fila = tablaConvalidaciones.getSelectedRow();
         if (fila != -1) {
-         //   new FormularioConvalidacionAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaConvalidaciones.convertRowIndexToModel(fila);
+            Convalidaciones convalidacionSeleccionada = (Convalidaciones) modelo.getValueAt(filaModelo, tablaConvalidaciones.getColumnCount() - 1);
+            new ActualizarConvalidacionesAdmin(convalidacionSeleccionada);
         }
     }
 

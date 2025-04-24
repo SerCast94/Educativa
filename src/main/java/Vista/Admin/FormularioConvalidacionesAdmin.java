@@ -33,8 +33,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     private JComboBox<Cursos> cmbCursoOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
 
-    private JTextArea txtComentarios = new JTextArea(3, 20);
-    private JScrollPane scrollComentarios = new JScrollPane(txtComentarios);
+    private JTextField txtComentarios = crearTextField();
     private CustomDatePicker datePickerConvalidacion = new CustomDatePicker();
 
     public FormularioConvalidacionesAdmin() {
@@ -84,8 +83,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         agregarComponente(cmbEstado, 4, 1);
 
         agregarComponente(lblComentarios, 5, 0);
-        setBordeNaranja(scrollComentarios);
-        agregarComponente(scrollComentarios, 5, 1);
+        agregarComponente(txtComentarios, 5, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));

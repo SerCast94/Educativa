@@ -11,6 +11,8 @@ import java.awt.*;
 import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
+import Vista.Util.CustomDatePicker;
+import java.sql.Date;
 
 public class ActualizarMatriculasAdmin extends JFrame {
     private Container panel;
@@ -22,10 +24,12 @@ public class ActualizarMatriculasAdmin extends JFrame {
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblFechaMatricula = new JLabel("Fecha de Matrícula:");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
+    private CustomDatePicker datePickerMatricula = new CustomDatePicker();
 
     private Matriculas matricula;
 
@@ -42,12 +46,13 @@ public class ActualizarMatriculasAdmin extends JFrame {
         cmbEstudiante.setSelectedItem(matricula.getEstudiante());
         cmbCurso.setSelectedItem(matricula.getCurso());
         cmbEstado.setSelectedItem(matricula.getEstado().name());
+        datePickerMatricula.setDate(matricula.getFechaMatricula().toLocalDate());
     }
 
     private void initGUI() {
         setTitle("Actualizar Matrícula");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -69,6 +74,7 @@ public class ActualizarMatriculasAdmin extends JFrame {
         customizeComboBox(cmbEstado);
         customizeComboBox(cmbEstudiante);
         customizeComboBox(cmbCurso);
+        EspaciadoEnDatePicker(datePickerMatricula);
 
         agregarComponente(lblEstudiante, 1, 0);
         setBordeNaranja(cmbEstudiante);
@@ -78,9 +84,12 @@ public class ActualizarMatriculasAdmin extends JFrame {
         setBordeNaranja(cmbCurso);
         agregarComponente(cmbCurso, 2, 1);
 
-        agregarComponente(lblEstado, 3, 0);
+        agregarComponente(lblFechaMatricula, 3, 0);
+        agregarComponente(datePickerMatricula, 3, 1);
+
+        agregarComponente(lblEstado, 4, 0);
         setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 3, 1);
+        agregarComponente(cmbEstado, 4, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -91,7 +100,7 @@ public class ActualizarMatriculasAdmin extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         panel.add(panelBotones, gbc);
 
@@ -109,17 +118,20 @@ public class ActualizarMatriculasAdmin extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbCurso.getSelectedItem() == null) {
+                    cmbCurso.getSelectedItem() == null ||
+                    datePickerMatricula.getDate() == null ||
+                    cmbEstado.getSelectedItem() == null) {
 
                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            matricula.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-            matricula.setCurso((Cursos) cmbCurso.getSelectedItem());
-            matricula.setEstado(Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString()));
-
             try {
+                matricula.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
+                matricula.setCurso((Cursos) cmbCurso.getSelectedItem());
+                matricula.setEstado(Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString()));
+                matricula.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
+
                 Controlador.actualizarControladorMatricula(matricula);
                 Controlador.actualizarListaMatriculas();
 

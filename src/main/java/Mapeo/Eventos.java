@@ -104,4 +104,6 @@ public class Eventos {
     public void setTipoEvento(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
+
+
 }

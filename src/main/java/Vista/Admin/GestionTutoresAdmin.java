@@ -232,7 +232,9 @@ public class GestionTutoresAdmin extends JPanel {
     private void modificarTutor() {
         int fila = tablaTutores.getSelectedRow();
         if (fila != -1) {
-           // new FormularioTutoresAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaTutores.convertRowIndexToModel(fila);
+            Tutores tutorSeleccionado = (Tutores) modelo.getValueAt(filaModelo, tablaTutores.getColumnCount() - 1);
+            new ActualizarTutoresAdmin(tutorSeleccionado);
         }
     }
 

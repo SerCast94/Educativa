@@ -244,7 +244,9 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     private void modificarHistorial() {
         int fila = tablaHistorial.getSelectedRow();
         if (fila != -1) {
-            //new FormularioHistorialAcademicoAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
+            HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
+            new ActualizarHistorialAcademicoAdmin(historialSeleccionado);
         }
     }
 
@@ -264,7 +266,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             Object[] fila = {
                     historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
                     historial.getCurso().getNombre(),
-                    historial.getNotaFinal(),
+                    (Double) historial.getNotaFinal(),
                     historial.getFechaAprobacion().toString(),
                     historial.getComentarios(),
                     historial

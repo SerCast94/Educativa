@@ -3,10 +3,11 @@ package Vista.Admin;
 import Controlador.Controlador;
 import Mapeo.Eventos;
 import Vista.Util.Boton;
+import Vista.Util.CustomDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.sql.Date;
 
 import static Vista.Util.EstiloComponentes.*;
 
@@ -18,14 +19,19 @@ public class ActualizarEventosAdmin extends JFrame {
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
     private JLabel lblNombre = new JLabel("Nombre:");
-    private JLabel lblFecha = new JLabel("Fecha:");
     private JLabel lblDescripcion = new JLabel("Descripción:");
-    private JLabel lblEstado = new JLabel("Estado:");
+    private JLabel lblFechaInicio = new JLabel("Fecha de Inicio:");
+    private JLabel lblFechaFin = new JLabel("Fecha de Fin:");
+    private JLabel lblUbicacion = new JLabel("Ubicación:");
+    private JLabel lblTipoEvento = new JLabel("Tipo de Evento:");
 
     private JTextField txtNombre = crearTextField();
-    private JTextField txtFecha = crearTextField();
     private JTextField txtDescripcion = crearTextField();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
+    private JTextField txtUbicacion = crearTextField();
+    private JComboBox<Eventos.TipoEvento> cmbTipoEvento = new JComboBox<>(Eventos.TipoEvento.values());
+
+    private CustomDatePicker datePickerInicio = new CustomDatePicker();
+    private CustomDatePicker datePickerFin = new CustomDatePicker();
 
     private Eventos evento;
 
@@ -37,10 +43,12 @@ public class ActualizarEventosAdmin extends JFrame {
     }
 
     private void cargarDatosEvento() {
-//        txtNombre.setText(evento.getNombre());
-//        txtFecha.setText(evento.getFecha().toString());
-//        txtDescripcion.setText(evento.getDescripcion());
-//        cmbEstado.setSelectedItem(evento.getEstado().name());
+        txtNombre.setText(evento.getNombre());
+        txtDescripcion.setText(evento.getDescripcion());
+        datePickerInicio.setDate(evento.getFechaInicio().toLocalDate());
+        datePickerFin.setDate(evento.getFechaFin().toLocalDate());
+        txtUbicacion.setText(evento.getUbicacion());
+        cmbTipoEvento.setSelectedItem(evento.getTipoEvento());
     }
 
     private void initGUI() {
@@ -59,29 +67,38 @@ public class ActualizarEventosAdmin extends JFrame {
 
         JLabel titulo = new JLabel("Actualizar Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
-        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
+        titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         gbc.gridwidth = 2;
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
+        customizeComboBox(cmbTipoEvento);
+
 
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);
         agregarComponente(txtNombre, 1, 1);
 
-        agregarComponente(lblFecha, 2, 0);
-        setBordeNaranja(txtFecha);
-        agregarComponente(txtFecha, 2, 1);
-
-        agregarComponente(lblDescripcion, 3, 0);
+        agregarComponente(lblDescripcion, 2, 0);
         setBordeNaranja(txtDescripcion);
-        agregarComponente(txtDescripcion, 3, 1);
+        agregarComponente(txtDescripcion, 2, 1);
 
-        agregarComponente(lblEstado, 4, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 4, 1);
+        agregarComponente(lblFechaInicio, 3, 0);
+        EspaciadoEnDatePicker(datePickerInicio);
+        agregarComponente(datePickerInicio, 3, 1);
+
+        agregarComponente(lblFechaFin, 4, 0);
+        EspaciadoEnDatePicker(datePickerFin);
+        agregarComponente(datePickerFin, 4, 1);
+
+        agregarComponente(lblUbicacion, 5, 0);
+        setBordeNaranja(txtUbicacion);
+        agregarComponente(txtUbicacion, 5, 1);
+
+        agregarComponente(lblTipoEvento, 6, 0);
+        setBordeNaranja(cmbTipoEvento);
+        agregarComponente(cmbTipoEvento, 6, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -92,7 +109,7 @@ public class ActualizarEventosAdmin extends JFrame {
         panelBotones.add(btnCancelar);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 8;
         gbc.gridwidth = 2;
         panel.add(panelBotones, gbc);
 
@@ -110,17 +127,22 @@ public class ActualizarEventosAdmin extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             if (txtNombre.getText().trim().isEmpty() ||
-                    txtFecha.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty()) {
+                    txtDescripcion.getText().trim().isEmpty() ||
+                    datePickerInicio.getDate() == null ||
+                    datePickerFin.getDate() == null ||
+                    txtUbicacion.getText().trim().isEmpty() ||
+                    cmbTipoEvento.getSelectedItem() == null){
 
                 JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-//            evento.setNombre(txtNombre.getText().trim());
-//            evento.setFecha(java.sql.Date.valueOf(txtFecha.getText().trim()));
-//            evento.setDescripcion(txtDescripcion.getText().trim());
-//            evento.setEstado(Eventos.EstadoEvento.valueOf(cmbEstado.getSelectedItem().toString()));
+            evento.setNombre(txtNombre.getText().trim());
+            evento.setDescripcion(txtDescripcion.getText().trim());
+            evento.setFechaInicio(Date.valueOf(datePickerInicio.getDate()));
+            evento.setFechaFin(Date.valueOf(datePickerFin.getDate()));
+            evento.setUbicacion(txtUbicacion.getText().trim());
+            evento.setTipoEvento((Eventos.TipoEvento) cmbTipoEvento.getSelectedItem());
 
             try {
                 Controlador.actualizarControladorEvento(evento);
@@ -129,10 +151,10 @@ public class ActualizarEventosAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaEventos();
 
-                JOptionPane.showMessageDialog(null, "Evento actualizado correctamente");
+                JOptionPane.showMessageDialog(null, "Evento actualizado correctamente.");
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar evento", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error al actualizar evento.", "Error", JOptionPane.ERROR_MESSAGE);
                 Controlador.rollback();
             }
         });

@@ -245,7 +245,9 @@ public class GestionExtraescolaresAdmin extends JPanel {
     private void modificarExtraescolar() {
         int fila = tablaExtraescolares.getSelectedRow();
         if (fila != -1) {
-           // new FormularioExtraescolaresAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaExtraescolares.convertRowIndexToModel(fila);
+            Extraescolares extraescolarSeleccionada = (Extraescolares) modelo.getValueAt(filaModelo, tablaExtraescolares.getColumnCount() - 1);
+            new ActualizarExtraescolaresAdmin(extraescolarSeleccionada);
         }
     }
 

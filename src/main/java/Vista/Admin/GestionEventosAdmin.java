@@ -245,7 +245,9 @@ public class GestionEventosAdmin extends JPanel {
     private void modificarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
-            //new FormularioEventosAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaEventos.convertRowIndexToModel(fila);
+            Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
+            new ActualizarEventosAdmin(eventoSeleccionado);
         }
     }
 

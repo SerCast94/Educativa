@@ -66,10 +66,9 @@ public class GestionBecasAdmin extends JPanel {
                 if (row >= 0) {
                     tablaBecas.setRowSelectionInterval(row, row);
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        // Verificar si el clic está en la parte baja de la tabla
                         int visibleHeight = tablaBecas.getVisibleRect().height;
                         int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                        if (clickY > visibleHeight - 100) {
                             popupMenu.show(tablaBecas, e.getX(), e.getY() - 80);
                         } else {
                             popupMenu.show(tablaBecas, e.getX(), e.getY());
@@ -239,7 +238,9 @@ public class GestionBecasAdmin extends JPanel {
     private void modificarBeca() {
         int fila = tablaBecas.getSelectedRow();
         if (fila != -1) {
-           // new FormularioBecasAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaBecas.convertRowIndexToModel(fila);
+            Becas becaSeleccionada = (Becas) modelo.getValueAt(filaModelo, tablaBecas.getColumnCount() - 1);
+            new ActualizarBecasAdmin(becaSeleccionada);
         }
     }
 

@@ -242,7 +242,9 @@ public class GestionMatriculasAdmin extends JPanel {
     private void modificarMatricula() {
         int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
-            //new FormularioMatriculasAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaMatriculas.convertRowIndexToModel(fila);
+            Matriculas matriculaSeleccionada = (Matriculas) modelo.getValueAt(filaModelo, tablaMatriculas.getColumnCount() - 1);
+            new ActualizarMatriculasAdmin(matriculaSeleccionada);
         }
     }
 

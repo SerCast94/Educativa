@@ -244,7 +244,9 @@ public class GestionHorarioAdmin extends JPanel {
     private void modificarHorario() {
         int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
-            //new FormularioHorariosAdmin(modelo.getDataVector().elementAt(fila));
+            int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
+            Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
+            new ActualizarHorariosAdmin(horarioSeleccionado);
         }
     }
 
