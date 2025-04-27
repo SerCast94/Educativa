@@ -17,6 +17,7 @@ public class DashboardAdmin extends JPanel {
     }
 
     private void initPanelSuperior() {
+
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));

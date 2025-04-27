@@ -2,6 +2,9 @@ package Mapeo;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "tutores")
 public class Tutores {
@@ -39,6 +42,10 @@ public class Tutores {
     public enum EstadoTutor {
         activo, inactivo
     }
+
+    @OneToMany(mappedBy = "tutor", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Estudiantes> estudiantes = new ArrayList<>();
+
 
     // Constructor
     public Tutores() {
@@ -137,6 +144,14 @@ public class Tutores {
 
     public void setEstado(EstadoTutor estado) {
         this.estado = estado;
+    }
+
+    public List<Estudiantes> getEstudiantes() {
+        return estudiantes;
+    }
+
+    public void setEstudiantes(List<Estudiantes> estudiantes) {
+        this.estudiantes = estudiantes;
     }
 
     @Override

@@ -26,6 +26,7 @@ public class loginGUI extends JFrame {
     static ControladorLogin controladorLogin;
 
     public loginGUI() {
+
         controlador = new Controlador();
         controlador.cargarListas();
         controladorLogin = new ControladorLogin();
@@ -42,6 +43,7 @@ public class loginGUI extends JFrame {
     }
 
     public void initGUI() {
+
         frame = new JFrame();
         frame.setTitle("Login - Colegio Salesiano San Francisco de Sales");
         frame.setSize(1920, 1080);

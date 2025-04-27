@@ -95,4 +95,6 @@ public class Convalidaciones {
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
+
+
 }

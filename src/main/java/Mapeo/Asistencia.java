@@ -89,5 +89,9 @@ public class Asistencia {
     public void setMotivoAusencia(String motivoAusencia) {
         this.motivoAusencia = motivoAusencia;
     }
+
+
+
+
 }
 

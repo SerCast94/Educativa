@@ -2,6 +2,9 @@ package Mapeo;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "extraescolares")
 public class Extraescolares {
@@ -28,6 +31,10 @@ public class Extraescolares {
     public enum TipoExtraescolar {
         academico, deportivo, religioso
     }
+
+    @OneToMany(mappedBy = "extraescolar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Horarios> horarios = new ArrayList<>();
+
 
     // Constructor
     public Extraescolares() {
@@ -80,6 +87,14 @@ public class Extraescolares {
 
     public void setProfesor(Profesores profesor) {
         this.profesor = profesor;
+    }
+
+    public List<Horarios> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<Horarios> horarios) {
+        this.horarios = horarios;
     }
 
     @Override

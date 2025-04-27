@@ -110,5 +110,7 @@ public class Becas {
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
+
+
 }
 

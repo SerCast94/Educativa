@@ -1,6 +1,8 @@
 package Mapeo;
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "eventos")
@@ -33,6 +35,10 @@ public class Eventos {
     public enum TipoEvento {
         academico, deportivo, religioso
     }
+
+    @OneToMany(mappedBy = "evento", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<EstudiantesEventos> estudiantesEventos = new ArrayList<>();
+
 
     // Constructor
     public Eventos() {
@@ -105,5 +111,11 @@ public class Eventos {
         this.tipoEvento = tipoEvento;
     }
 
+    public List<EstudiantesEventos> getEstudiantesEventos() {
+        return estudiantesEventos;
+    }
 
+    public void setEstudiantesEventos(List<EstudiantesEventos> estudiantesEventos) {
+        this.estudiantesEventos = estudiantesEventos;
+    }
 }

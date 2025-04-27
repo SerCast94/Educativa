@@ -4,19 +4,21 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cursos_asignaturas")
+@IdClass(CursosAsignaturasId.class)
 public class CursosAsignaturas {
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "id_curso", nullable = false, foreignKey = @ForeignKey(name = "FK_curso_asignatura"))
     private Cursos curso;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "id_asignatura", nullable = false, foreignKey = @ForeignKey(name = "FK_asignatura_curso"))
     private Asignaturas asignatura;
 
     // Constructor
-    public CursosAsignaturas() {
-    }
+    public CursosAsignaturas() {}
 
     public CursosAsignaturas(Cursos curso, Asignaturas asignatura) {
         this.curso = curso;
@@ -41,5 +43,5 @@ public class CursosAsignaturas {
         this.asignatura = asignatura;
     }
 
-}
 
+}

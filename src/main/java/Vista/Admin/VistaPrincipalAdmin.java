@@ -1,5 +1,7 @@
 package Vista.Admin;
 
+import Vista.Admin.Tablas.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,110 +34,109 @@ public class VistaPrincipalAdmin extends JFrame {
         return instancia;
     }
 
-    private void mostrarVistaDashboardAdmin() {
+    public  void mostrarVistaDashboardAdmin() {
         contentPanel.removeAll();
         contentPanel.add(new DashboardAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaEstudiantes() {
+    public void mostrarVistaEstudiantes() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEstudiantesAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaProfesores() {
+    public void mostrarVistaProfesores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionProfesoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
-    void mostrarVistaMatriculas() {
+    public void mostrarVistaMatriculas() {
         contentPanel.removeAll();
         contentPanel.add(new GestionMatriculasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaCursos() {
+    public void mostrarVistaCursos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionCursosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaAsignaturas(){
+    public void mostrarVistaAsignaturas(){
         contentPanel.removeAll();
         contentPanel.add(new GestionAsignaturasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaHistorialAcademico() {
+    public void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHistorialAcademicoAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaAsistencia() {
+    public void mostrarVistaAsistencia() {
         contentPanel.removeAll();
         contentPanel.add(new GestionAsistenciaAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaEventos() {
+    public void mostrarVistaEventos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEventosAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaHorarios() {
+    public void mostrarVistaHorarios() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHorarioAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaActividadesExtraescolares() {
+    public void mostrarVistaActividadesExtraescolares() {
         contentPanel.removeAll();
         contentPanel.add(new GestionExtraescolaresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaTutores() {
+    public void mostrarVistaTutores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionTutoresAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaBecas() {
+    public void mostrarVistaBecas() {
         contentPanel.removeAll();
         contentPanel.add(new GestionBecasAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    void mostrarVistaConvalidaciones() {
+    public void mostrarVistaConvalidaciones() {
         contentPanel.removeAll();
         contentPanel.add(new GestionConvalidacionesAdmin());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
 
-    private void mostrarVistaReportes() {
+    public void mostrarVistaReportes() {
         contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
+        contentPanel.add(new Reportes());
         contentPanel.revalidate();
         contentPanel.repaint();
     }
-
 
 
     private class MenuListener implements ActionListener {
@@ -204,9 +205,5 @@ public class VistaPrincipalAdmin extends JFrame {
                 JOptionPane.showMessageDialog(null, "Evento no reconocido");
             }
         }
-    }
-
-    public static void main(String[] args) {
-        new VistaPrincipalAdmin();
     }
 }

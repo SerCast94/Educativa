@@ -137,5 +137,7 @@ public class Administradores {
     public void setEstado(EstadoAdministrador estado) {
         this.estado = estado;
     }
+
+
 }
 

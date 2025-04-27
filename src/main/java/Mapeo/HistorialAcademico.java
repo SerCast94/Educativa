@@ -2,6 +2,8 @@ package Mapeo;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "historialacademico")
@@ -17,8 +19,8 @@ public class HistorialAcademico {
     private Estudiantes estudiante;
 
     @ManyToOne
-    @JoinColumn(name = "id_curso", nullable = false)
-    private Cursos curso;
+    @JoinColumn(name = "id_asignatura", nullable = false)
+    private Asignaturas asignatura;
 
     @Column(name = "nota_final")
     private double notaFinal;
@@ -29,13 +31,14 @@ public class HistorialAcademico {
     @Column(name = "comentarios")
     private String comentarios;
 
+
     // Constructor
     public HistorialAcademico() {
     }
 
-    public HistorialAcademico(Estudiantes estudiante, Cursos curso, double notaFinal, Date fechaAprobacion, String comentarios) {
+    public HistorialAcademico(Estudiantes estudiante, Asignaturas asignatura, double notaFinal, Date fechaAprobacion, String comentarios) {
         this.estudiante = estudiante;
-        this.curso = curso;
+        this.asignatura = asignatura;
         this.notaFinal = notaFinal;
         this.fechaAprobacion = fechaAprobacion;
         this.comentarios = comentarios;
@@ -59,12 +62,12 @@ public class HistorialAcademico {
         this.estudiante = estudiante;
     }
 
-    public Cursos getCurso() {
-        return curso;
+    public Asignaturas getAsignatura() {
+        return asignatura;
     }
 
-    public void setCurso(Cursos curso) {
-        this.curso = curso;
+    public void setAsignatura(Asignaturas asignatura) {
+        this.asignatura = asignatura;
     }
 
     public double getNotaFinal() {
@@ -90,5 +93,7 @@ public class HistorialAcademico {
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
+
+
 }
 

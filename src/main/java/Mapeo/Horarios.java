@@ -37,6 +37,8 @@ public class Horarios {
         lunes, martes, miercoles, jueves, viernes, sabado, domingo
     }
 
+
+
     // Constructor
     public Horarios() {
     }

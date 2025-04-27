@@ -3,8 +3,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "estudiantes_eventos")
+@IdClass(EstudiantesEventosId.class) // <- usar clase auxiliar para la PK compuesta
 public class EstudiantesEventos {
-
     @Id
     @ManyToOne
     @JoinColumn(name = "id_estudiante", nullable = false)
@@ -31,6 +31,19 @@ public class EstudiantesEventos {
         this.comentario = comentario;
         this.confirmado = confirmado;
     }
+
+    // Métodos
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
 
     // Getters y Setters
 
@@ -65,5 +78,7 @@ public class EstudiantesEventos {
     public void setConfirmado(Boolean confirmado) {
         this.confirmado = confirmado;
     }
+
+
 }
 

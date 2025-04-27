@@ -1,0 +1,68 @@
+package Controlador;
+
+import Mapeo.*;
+
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ControladorBoletin {
+
+    static Map<String, String> datosBoletin = new HashMap<>();
+
+    public static Map<String, String> enviarInfoParaBoletin(Estudiantes estudiante) {
+
+
+        datosBoletin.put("nombre", estudiante.getNombre() + " " + estudiante.getApellido());
+        datosBoletin.put("curso", estudiante.getMatriculas().get(0).getCurso().getNombre());
+        datosBoletin.put("tutor", estudiante.getMatriculas().get(0).getCurso().getProfesor().toString());
+
+        List<HistorialAcademico> historialAcademico = estudiante.getHistorialAcademico();
+
+        for (int i = 0; i < historialAcademico.size() || i == 5; i++) {
+            HistorialAcademico historial = historialAcademico.get(i);
+            datosBoletin.put("asignatura" + (i + 1), historial.getAsignatura().getNombre());
+            datosBoletin.put("nota" + (i + 1), String.valueOf(historial.getNotaFinal()));
+        }
+
+        datosBoletin.put("media", calcularMedia(estudiante));
+        datosBoletin.put("faltasjustificadas", String.valueOf(obtenerFaltasJustificadas(estudiante)));
+        datosBoletin.put("faltasinjustificadas", String.valueOf(obtenerFaltasInjustificadas(estudiante)));
+        datosBoletin.put("comentarios", historialAcademico.isEmpty() ? "" : historialAcademico.get(0).getComentarios());
+        datosBoletin.put("today", java.time.LocalDate.now().toString());
+
+        return datosBoletin;
+    }
+
+
+    private static long obtenerFaltasJustificadas(Estudiantes estudiante) {
+        int faltasJustificadas = 0;
+        for (Asistencia asistencia : estudiante.getAsistencias()) {
+            if (asistencia.getAsistio()) {
+                faltasJustificadas++;
+            }
+        }
+        return faltasJustificadas;
+    }
+
+    private static long obtenerFaltasInjustificadas(Estudiantes estudiante) {
+        int faltasInjustificadas = 0;
+        for (Asistencia asistencia : estudiante.getAsistencias()) {
+            if (!asistencia.getAsistio()) {
+                faltasInjustificadas++;
+            }
+        }
+        return faltasInjustificadas;
+    }
+
+    private static String calcularMedia(Estudiantes estudiante) {
+        double sumaNotas = 0;
+        int cantidadNotas = 0;
+        for (HistorialAcademico historial : estudiante.getHistorialAcademico()) {
+            sumaNotas += historial.getNotaFinal();
+            cantidadNotas++;
+        }
+        double media = cantidadNotas > 0 ? sumaNotas / cantidadNotas : 0;
+        return String.format("%.2f", media);
+    }
+}

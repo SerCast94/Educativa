@@ -2,6 +2,9 @@ package Mapeo;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "asignaturas")
 public class Asignaturas {
@@ -25,9 +28,16 @@ public class Asignaturas {
     @Enumerated(EnumType.STRING)
     private EstadoAsignatura estado;
 
+    @OneToMany(mappedBy = "asignatura", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CursosAsignaturas> cursosAsignaturas = new ArrayList<>();
+
+
+
     public enum EstadoAsignatura {
         activa, inactiva
     }
+
+
 
     // Constructor
     public Asignaturas() {
@@ -79,5 +89,13 @@ public class Asignaturas {
 
     public void setEstado(EstadoAsignatura estado) {
         this.estado = estado;
+    }
+
+    public List<CursosAsignaturas> getCursosAsignaturas() {
+        return cursosAsignaturas;
+    }
+
+    public void setCursosAsignaturas(List<CursosAsignaturas> cursosAsignaturas) {
+        this.cursosAsignaturas = cursosAsignaturas;
     }
 }

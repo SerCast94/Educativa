@@ -1,6 +1,8 @@
 package Mapeo;
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "estudiantes")
@@ -52,6 +54,24 @@ public class Estudiantes {
     public enum EstadoEstudiante {
         activo, inactivo
     }
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Matriculas> matriculas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Asistencia> asistencias = new ArrayList<>();
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Becas> becas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Convalidaciones> convalidaciones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<EstudiantesEventos> estudiantesEventos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "estudiante", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HistorialAcademico> historialAcademico = new ArrayList<>();
 
     // Constructor
     public Estudiantes() {
@@ -194,6 +214,54 @@ public class Estudiantes {
 
     public void setEstado(EstadoEstudiante estado) {
         this.estado = estado;
+    }
+
+    public List<Matriculas> getMatriculas() {
+        return matriculas;
+    }
+
+    public void setMatriculas(List<Matriculas> matriculas) {
+        this.matriculas = matriculas;
+    }
+
+    public List<Asistencia> getAsistencias() {
+        return asistencias;
+    }
+
+    public void setAsistencias(List<Asistencia> asistencias) {
+        this.asistencias = asistencias;
+    }
+
+    public List<Becas> getBecas() {
+        return becas;
+    }
+
+    public void setBecas(List<Becas> becas) {
+        this.becas = becas;
+    }
+
+    public List<Convalidaciones> getConvalidaciones() {
+        return convalidaciones;
+    }
+
+    public void setConvalidaciones(List<Convalidaciones> convalidaciones) {
+        this.convalidaciones = convalidaciones;
+    }
+
+    public List<EstudiantesEventos> getEstudiantesEventos() {
+        return estudiantesEventos;
+    }
+
+    public void setEstudiantesEventos(List<EstudiantesEventos> estudiantesEventos) {
+        this.estudiantesEventos = estudiantesEventos;
+    }
+
+    public List<HistorialAcademico> getHistorialAcademico() {
+        return historialAcademico;
+    }
+
+    public void setHistorialAcademico(List<HistorialAcademico> historialAcademico) {
+        this.historialAcademico = historialAcademico;
     }
 
     @Override
