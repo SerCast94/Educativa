@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaAsistencia;
+import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
+import static Vista.Util.EstiloComponentes.checkPersonalizadoNaranja;
 
 public class GestionAsistenciaAdmin extends JPanel {
     private JTable tablaAsistencias;
@@ -112,8 +114,13 @@ public class GestionAsistenciaAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Curso", "Fecha", "Asistió", "Motivo de ausencia", "Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+        String[] columnas = {"Estudiante", "Curso", "Fecha", "Justificado", "Motivo de ausencia", "Objeto"};
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaAsistencias = new JTable(modelo) {
             @Override
@@ -127,7 +134,26 @@ public class GestionAsistenciaAdmin extends JPanel {
             }
         };
 
-        TableColumn columnaOculta = tablaAsistencias.getColumnModel().getColumn(tablaAsistencias.getColumnCount()-1);
+        //  columna "Justificado"
+        tablaAsistencias.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JCheckBox checkBox = new JCheckBox();
+                checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+                checkBox.setSelected(value != null && value.equals("Sí"));
+                checkPersonalizadoGris(checkBox);
+
+                checkBox.setEnabled(true); // Necesario para que se vea bien
+                checkBox.setFocusable(false); // No toma foco
+                checkBox.setRequestFocusEnabled(false); // No responde a focus
+                checkBox.setRolloverEnabled(false); // No responde a hover
+                checkBox.setOpaque(true);
+                checkBox.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                return checkBox;
+            }
+        });
+
+        TableColumn columnaOculta = tablaAsistencias.getColumnModel().getColumn(tablaAsistencias.getColumnCount() - 1);
         columnaOculta.setMinWidth(0);
         columnaOculta.setMaxWidth(0);
         columnaOculta.setPreferredWidth(0);
@@ -164,7 +190,6 @@ public class GestionAsistenciaAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -283,7 +308,7 @@ public class GestionAsistenciaAdmin extends JPanel {
                     asistencia.getEstudiante().getNombre() + " " + asistencia.getEstudiante().getApellido(),
                     asistencia.getCurso().getNombre(),
                     asistencia.getFecha().toString(),
-                    asistencia.getAsistio() ? "Sí" : "No",
+                    asistencia.getJustificado() ? "Sí" : "No",
                     asistencia.getMotivoAusencia() != null ? asistencia.getMotivoAusencia() : "-",
                     asistencia
             };

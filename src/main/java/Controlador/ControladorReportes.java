@@ -43,7 +43,7 @@ public class ControladorReportes {
     private static long obtenerFaltasJustificadas(Estudiantes estudiante) {
         int faltasJustificadas = 0;
         for (Asistencia asistencia : estudiante.getAsistencias()) {
-            if (asistencia.getAsistio()) {
+            if (asistencia.getJustificado()) {
                 faltasJustificadas++;
             }
         }
@@ -53,7 +53,7 @@ public class ControladorReportes {
     private static long obtenerFaltasInjustificadas(Estudiantes estudiante) {
         int faltasInjustificadas = 0;
         for (Asistencia asistencia : estudiante.getAsistencias()) {
-            if (!asistencia.getAsistio()) {
+            if (!asistencia.getJustificado()) {
                 faltasInjustificadas++;
             }
         }
@@ -87,6 +87,29 @@ public class ControladorReportes {
 
         return datosBeca;
     }
+
+    public static Map<String, String> enviarInfoParaCertificadoConvalidacion(Estudiantes estudiante) {
+        Map<String, String> datosConvalidacion = new HashMap<>();
+
+        datosConvalidacion.put("NombreAdmin", Controlador.getListaAdministradores().get(0).toString());
+        datosConvalidacion.put("nombreEstudiante", estudiante.toString());
+        datosConvalidacion.put("dni", estudiante.getDni());
+        String asignatura = estudiante.getConvalidaciones().get(0).getAsignaturaOriginal().getNombre();
+        int longitud = 40;
+        if (asignatura.length() > longitud) {
+            asignatura = asignatura.substring(0, longitud) + "...";
+        }
+        datosConvalidacion.put("asignatura", asignatura);
+        LocalDate hoy = LocalDate.now();
+        datosConvalidacion.put("dia", String.valueOf(hoy.getDayOfMonth()));
+        datosConvalidacion.put("mes", hoy.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
+        datosConvalidacion.put("anio", String.valueOf(hoy.getYear()));
+        datosConvalidacion.put("nombreAdmin", Controlador.getListaAdministradores().get(0).toString());
+
+
+        return datosConvalidacion;
+    }
+
 
 
 }

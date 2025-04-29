@@ -113,7 +113,12 @@ public class GestionBecasAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Estudiante", "Tipo de Beca", "Monto", "Fecha Asignación", "Estado", "Comentarios", "Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaBecas = new JTable(modelo) {
             @Override

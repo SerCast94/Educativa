@@ -112,8 +112,13 @@ public class GestionConvalidacionesAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Curso Original", "Fecha Convalidación", "Estado", "Comentarios", "Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+        String[] columnas = {"Estudiante", "Asignatura a convalidar", "Fecha Convalidación", "Estado", "Comentarios", "Objeto"};
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaConvalidaciones = new JTable(modelo) {
             @Override
@@ -280,7 +285,7 @@ public class GestionConvalidacionesAdmin extends JPanel {
         for (Convalidaciones convalidacion : listaConvalidaciones) {
             Object[] fila = {
                     convalidacion.getEstudiante().getNombre() + " " + convalidacion.getEstudiante().getApellido(),
-                    convalidacion.getCursoOriginal().getNombre(),
+                    convalidacion.getAsignaturaOriginal().getNombre(),
                     convalidacion.getFechaConvalidacion(),
                     convalidacion.getEstadoConvalidacion(),
                     convalidacion.getComentarios(),

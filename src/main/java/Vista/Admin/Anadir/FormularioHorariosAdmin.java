@@ -1,10 +1,7 @@
 package Vista.Admin.Anadir;
 
 import Controlador.Controlador;
-import Mapeo.Horarios;
-import Mapeo.Cursos;
-import Mapeo.Extraescolares;
-import Mapeo.Profesores;
+import Mapeo.*;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
@@ -26,15 +23,13 @@ public class FormularioHorariosAdmin extends JFrame {
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblCurso = new JLabel("Curso: ");
-    private JLabel lblExtraescolar = new JLabel("Extraescolar: ");
+    private JLabel lblAsignatura = new JLabel("Asignatura: ");
     private JLabel lblDiaSemana = new JLabel("Día de la Semana: ");
     private JLabel lblHoraInicio = new JLabel("Hora de Inicio: ");
     private JLabel lblHoraFin = new JLabel("Hora de Fin: ");
     private JLabel lblProfesor = new JLabel("Profesor: ");
 
-    private JComboBox<Cursos> cmbCurso = new JComboBox<>();
-    private JComboBox<Extraescolares> cmbExtraescolar = new JComboBox<>();
+    private JComboBox<Asignaturas> cmbAsignatura = new JComboBox<>();
     private JComboBox<Horarios.DiaSemana> cmbDiaSemana = new JComboBox<>(Horarios.DiaSemana.values());
     private JSpinner spnHoraInicio = crearHoraSpinner();
     private JSpinner spnHoraFin = crearHoraSpinner();
@@ -43,8 +38,7 @@ public class FormularioHorariosAdmin extends JFrame {
     public FormularioHorariosAdmin() {
         initGUI();
         initEventos();
-        cargarCursos();
-        cargarExtraescolares();
+        cargarAsignaturas();
         cargarProfesores();
     }
 
@@ -70,18 +64,17 @@ public class FormularioHorariosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbCurso);
-        customizeComboBox(cmbExtraescolar);
+        customizeComboBox(cmbAsignatura);
         customizeComboBox(cmbDiaSemana);
         customizeComboBox(cmbProfesor);
 
-        agregarComponente(lblCurso, 1, 0);
-        setBordeNaranja(cmbCurso);
-        agregarComponente(cmbCurso, 1, 1);
+        agregarComponente(lblAsignatura, 1, 0);
+        setBordeNaranja(cmbAsignatura);
+        agregarComponente(cmbAsignatura, 1, 1);
 
-        agregarComponente(lblExtraescolar, 2, 0);
-        setBordeNaranja(cmbExtraescolar);
-        agregarComponente(cmbExtraescolar, 2, 1);
+        agregarComponente(lblProfesor, 2, 0);
+        setBordeNaranja(cmbProfesor);
+        agregarComponente(cmbProfesor, 2, 1);
 
         agregarComponente(lblDiaSemana, 3, 0);
         setBordeNaranja(cmbDiaSemana);
@@ -94,10 +87,6 @@ public class FormularioHorariosAdmin extends JFrame {
         agregarComponente(lblHoraFin, 5, 0);
         setBordeNaranja(spnHoraFin);
         agregarComponente(spnHoraFin, 5, 1);
-
-        agregarComponente(lblProfesor, 6, 0);
-        setBordeNaranja(cmbProfesor);
-        agregarComponente(cmbProfesor, 6, 1);
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -125,8 +114,7 @@ public class FormularioHorariosAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (cmbCurso.getSelectedItem() == null ||
-                    cmbExtraescolar.getSelectedItem() == null ||
+            if (cmbAsignatura.getSelectedItem() == null ||
                     cmbDiaSemana.getSelectedItem() == null ||
                     spnHoraInicio.getValue() == null ||
                     spnHoraFin.getValue() == null ||
@@ -154,8 +142,7 @@ public class FormularioHorariosAdmin extends JFrame {
                 Time horaFin = new Time(calendar.getTimeInMillis());
 
                 Horarios nuevoHorario = new Horarios(
-                        (Cursos) cmbCurso.getSelectedItem(),
-                        (Extraescolares) cmbExtraescolar.getSelectedItem(),
+                        (Asignaturas) cmbAsignatura.getSelectedItem(),
                         (Horarios.DiaSemana) cmbDiaSemana.getSelectedItem(),
                         horaInicio,
                         horaFin,
@@ -177,19 +164,12 @@ public class FormularioHorariosAdmin extends JFrame {
         });
     }
 
-    private void cargarCursos() {
-        List<Cursos> cursos = Controlador.getListaCursos();
-        cmbCurso.removeAllItems();
-        for (Cursos curso : cursos) {
-            cmbCurso.addItem(curso);
-        }
-    }
 
-    private void cargarExtraescolares() {
-        List<Extraescolares> extraescolares = Controlador.getListaExtraescolares();
-        cmbExtraescolar.removeAllItems();
-        for (Extraescolares extraescolar : extraescolares) {
-            cmbExtraescolar.addItem(extraescolar);
+    private void cargarAsignaturas() {
+        List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
+        cmbAsignatura.removeAllItems();
+        for (Asignaturas asignatura : asignaturas) {
+            cmbAsignatura.addItem(asignatura);
         }
     }
 

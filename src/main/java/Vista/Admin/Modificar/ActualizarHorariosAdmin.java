@@ -1,6 +1,7 @@
 package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
+import Mapeo.Asignaturas;
 import Mapeo.Horarios;
 import Mapeo.Cursos;
 import Mapeo.Profesores;
@@ -24,13 +25,13 @@ public class ActualizarHorariosAdmin extends JFrame {
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private JLabel lblCurso = new JLabel("Curso:");
+    private JLabel lblCurso = new JLabel("Asignatura:");
     private JLabel lblProfesor = new JLabel("Profesor:");
     private JLabel lblDiaSemana = new JLabel("Día de la Semana:");
     private JLabel lblHoraInicio = new JLabel("Hora de Inicio:");
     private JLabel lblHoraFin = new JLabel("Hora de Fin:");
 
-    private JComboBox<Cursos> cmbCurso = new JComboBox<>();
+    private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<Horarios.DiaSemana> cmbDiaSemana = new JComboBox<>(Horarios.DiaSemana.values());
     private JSpinner spnHoraInicio = crearHoraSpinner();
@@ -42,7 +43,7 @@ public class ActualizarHorariosAdmin extends JFrame {
         this.horario = horario;
         initGUI();
         initEventos();
-        cargarCursos();
+        cargarAsignaturas();
         cargarProfesores();
         cargarDatosHorario();
     }
@@ -69,13 +70,13 @@ public class ActualizarHorariosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbCurso);
+        customizeComboBox(cmbAsignaturas);
         customizeComboBox(cmbProfesor);
         customizeComboBox(cmbDiaSemana);
 
         agregarComponente(lblCurso, 1, 0);
-        setBordeNaranja(cmbCurso);
-        agregarComponente(cmbCurso, 1, 1);
+        setBordeNaranja(cmbAsignaturas);
+        agregarComponente(cmbAsignaturas, 1, 1);
 
         agregarComponente(lblProfesor, 2, 0);
         setBordeNaranja(cmbProfesor);
@@ -119,7 +120,7 @@ public class ActualizarHorariosAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (cmbCurso.getSelectedItem() == null ||
+            if (cmbAsignaturas.getSelectedItem() == null ||
                     cmbProfesor.getSelectedItem() == null ||
                     cmbDiaSemana.getSelectedItem() == null ||
                     spnHoraInicio.getValue() == null ||
@@ -142,7 +143,7 @@ public class ActualizarHorariosAdmin extends JFrame {
                 calendar.set(Calendar.MILLISECOND, 0);
                 Time horaFin = new Time(calendar.getTimeInMillis());
 
-                horario.setCurso((Cursos) cmbCurso.getSelectedItem());
+                horario.setAsignatura((Asignaturas) cmbAsignaturas.getSelectedItem());
                 horario.setProfesor((Profesores) cmbProfesor.getSelectedItem());
                 horario.setDiaSemana((Horarios.DiaSemana) cmbDiaSemana.getSelectedItem());
                 horario.setHoraInicio(horaInicio);
@@ -164,18 +165,18 @@ public class ActualizarHorariosAdmin extends JFrame {
     }
 
     private void cargarDatosHorario() {
-        cmbCurso.setSelectedItem(horario.getCurso());
+        cmbAsignaturas.setSelectedItem(horario.getAsignatura());
         cmbProfesor.setSelectedItem(horario.getProfesor());
         cmbDiaSemana.setSelectedItem(horario.getDiaSemana());
         spnHoraInicio.setValue(horario.getHoraInicio());
         spnHoraFin.setValue(horario.getHoraFin());
     }
 
-    private void cargarCursos() {
-        List<Cursos> cursos = Controlador.getListaCursos();
-        cmbCurso.removeAllItems();
-        for (Cursos curso : cursos) {
-            cmbCurso.addItem(curso);
+    private void cargarAsignaturas(){
+        List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
+        cmbAsignaturas.removeAllItems();
+        for (Asignaturas asignatura : asignaturas) {
+            cmbAsignaturas.addItem(asignatura);
         }
     }
 

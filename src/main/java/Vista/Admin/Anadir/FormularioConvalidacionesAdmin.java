@@ -1,6 +1,7 @@
 package Vista.Admin.Anadir;
 
 import Controlador.Controlador;
+import Mapeo.Asignaturas;
 import Mapeo.Convalidaciones;
 import Mapeo.Convalidaciones.EstadoConvalidacion;
 import Mapeo.Cursos;
@@ -25,13 +26,13 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
-    private JLabel lblCursoOriginal = new JLabel("Curso Original: ");
+    private JLabel lblCursoOriginal = new JLabel("Asignatura Original: ");
     private JLabel lblFecha = new JLabel("Fecha de Convalidación: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblComentarios = new JLabel("Comentarios: ");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<Cursos> cmbCursoOriginal = new JComboBox<>();
+    private JComboBox<Asignaturas> cmbAsignaturaOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
 
     private JTextField txtComentarios = crearTextField();
@@ -40,7 +41,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     public FormularioConvalidacionesAdmin() {
         initGUI();
         cargarEstudiantes();
-        cargarCursos();
+        cargarAsignaturas();
         initEventos();
     }
 
@@ -67,14 +68,14 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         gbc.gridwidth = 1;
 
         customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbCursoOriginal);
+        customizeComboBox(cmbAsignaturaOriginal);
         customizeComboBox(cmbEstado);
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
         agregarComponente(lblCursoOriginal, 2, 0);
-        agregarComponente(cmbCursoOriginal, 2, 1);
+        agregarComponente(cmbAsignaturaOriginal, 2, 1);
 
         agregarComponente(lblFecha, 3, 0);
         EspaciadoEnDatePicker(datePickerConvalidacion);
@@ -105,7 +106,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbCursoOriginal.getSelectedItem() == null ||
+                    cmbAsignaturaOriginal.getSelectedItem() == null ||
                     datePickerConvalidacion.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
@@ -116,7 +117,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
             try {
                 Convalidaciones nuevaConvalidacion = new Convalidaciones(
                         (Estudiantes) cmbEstudiante.getSelectedItem(),
-                        (Cursos) cmbCursoOriginal.getSelectedItem(),
+                        (Asignaturas) cmbAsignaturaOriginal.getSelectedItem(),
                         java.sql.Date.valueOf(datePickerConvalidacion.getDate()),
                         EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()),
                         txtComentarios.getText().trim()
@@ -153,11 +154,12 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         }
     }
 
-    private void cargarCursos() {
-        List<Cursos> cursos = Controlador.getListaCursos();
-        cmbCursoOriginal.removeAllItems();
-        for (Cursos curso : cursos) {
-            cmbCursoOriginal.addItem(curso);
+    private void cargarAsignaturas(){
+        List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
+        cmbAsignaturaOriginal.removeAllItems();
+        for (Asignaturas asignatura : asignaturas) {
+            cmbAsignaturaOriginal.addItem(asignatura);
         }
     }
+
 }

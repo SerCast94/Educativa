@@ -1,6 +1,7 @@
 package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
+import Mapeo.Asignaturas;
 import Mapeo.Convalidaciones;
 import Mapeo.Estudiantes;
 import Mapeo.Cursos;
@@ -25,17 +26,16 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
     private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblCursoOriginal = new JLabel("Curso Original:");
+    private JLabel lblCursoOriginal = new JLabel("Asignatura Original:");
     private JLabel lblFecha = new JLabel("Fecha de Convalidación:");
     private JLabel lblEstado = new JLabel("Estado:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<Cursos> cmbCursoOriginal = new JComboBox<>();
+    private JComboBox<Asignaturas> cmbAsignaturaOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
 
     private JTextField txtComentarios = crearTextField();
-    private JScrollPane scrollComentarios = new JScrollPane(txtComentarios);
     private CustomDatePicker datePickerConvalidacion = new CustomDatePicker();
 
     private Convalidaciones convalidacion;
@@ -45,13 +45,13 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         initGUI();
         initEventos();
         cargarEstudiantes();
-        cargarCursos();
+        cargarAsignaturas();
         cargarDatosConvalidacion();
     }
 
     private void cargarDatosConvalidacion() {
         cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
-        cmbCursoOriginal.setSelectedItem(convalidacion.getCursoOriginal());
+        cmbAsignaturaOriginal.setSelectedItem(convalidacion.getAsignaturaOriginal());
         datePickerConvalidacion.setDate(convalidacion.getFechaConvalidacion().toLocalDate());
         cmbEstado.setSelectedItem(convalidacion.getEstadoConvalidacion().name());
         txtComentarios.setText(convalidacion.getComentarios());
@@ -81,13 +81,13 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
 
         customizeComboBox(cmbEstado);
         customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbCursoOriginal);
+        customizeComboBox(cmbAsignaturaOriginal);
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
         agregarComponente(lblCursoOriginal, 2, 0);
-        agregarComponente(cmbCursoOriginal, 2, 1);
+        agregarComponente(cmbAsignaturaOriginal, 2, 1);
 
         agregarComponente(lblFecha, 3, 0);
         EspaciadoEnDatePicker(datePickerConvalidacion);
@@ -126,7 +126,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
 
         btnAceptar.addActionListener(e -> {
             if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbCursoOriginal.getSelectedItem() == null ||
+                    cmbAsignaturaOriginal.getSelectedItem() == null ||
                     datePickerConvalidacion.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
@@ -136,7 +136,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
 
             try {
                 convalidacion.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-                convalidacion.setCursoOriginal((Cursos) cmbCursoOriginal.getSelectedItem());
+                convalidacion.setAsignaturaOriginal((Asignaturas) cmbAsignaturaOriginal.getSelectedItem());
                 convalidacion.setFechaConvalidacion(Date.valueOf(datePickerConvalidacion.getDate()));
                 convalidacion.setEstadoConvalidacion(Convalidaciones.EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()));
                 convalidacion.setComentarios(txtComentarios.getText().trim());
@@ -166,11 +166,11 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         }
     }
 
-    private void cargarCursos() {
-        List<Cursos> cursos = Controlador.getListaCursos();
-        cmbCursoOriginal.removeAllItems();
-        for (Cursos curso : cursos) {
-            cmbCursoOriginal.addItem(curso);
+    private void cargarAsignaturas(){
+        List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
+        cmbAsignaturaOriginal.removeAllItems();
+        for (Asignaturas asignatura : asignaturas) {
+            cmbAsignaturaOriginal.addItem(asignatura);
         }
     }
 }

@@ -85,13 +85,29 @@ public class MenuLateralAdmin extends JPanel {
             panelBotones.add(boton);
         }
 
-        JPanel espaciador = new JPanel();
-        espaciador.setBackground(new Color(251, 234, 230));
+        JPanel panelInferior = new JPanel();
+        panelInferior.setLayout(new BoxLayout(panelInferior, BoxLayout.Y_AXIS));
+        panelInferior.setBackground(new Color(251, 234, 230));
+        panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        Boton botonModificarPerfil = new Boton("   Modificar Perfil", Boton.ButtonType.PRIMARY);
+        ImageIcon iconoPerfil = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/opciones.png")));
+        iconoPerfil.setImage(iconoPerfil.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+        botonModificarPerfil.setIcon(iconoPerfil);
+        botonModificarPerfil.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botonModificarPerfil.setPreferredSize(new Dimension(230, 40));
+        botonModificarPerfil.setMinimumSize(new Dimension(230, 40));
+        botonModificarPerfil.setMaximumSize(new Dimension(230, 40));
+        botonModificarPerfil.setHorizontalAlignment(SwingConstants.LEFT);
+        botonModificarPerfil.setActionCommand("ModificarPerfil");
+        botonModificarPerfil.addActionListener(listener);
+
+        panelInferior.add(Box.createVerticalStrut(10));
+        panelInferior.add(botonModificarPerfil);
 
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);
-        add(espaciador, BorderLayout.SOUTH);
+        add(panelInferior, BorderLayout.SOUTH);
     }
 
     public JButton getBoton(String nombre) {

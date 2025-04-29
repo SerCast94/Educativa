@@ -116,7 +116,12 @@ public class GestionAsignaturasAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Nombre", "Descripción", "Profesor", "Curso", "Estado", "Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaAsignaturas = new JTable(modelo) {
             @Override

@@ -115,7 +115,12 @@ public class GestionEventosAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo","Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaEventos = new JTable(modelo) {
             @Override

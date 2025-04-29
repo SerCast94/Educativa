@@ -8,8 +8,6 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.util.Objects;
 
-import static javax.swing.text.StyleConstants.setBackground;
-
 public class EstiloComponentes {
 
     public static void setBordeNaranja(JComponent componente) {
@@ -122,9 +120,15 @@ public class EstiloComponentes {
         dateTextField.setDocument(doc);
     }
 
-    public static void checkPersonalizado(JCheckBox checkBox){
+    public static void checkPersonalizadoNaranja(JCheckBox checkBox){
         checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoff.png"))));
         checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkon.png"))));
-        checkBox.setBackground(new Color(251, 234, 230));
+        checkBox.setOpaque(true);
     }
+    public static void checkPersonalizadoGris(JCheckBox checkBox){
+        checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoffGris.png"))));
+        checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkonGris.png"))));
+        checkBox.setOpaque(true);
+    }
+
 }

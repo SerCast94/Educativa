@@ -2,6 +2,7 @@ package Vista.Admin;
 
 import BackUtil.GeneradorReportes;
 import Controlador.Controlador;
+import Mapeo.Convalidaciones;
 import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Vista.Util.Boton;
@@ -12,8 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import static Controlador.ControladorReportes.enviarInfoParaBoletin;
-import static Controlador.ControladorReportes.enviarInfoParaCertificadoBeca;
+import static Controlador.ControladorReportes.*;
 import static Vista.Util.EstiloComponentes.customizeComboBox;
 import static Vista.Util.EstiloComponentes.setBordeNaranja;
 
@@ -134,10 +134,18 @@ public class Reportes extends JPanel {
                 cbEstudianteBeca.addItem(e);
             }
 
-            if (e.getConvalidaciones() != null && !e.getConvalidaciones().isEmpty()) {
-                cbEstudianteConvalidacion.addItem(e);
+            if (e.getConvalidaciones() != null) {
+                boolean tieneConvalidacionAprobada = false;
+                for (Convalidaciones convalidacion : e.getConvalidaciones()) {
+                    if (convalidacion.getEstadoConvalidacion() == Convalidaciones.EstadoConvalidacion.Aprobada) {
+                        tieneConvalidacionAprobada = true;
+                        break;
+                    }
+                }
+                if (tieneConvalidacionAprobada) {
+                    cbEstudianteConvalidacion.addItem(e);
+                }
             }
-
         }
 
     }
@@ -188,6 +196,11 @@ public class Reportes extends JPanel {
 
     private void descargarConvalidacionEstudiante() {
         Estudiantes alumno = (Estudiantes) cbEstudianteConvalidacion.getSelectedItem();
-        System.out.println("Descargando certificado de convalidación para: " + alumno);
+
+        if (alumno == null) {
+            new CustomDialog(null, "Error", "Por favor, seleccione un estudiante.", "ONLY_OK");
+        }else{
+            GeneradorReportes.generarCertificadoConvalidacion(enviarInfoParaCertificadoConvalidacion(alumno));
+        }
     }
 }

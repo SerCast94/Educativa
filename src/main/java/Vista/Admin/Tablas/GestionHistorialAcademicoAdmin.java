@@ -113,7 +113,12 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Estudiante", "Curso", "Nota Final", "Fecha Aprobación", "Comentarios","Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+               modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaHistorial = new JTable(modelo) {
             @Override

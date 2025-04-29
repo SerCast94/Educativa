@@ -113,7 +113,12 @@ public class GestionEstudiantesAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Nombre", "Apellido", "DNI", "Fecha de nacimiento", "Dirección", "Teléfono", "Email", "Fecha matrícula", "Tutor legal", "Usuario", "Estado","Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+        modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaEstudiantes = new JTable(modelo) {
             @Override

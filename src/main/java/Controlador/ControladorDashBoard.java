@@ -130,7 +130,7 @@ public class ControladorDashBoard {
     public static int numAsistenciaNoJustificada() {
         int contador = 0;
         for (int i = 0; i < Controlador.getListaAsistencia().size(); i++) {
-            if (Controlador.getListaAsistencia().get(i).getAsistio().equals(false)) {
+            if (Controlador.getListaAsistencia().get(i).getJustificado().equals(false)) {
                 contador++;
             }
         }

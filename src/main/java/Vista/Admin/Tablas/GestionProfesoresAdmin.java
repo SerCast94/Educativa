@@ -122,8 +122,12 @@ public class GestionProfesoresAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Dirección", "Usuario", "Estado","Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
-
+       modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tablaProfesores = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {

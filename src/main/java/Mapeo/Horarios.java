@@ -1,4 +1,5 @@
 package Mapeo;
+
 import jakarta.persistence.*;
 import java.sql.Time;
 
@@ -12,12 +13,8 @@ public class Horarios {
     private Integer idHorario;
 
     @ManyToOne
-    @JoinColumn(name = "id_curso", nullable = false)
-    private Cursos curso;
-
-    @ManyToOne
-    @JoinColumn(name = "id_extraescolar", nullable = false)
-    private Extraescolares extraescolar;
+    @JoinColumn(name = "id_asignatura", nullable = false)
+    private Asignaturas asignatura;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "dia_semana", nullable = false)
@@ -37,15 +34,12 @@ public class Horarios {
         lunes, martes, miercoles, jueves, viernes, sabado, domingo
     }
 
+    // Constructor por defecto
+    public Horarios() {}
 
-
-    // Constructor
-    public Horarios() {
-    }
-
-    public Horarios(Cursos curso, Extraescolares extraescolar, DiaSemana diaSemana, Time horaInicio, Time horaFin, Profesores profesor) {
-        this.curso = curso;
-        this.extraescolar = extraescolar;
+    // Constructor con parámetros
+    public Horarios(Asignaturas asignatura, DiaSemana diaSemana, Time horaInicio, Time horaFin, Profesores profesor) {
+        this.asignatura = asignatura;
         this.diaSemana = diaSemana;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
@@ -62,20 +56,12 @@ public class Horarios {
         this.idHorario = idHorario;
     }
 
-    public Cursos getCurso() {
-        return curso;
+    public Asignaturas getAsignatura() {
+        return asignatura;
     }
 
-    public void setCurso(Cursos curso) {
-        this.curso = curso;
-    }
-
-    public Extraescolares getExtraescolar() {
-        return extraescolar;
-    }
-
-    public void setExtraescolar(Extraescolares extraescolar) {
-        this.extraescolar = extraescolar;
+    public void setAsignatura(Asignaturas asignatura) {
+        this.asignatura = asignatura;
     }
 
     public DiaSemana getDiaSemana() {
@@ -109,7 +95,4 @@ public class Horarios {
     public void setProfesor(Profesores profesor) {
         this.profesor = profesor;
     }
-
-
 }
-

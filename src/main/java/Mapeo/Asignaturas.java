@@ -31,7 +31,11 @@ public class Asignaturas {
     @OneToMany(mappedBy = "asignatura", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CursosAsignaturas> cursosAsignaturas = new ArrayList<>();
 
+    @OneToMany(mappedBy = "asignaturaOriginal", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Convalidaciones> convalidaciones = new ArrayList<>();
 
+    @OneToMany(mappedBy = "asignatura", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Horarios> horarios = new ArrayList<>();
 
     public enum EstadoAsignatura {
         activa, inactiva
@@ -97,5 +101,26 @@ public class Asignaturas {
 
     public void setCursosAsignaturas(List<CursosAsignaturas> cursosAsignaturas) {
         this.cursosAsignaturas = cursosAsignaturas;
+    }
+
+    public List<Convalidaciones> getConvalidaciones() {
+        return convalidaciones;
+    }
+
+    public void setConvalidaciones(List<Convalidaciones> convalidaciones) {
+        this.convalidaciones = convalidaciones;
+    }
+
+    public List<Horarios> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<Horarios> horarios) {
+        this.horarios = horarios;
+    }
+
+    @Override
+    public String toString() {
+        return getNombre();
     }
 }

@@ -112,8 +112,13 @@ public class GestionHorarioAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Curso", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor", "Actividad Extraescolar","Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+        String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
+               modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaHorarios = new JTable(modelo) {
             @Override
@@ -280,12 +285,11 @@ public class GestionHorarioAdmin extends JPanel {
         modelo.setRowCount(0);
         for (Horarios horario : listaHorarios) {
             Object[] fila = {
-                    horario.getCurso().getNombre(),
+                    horario.getAsignatura().getNombre(),
                     horario.getDiaSemana() ,
                     horario.getHoraInicio().toString(),
                     horario.getHoraFin().toString(),
                     horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
-                    horario.getExtraescolar() != null && horario.getExtraescolar().getNombre() != null ? horario.getExtraescolar().getNombre() : "-",
                     horario
             };
             modelo.addRow(fila);

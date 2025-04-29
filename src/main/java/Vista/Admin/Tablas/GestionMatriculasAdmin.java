@@ -113,7 +113,12 @@ public class GestionMatriculasAdmin extends JPanel {
 
     private void initTabla() {
         String[] columnas = {"Estudiante", "Curso", "Fecha de Matrícula", "Estado", "Objeto"};
-        modelo = new DefaultTableModel(null, columnas);
+        modelo = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tablaMatriculas = new JTable(modelo) {
             @Override

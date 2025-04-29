@@ -208,6 +208,52 @@ public class GeneradorReportes {
         }
     }
 
+    public static void generarCertificadoConvalidacion(Map<String, String> datos) {
+        String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
+
+        try {
+            CustomFileChooser.applyNimbusLookAndFeel();
+
+            PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaConvalidacion.pdf"));
+            PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
+
+            if (acroForm != null) {
+                for (Map.Entry<String, String> entry : datos.entrySet()) {
+                    PDField field = acroForm.getField(entry.getKey());
+                    if (field != null) {
+                        field.setValue(entry.getValue());
+                        field.setReadOnly(true);
+                    }
+                }
+            }
+
+            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de convalidación", "Guardar");
+            int resultado = fileChooser.showSaveDialog(null);
+            if (resultado == JFileChooser.APPROVE_OPTION) {
+                File ruta = fileChooser.getSelectedFile();
+                String nombreArchivo = "Certificado_Convalidacion_" +
+                        (datos.get("nombreEstudiante") != null ? datos.get("nombreEstudiante").trim() : "sin_nombre") + ".pdf";
+                nombreArchivo = nombreArchivo.replaceAll(" ", "_");
+
+                File archivoFinal = new File(ruta, nombreArchivo);
+                documento.save(archivoFinal.getAbsolutePath());
+                documento.close();
+
+                new CustomDialog(null, "Éxito",
+                        "Certificado de convalidación guardado en: " + archivoFinal.getAbsolutePath(), "ONLY_OK").setVisible(true);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                UIManager.setLookAndFeel(lookAndFeelActual);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 }

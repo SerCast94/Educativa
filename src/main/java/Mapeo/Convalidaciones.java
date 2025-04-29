@@ -16,8 +16,8 @@ public class Convalidaciones {
     private Estudiantes estudiante;
 
     @ManyToOne
-    @JoinColumn(name = "id_curso_original", nullable = false)
-    private Cursos cursoOriginal;
+    @JoinColumn(name = "id_asignatura_original", nullable = false)
+    private Asignaturas asignaturaOriginal;
 
     @Column(name = "fecha_convalidacion")
     private Date fechaConvalidacion;
@@ -37,9 +37,9 @@ public class Convalidaciones {
     public Convalidaciones() {
     }
 
-    public Convalidaciones(Estudiantes estudiante, Cursos cursoOriginal, Date fechaConvalidacion, EstadoConvalidacion estadoConvalidacion, String comentarios) {
+    public Convalidaciones(Estudiantes estudiante, Asignaturas asignaturaOriginal, Date fechaConvalidacion, EstadoConvalidacion estadoConvalidacion, String comentarios) {
         this.estudiante = estudiante;
-        this.cursoOriginal = cursoOriginal;
+        this.asignaturaOriginal = asignaturaOriginal;
         this.fechaConvalidacion = fechaConvalidacion;
         this.estadoConvalidacion = estadoConvalidacion;
         this.comentarios = comentarios;
@@ -64,12 +64,12 @@ public class Convalidaciones {
         this.estudiante = estudiante;
     }
 
-    public Cursos getCursoOriginal() {
-        return cursoOriginal;
+    public Asignaturas getAsignaturaOriginal() {
+        return asignaturaOriginal;
     }
 
-    public void setCursoOriginal(Cursos cursoOriginal) {
-        this.cursoOriginal = cursoOriginal;
+    public void setAsignaturaOriginal(Asignaturas asignaturaOriginal) {
+        this.asignaturaOriginal = asignaturaOriginal;
     }
 
     public Date getFechaConvalidacion() {

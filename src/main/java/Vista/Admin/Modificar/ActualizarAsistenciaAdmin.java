@@ -26,13 +26,13 @@ public class ActualizarAsistenciaAdmin extends JFrame {
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblCurso = new JLabel("Curso: ");
     private JLabel lblFecha = new JLabel("Fecha: ");
-    private JLabel lblAsistio = new JLabel("Asistió: ");
+    private JLabel lblJustificado = new JLabel("Justificado: ");
     private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia: ");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
-    private JCheckBox chkAsistio = new JCheckBox("  Asistió");
+    private JCheckBox chkJustificado = new JCheckBox("  Justificado");
     private JTextField txtMotivoAusencia = crearTextField();
 
     private Asistencia asistencia;
@@ -50,7 +50,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         cmbEstudiante.setSelectedItem(asistencia.getEstudiante());
         cmbCurso.setSelectedItem(asistencia.getCurso());
         datePicker.setDate(asistencia.getFecha().toLocalDate());
-        chkAsistio.setSelected(asistencia.getAsistio());
+        chkJustificado.setSelected(asistencia.getJustificado());
         txtMotivoAusencia.setText(asistencia.getMotivoAusencia());
     }
 
@@ -90,9 +90,10 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         agregarComponente(lblFecha, 3, 0);
         agregarComponente(datePicker, 3, 1);
 
-        checkPersonalizado(chkAsistio);
-        agregarComponente(lblAsistio, 4, 0);
-        agregarComponente(chkAsistio, 4, 1);
+        checkPersonalizadoNaranja(chkJustificado);
+        chkJustificado.setBackground(new Color(251, 234, 230));
+        agregarComponente(lblJustificado, 4, 0);
+        agregarComponente(chkJustificado, 4, 1);
 
         agregarComponente(lblMotivoAusencia, 5, 0);
         agregarComponente(txtMotivoAusencia, 5, 1);
@@ -134,7 +135,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
             asistencia.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
             asistencia.setCurso((Cursos) cmbCurso.getSelectedItem());
             asistencia.setFecha(Date.valueOf(datePicker.getDate()));
-            asistencia.setAsistio(chkAsistio.isSelected());
+            asistencia.setJustificado(chkJustificado.isSelected());
             asistencia.setMotivoAusencia(txtMotivoAusencia.getText().trim());
 
             try {

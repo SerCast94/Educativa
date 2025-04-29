@@ -22,8 +22,8 @@ public class Asistencia {
     @Column(name = "fecha", nullable = false)
     private Date fecha;
 
-    @Column(name = "asistio")
-    private Boolean asistio;
+    @Column(name = "justificado")
+    private Boolean justificado;
 
     @Column(name = "motivo_ausencia")
     private String motivoAusencia;
@@ -36,7 +36,7 @@ public class Asistencia {
         this.estudiante = estudiante;
         this.curso = curso;
         this.fecha = fecha;
-        this.asistio = asistio;
+        this.justificado = asistio;
         this.motivoAusencia = motivoAusencia;
     }
 
@@ -74,12 +74,12 @@ public class Asistencia {
         this.fecha = fecha;
     }
 
-    public Boolean getAsistio() {
-        return asistio;
+    public Boolean getJustificado() {
+        return justificado;
     }
 
-    public void setAsistio(Boolean asistio) {
-        this.asistio = asistio;
+    public void setJustificado(Boolean asistio) {
+        this.justificado = asistio;
     }
 
     public String getMotivoAusencia() {

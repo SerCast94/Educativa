@@ -1,5 +1,6 @@
 package Vista.Admin;
 
+import Vista.Admin.Modificar.ActualizarAdministradoresAdmin;
 import Vista.Admin.Tablas.*;
 import Vista.Util.CustomDialog;
 
@@ -139,14 +140,19 @@ public class VistaPrincipalAdmin extends JFrame {
         contentPanel.repaint();
     }
 
+    public void mostrarVistaModificarPerfilAdmin() {
+        new ActualizarAdministradoresAdmin();
+    }
+
+
 
     private class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource(); // Obtiene el origen del evento
+            Object source = e.getSource();
 
             if (source instanceof JButton) {
-                JButton button = (JButton) source; // Realiza el cast solo si es un JButton
+                JButton button = (JButton) source;
                 String actionCommand = button.getText().trim();
 
                 switch (actionCommand) {
@@ -195,12 +201,14 @@ public class VistaPrincipalAdmin extends JFrame {
                     case "Reportes":
                         mostrarVistaReportes();
                         break;
+                    case "Modificar Perfil":
+                        mostrarVistaModificarPerfilAdmin();
+                        break;
                     default:
                         new CustomDialog(null, "Error", "Funcionalidad no implementada", "OK_CANCEL");
                         break;
                 }
             } else if ("Dashboard".equals(e.getActionCommand())) {
-                // Maneja el evento del logo aquí
                 mostrarVistaDashboardAdmin();
             } else {
                 new CustomDialog(null, "Error", "Evento no reconocido", "OK_CANCEL");

@@ -28,13 +28,13 @@ public class FormularioAsistenciaAdmin extends JFrame {
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblCurso = new JLabel("Curso: ");
     private JLabel lblFecha = new JLabel("Fecha: ");
-    private JLabel lblAsistio = new JLabel("Asistió: ");
+    private JLabel lblJustificado = new JLabel("Justificado: ");
     private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia: ");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
-    private JCheckBox chkAsistio = new JCheckBox("  Asistió");
+    private JCheckBox chkJustificado = new JCheckBox("  Justificado");
     private JTextField txtMotivoAusencia = crearTextField();
 
     public FormularioAsistenciaAdmin() {
@@ -80,10 +80,12 @@ public class FormularioAsistenciaAdmin extends JFrame {
         agregarComponente(lblFecha, 3, 0);
         agregarComponente(datePicker, 3, 1);
 
-        checkPersonalizado(chkAsistio);
+        checkPersonalizadoNaranja(chkJustificado);
+        chkJustificado.setBackground(new Color(251, 234, 230));
 
-        agregarComponente(lblAsistio, 4, 0);
-        agregarComponente(chkAsistio, 4, 1);
+
+        agregarComponente(lblJustificado, 4, 0);
+        agregarComponente(chkJustificado, 4, 1);
 
         agregarComponente(lblMotivoAusencia, 5, 0);
         agregarComponente(txtMotivoAusencia, 5, 1);
@@ -126,7 +128,7 @@ public class FormularioAsistenciaAdmin extends JFrame {
                     (Estudiantes) cmbEstudiante.getSelectedItem(),
                     (Cursos) cmbCurso.getSelectedItem(),
                     Date.valueOf(datePicker.getDate()),
-                    chkAsistio.isSelected(),
+                    chkJustificado.isSelected(),
                     txtMotivoAusencia.getText().trim()
             );
 
