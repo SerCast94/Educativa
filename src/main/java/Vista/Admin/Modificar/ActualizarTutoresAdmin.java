@@ -4,6 +4,7 @@ import Controlador.Controlador;
 import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,7 +130,7 @@ public class ActualizarTutoresAdmin extends JFrame {
                     txtEmail.getText().trim().isEmpty() ||
                     txtTelefono.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -154,10 +155,10 @@ public class ActualizarTutoresAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaTutores();
 
-                JOptionPane.showMessageDialog(null, "Tutor actualizado correctamente.");
+                new CustomDialog(null,"Tutor actualizado correctamente.", "Se ha actualizado correctamente el tutor.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar tutor", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar el tutor.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

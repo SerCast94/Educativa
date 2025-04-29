@@ -3,6 +3,7 @@ package Vista.Admin.Modificar;
 import Controlador.Controlador;
 import Mapeo.Administradores;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -120,7 +121,7 @@ public class ActualizarAdministradoresAdmin extends JFrame {
                     txtUsuario.getText().trim().isEmpty() ||
                     txtEmail.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -134,10 +135,10 @@ public class ActualizarAdministradoresAdmin extends JFrame {
                 Controlador.actualizarControladorAdministrador(administrador);
                 Controlador.actualizarListaAdministradores();
 
-                JOptionPane.showMessageDialog(null, "Administrador actualizado correctamente");
+                new CustomDialog(null,"Exito", "Administrador actualizado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar administrador", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar administrador: " + ex.getMessage(), "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

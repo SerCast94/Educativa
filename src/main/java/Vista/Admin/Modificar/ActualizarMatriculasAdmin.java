@@ -13,6 +13,8 @@ import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
 import Vista.Util.CustomDatePicker;
+import Vista.Util.CustomDialog;
+
 import java.sql.Date;
 
 public class ActualizarMatriculasAdmin extends JFrame {
@@ -123,7 +125,7 @@ public class ActualizarMatriculasAdmin extends JFrame {
                     datePickerMatricula.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -139,10 +141,11 @@ public class ActualizarMatriculasAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaMatriculas();
 
-                JOptionPane.showMessageDialog(null, "Matrícula actualizada correctamente");
+                new CustomDialog(null,"Éxito", "Matrícula actualizada correctamente.","ONLY_OK").setVisible(true);
+
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar matrícula", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

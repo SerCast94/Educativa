@@ -5,6 +5,7 @@ import Mapeo.Cursos;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -119,7 +120,7 @@ public class ActualizarCursosAdmin extends JFrame {
                     cmbProfesor.getSelectedItem() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -135,10 +136,10 @@ public class ActualizarCursosAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaCursos();
 
-                JOptionPane.showMessageDialog(null, "Curso actualizado correctamente");
+                new CustomDialog(null,"Exito", "Curso actualizado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar curso", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar curso: " + ex.getMessage(), "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

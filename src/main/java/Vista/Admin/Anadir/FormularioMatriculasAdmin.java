@@ -7,6 +7,7 @@ import Mapeo.Matriculas;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,7 +112,7 @@ public class FormularioMatriculasAdmin extends JFrame {
                     datePickerMatricula.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -129,10 +130,10 @@ public class FormularioMatriculasAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaMatriculas();
 
-                JOptionPane.showMessageDialog(null, "Matrícula registrada correctamente.");
+                new CustomDialog(null,"Éxito", "Matrícula registrada correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar la matrícula.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar la matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

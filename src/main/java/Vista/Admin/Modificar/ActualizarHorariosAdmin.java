@@ -6,6 +6,7 @@ import Mapeo.Cursos;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -124,7 +125,7 @@ public class ActualizarHorariosAdmin extends JFrame {
                     spnHoraInicio.getValue() == null ||
                     spnHoraFin.getValue() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben estar completos.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -153,10 +154,10 @@ public class ActualizarHorariosAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaHorarios();
 
-                JOptionPane.showMessageDialog(null, "Horario actualizado correctamente.");
+                new CustomDialog(null,"Éxito", "Horario actualizado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar el horario.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar el horario.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

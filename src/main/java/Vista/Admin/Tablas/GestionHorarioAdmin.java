@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Horarios;
 import Vista.Admin.Anadir.FormularioHorariosAdmin;
 import Vista.Admin.Modificar.ActualizarHorariosAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -150,7 +153,7 @@ public class GestionHorarioAdmin extends JPanel {
 
         header = tablaHorarios.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -255,9 +258,20 @@ public class GestionHorarioAdmin extends JPanel {
     private void eliminarHorario() {
         int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar horario?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Horario", "¿Está seguro de que desea eliminar este horario?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
+                Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
+                Controlador.eliminarControladorHorario(horarioSeleccionado);
+                Controlador.actualizarListaHorarios();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaHorarios();
+                new CustomDialog(null, "Horario Eliminado", "Horario eliminado correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

@@ -6,6 +6,8 @@ import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
@@ -183,7 +185,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
                     txtDireccion.getText().trim().isEmpty() ||
                     cmbTutor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
             }
 
             String nuevaPassword = new String(txtPassword.getPassword());
@@ -210,10 +212,10 @@ public class ActualizarEstudiantesAdmin extends JFrame {
                     VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                     vistaPrincipal.mostrarVistaEstudiantes();
 
-                    JOptionPane.showMessageDialog(null, "Estudiante actualizado correctamente");
+                    new CustomDialog(null,"Exito", "Estudiante actualizado correctamente.","ONLY_OK").setVisible(true);
                     dispose();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al actualizar estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                    new CustomDialog(null,"Error", "Error al actualizar estudiante.","ONLY_OK").setVisible(true);
                     Controlador.rollback();
                 }
 
@@ -237,10 +239,10 @@ public class ActualizarEstudiantesAdmin extends JFrame {
                     VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                     vistaPrincipal.mostrarVistaEstudiantes();
 
-                    JOptionPane.showMessageDialog(null, "Estudiante actualizado correctamente");
+                    new CustomDialog(null,"Exito", "Estudiante actualizado correctamente.","ONLY_OK").setVisible(true);
                     dispose();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error al actualizar estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                    new CustomDialog(null,"Error", "Error al actualizar estudiante.","ONLY_OK").setVisible(true);
                     Controlador.rollback();
                 }
             }

@@ -4,6 +4,7 @@ import Controlador.Controlador;
 import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,7 +118,7 @@ public class FormularioTutoresAdmin extends JFrame {
                     new String(txtPassword.getPassword()).trim().isEmpty() ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -139,10 +140,10 @@ public class FormularioTutoresAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaTutores();
 
-                JOptionPane.showMessageDialog(null, "Tutor registrado correctamente.");
+                new CustomDialog(null,"Tutor registrado correctamente.", "Se ha registrado correctamente el tutor.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar el tutor.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar el tutor.", "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

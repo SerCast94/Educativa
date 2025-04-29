@@ -7,6 +7,7 @@ import Mapeo.Extraescolares;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,7 +132,7 @@ public class FormularioHorariosAdmin extends JFrame {
                     spnHoraFin.getValue() == null ||
                     cmbProfesor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -167,10 +168,10 @@ public class FormularioHorariosAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaHorarios();
 
-                JOptionPane.showMessageDialog(null, "Horario registrado correctamente.");
+                new CustomDialog(null, "Éxito", "Horario registrado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar el horario.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar el horario.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

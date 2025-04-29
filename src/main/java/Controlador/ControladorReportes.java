@@ -2,13 +2,18 @@ package Controlador;
 
 import Mapeo.*;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-public class ControladorBoletin {
+public class ControladorReportes {
 
     static Map<String, String> datosBoletin = new HashMap<>();
+    static Map<String, String> datosBeca = new HashMap<>();
+    static Map<String, String> datosConvalidacion = new HashMap<>();
 
     public static Map<String, String> enviarInfoParaBoletin(Estudiantes estudiante) {
 
@@ -65,4 +70,23 @@ public class ControladorBoletin {
         double media = cantidadNotas > 0 ? sumaNotas / cantidadNotas : 0;
         return String.format("%.2f", media);
     }
+
+    public static Map<String, String> enviarInfoParaCertificadoBeca(Estudiantes estudiante) {
+
+        datosBeca.put("nombreAdmin", Controlador.getListaAdministradores().get(0).toString());
+        datosBeca.put("nombreEstudiante", estudiante.toString());
+        datosBeca.put("dni", estudiante.getDni());
+        datosBeca.put("monto", estudiante.getBecas().get(0).getMonto().toString() + " €");
+        datosBeca.put("motivo", estudiante.getBecas().get(0).getTipoBeca().toString());
+        datosBeca.put("curso", estudiante.getMatriculas().get(0).getCurso().getNombre());
+
+        LocalDate hoy = LocalDate.now();
+        datosBeca.put("dia", String.valueOf(hoy.getDayOfMonth()));
+        datosBeca.put("mes", hoy.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
+        datosBeca.put("anio", String.valueOf(hoy.getYear()));
+
+        return datosBeca;
+    }
+
+
 }

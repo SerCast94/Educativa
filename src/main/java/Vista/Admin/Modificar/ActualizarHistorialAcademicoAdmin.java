@@ -8,6 +8,7 @@ import Mapeo.Cursos;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,7 +130,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
                     dateAprobacion.getDate() == null ||
                     txtComentarios.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -146,12 +147,12 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaHistorialAcademico();
 
-                JOptionPane.showMessageDialog(null, "Historial académico actualizado correctamente.");
+                new CustomDialog(null,"Éxito", "Historial académico actualizado correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "La calificación debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "La calificación debe ser un número válido.","ONLY_OK").setVisible(true);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar historial académico.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar el historial académico: " + ex.getMessage(),"ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

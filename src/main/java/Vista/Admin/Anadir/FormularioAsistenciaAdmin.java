@@ -7,6 +7,7 @@ import Mapeo.Estudiantes;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,7 +118,7 @@ public class FormularioAsistenciaAdmin extends JFrame {
                     cmbCurso.getSelectedItem() == null ||
                     datePicker.getDate() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -136,10 +137,10 @@ public class FormularioAsistenciaAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaAsistencia();
 
-                JOptionPane.showMessageDialog(null, "Asistencia registrada correctamente.");
+                new CustomDialog(null,"Éxito", "Asistencia registrada correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar la asistencia.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar la asistencia.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

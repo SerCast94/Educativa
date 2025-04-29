@@ -5,6 +5,7 @@ import Mapeo.Eventos;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +123,7 @@ public class FormularioEventosAdmin extends JFrame {
                     txtUbicacion.getText().trim().isEmpty() ||
                     cmbTipoEvento.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -142,10 +143,10 @@ public class FormularioEventosAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaEventos();
 
-                JOptionPane.showMessageDialog(null, "Evento registrado correctamente.");
+                new CustomDialog(null, "Éxito", "Evento registrado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar el evento.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null, "Error", "Error al registrar el evento.", "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

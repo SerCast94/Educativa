@@ -1,12 +1,9 @@
 package Controlador;
 
-import BBDD.Actualizaciones;
-import BBDD.Conexion;
-import BBDD.Inserciones;
+import BBDD.*;
 import org.hibernate.Session;
 import java.util.List;
 import Mapeo.*;
-import BBDD.Consultas;
 
 public class Controlador {
 
@@ -371,11 +368,72 @@ public class Controlador {
         Actualizaciones.actualizarAdministrador(session, administradorActualizado);
     }
 
+    //Métodos de eliminación
+
+    public static void eliminarControladorEstudiante(Estudiantes estudiante) {
+        Eliminaciones.deleteEstudiantes(session, estudiante);
+    }
+
+    public static void eliminarControladorTutor(Tutores tutor) {
+        Eliminaciones.deleteTutores(session, tutor);
+    }
+
+    public static void eliminarControladorProfesor(Profesores profesor) {
+        Eliminaciones.deleteProfesores(session, profesor);
+    }
+
+    public static void eliminarControladorExtraescolar(Extraescolares extraescolar) {
+        Eliminaciones.deleteExtraescolares(session, extraescolar);
+    }
+
+    public static void eliminarControladorCurso(Cursos curso) {
+        Eliminaciones.deleteCursos(session, curso);
+    }
+
+    public static void eliminarControladorAsignatura(Asignaturas asignatura) {
+        Eliminaciones.deleteAsignaturas(session, asignatura);
+    }
+
+    public static void eliminarControladorMatricula(Matriculas matricula) {
+        Eliminaciones.deleteMatriculas(session, matricula);
+    }
+
+    public static void eliminarControladorHistorialAcademico(HistorialAcademico historial) {
+        Eliminaciones.deleteHistorialAcademico(session, historial);
+    }
+
+    public static void eliminarControladorAsistencia(Asistencia asistencia) {
+        Eliminaciones.deleteAsistencia(session, asistencia);
+    }
+
+    public static void eliminarControladorEvento(Eventos evento) {
+        Eliminaciones.deleteEventos(session, evento);
+    }
+
+    public static void eliminarControladorEstudianteEvento(EstudiantesEventos estudianteEvento) {
+        Eliminaciones.deleteEstudiantesEventos(session, estudianteEvento);
+    }
+
+    public static void eliminarControladorHorario(Horarios horario) {
+        Eliminaciones.deleteHorarios(session, horario);
+    }
+
+    public static void eliminarControladorBeca(Becas beca) {
+        Eliminaciones.deleteBecas(session, beca);
+    }
+
+    public static void eliminarControladorConvalidacion(Convalidaciones convalidacion) {
+        Eliminaciones.deleteConvalidaciones(session, convalidacion);
+    }
+
+    public static void eliminarControladorAdministrador(Administradores administrador) {
+        Eliminaciones.deleteAdministradores(session, administrador);
+    }
+
     /**
      * Metodo rollback para deshacer los cambios en la base de datos
      */
     public static void rollback() {
         session.getTransaction().rollback();
     }
-
 }

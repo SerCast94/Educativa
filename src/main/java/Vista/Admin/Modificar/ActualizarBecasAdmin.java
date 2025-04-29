@@ -6,6 +6,7 @@ import Mapeo.Estudiantes;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,7 +118,7 @@ public class ActualizarBecasAdmin extends JFrame {
                     datePickerAsignacion.getDate() == null ||
                     cmbEstadoBeca.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -135,12 +136,12 @@ public class ActualizarBecasAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaBecas();
 
-                JOptionPane.showMessageDialog(null, "Beca actualizada correctamente");
+                new CustomDialog(null,"Éxito", "Beca actualizada correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "El monto debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "El monto debe ser un número válido.","ONLY_OK").setVisible(true);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar la beca.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar la beca.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

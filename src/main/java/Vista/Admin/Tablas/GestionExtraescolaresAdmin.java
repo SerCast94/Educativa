@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Extraescolares;
 import Vista.Admin.Anadir.FormularioExtraescolaresAdmin;
 import Vista.Admin.Modificar.ActualizarExtraescolaresAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -151,7 +154,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
 
         header = tablaExtraescolares.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -256,9 +259,20 @@ public class GestionExtraescolaresAdmin extends JPanel {
     private void eliminarExtraescolar() {
         int fila = tablaExtraescolares.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar actividad extraescolar?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Actividad Extraescolar", "¿Está seguro de que desea eliminar esta actividad extraescolar?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaExtraescolares.convertRowIndexToModel(fila);
+                Extraescolares extraescolarSeleccionada = (Extraescolares) modelo.getValueAt(filaModelo, tablaExtraescolares.getColumnCount() - 1);
+                Controlador.eliminarControladorExtraescolar(extraescolarSeleccionada);
+                Controlador.actualizarListaExtraescolares();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaActividadesExtraescolares();
+                new CustomDialog(null, "Actividad Extraescolar Eliminada", "Actividad extraescolar eliminada correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

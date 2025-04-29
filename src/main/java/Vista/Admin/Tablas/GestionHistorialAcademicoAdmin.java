@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.HistorialAcademico;
 import Vista.Admin.Anadir.FormularioHistorialAcademicoAdmin;
 import Vista.Admin.Modificar.ActualizarHistorialAcademicoAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -150,7 +153,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
 
         header = tablaHistorial.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -225,7 +228,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
 
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHistorial());
+        eliminarItembtn.addActionListener(e -> eliminarHistorialAcademico());
 
         popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
@@ -252,12 +255,23 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         }
     }
 
-    private void eliminarHistorial() {
+    private void eliminarHistorialAcademico() {
         int fila = tablaHistorial.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar registro del historial académico?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Historial Académico", "¿Está seguro de que desea eliminar este registro del historial académico?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
+                HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
+                Controlador.eliminarControladorHistorialAcademico(historialSeleccionado);
+                Controlador.actualizarListaHistorialAcademico();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaHistorialAcademico();
+                new CustomDialog(null, "Historial Eliminado", "Registro del historial académico eliminado correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

@@ -5,6 +5,7 @@ import Mapeo.Asignaturas;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -109,8 +110,7 @@ public class FormularioAsignaturasAdmin extends JFrame {
                     txtDescripcion.getText().trim().isEmpty() ||
                     cmbProfesor.getSelectedItem() == null ||
                     cmbEstado.getSelectedItem() == null) {
-
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -128,10 +128,10 @@ public class FormularioAsignaturasAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaAsignaturas();
 
-                JOptionPane.showMessageDialog(null, "Asignatura agregada correctamente");
+                new CustomDialog(null,"Nuevo registro generado", "Asignatura agregada correctamente","ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al añadir asignatura", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al añadir asignatura: " , "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
 

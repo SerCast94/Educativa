@@ -8,6 +8,7 @@ import Mapeo.Estudiantes;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,7 +109,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
                     datePickerConvalidacion.getDate() == null ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(this, "Todos los campos obligatorios deben completarse.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -127,12 +128,12 @@ public class FormularioConvalidacionesAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaConvalidaciones();
 
-                JOptionPane.showMessageDialog(this, "Convalidación registrada correctamente.");
+                new CustomDialog(null,"Éxito", "Convalidación registrada correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (IllegalArgumentException ex) {
-                JOptionPane.showMessageDialog(this, "El estado seleccionado no es válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "El estado seleccionado no es válido.","ONLY_OK").setVisible(true);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al registrar la convalidación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar la convalidación: " + ex.getMessage(),"ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

@@ -6,6 +6,7 @@ import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 import org.hibernate.NonUniqueObjectException;
 
 import javax.swing.*;
@@ -171,7 +172,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
                     txtDireccion.getText().trim().isEmpty() ||
                     cmbTutor.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
             }
 
             Estudiantes nuevoEstudiante = new Estudiantes(
@@ -196,10 +197,10 @@ public class FormularioEstudiantesAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaEstudiantes();
 
-                JOptionPane.showMessageDialog(null, "Estudiante agregado correctamente");
+                new CustomDialog(null,"Exitoso", "Estudiante agregado correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (NonUniqueObjectException ex) {
-                JOptionPane.showMessageDialog(null, "Error al añadir estudiante", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "El DNI ya existe.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

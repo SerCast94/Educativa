@@ -1,9 +1,13 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Eventos;
 import Vista.Admin.Anadir.FormularioEventosAdmin;
 import Vista.Admin.Modificar.ActualizarEventosAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -151,7 +155,7 @@ public class GestionEventosAdmin extends JPanel {
 
         header = tablaEventos.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -256,9 +260,20 @@ public class GestionEventosAdmin extends JPanel {
     private void eliminarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar evento seleccionado?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Evento", "¿Está seguro de que desea eliminar este evento?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaEventos.convertRowIndexToModel(fila);
+                Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
+                Controlador.eliminarControladorEvento(eventoSeleccionado);
+                Controlador.actualizarListaEventos();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaEventos();
+                new CustomDialog(null, "Evento Eliminado", "Evento eliminado correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

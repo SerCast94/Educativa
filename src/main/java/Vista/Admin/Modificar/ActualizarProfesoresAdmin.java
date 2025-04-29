@@ -4,6 +4,7 @@ import Controlador.Controlador;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -156,7 +157,7 @@ public class ActualizarProfesoresAdmin extends JFrame {
                     txtTelefono.getText().trim().isEmpty() ||
                     txtDireccion.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -182,10 +183,10 @@ public class ActualizarProfesoresAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaProfesores();
 
-                JOptionPane.showMessageDialog(null, "Profesor actualizado correctamente");
+                new CustomDialog(null,"Exito", "Profesor actualizado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al actualizar profesor", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al actualizar profesor.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

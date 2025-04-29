@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Profesores;
 import Vista.Admin.Anadir.FormularioProfesoresAdmin;
 import Vista.Admin.Modificar.ActualizarProfesoresAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -159,7 +162,7 @@ public class GestionProfesoresAdmin extends JPanel {
 
         header = tablaProfesores.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -257,16 +260,25 @@ public class GestionProfesoresAdmin extends JPanel {
         if (fila != -1) {
             Profesores profesorSeleccionado = (Profesores) modelo.getValueAt(fila, tablaProfesores.getColumnCount()-1);
             new ActualizarProfesoresAdmin(profesorSeleccionado);
+
         }
     }
 
     private void eliminarProfesor() {
         int fila = tablaProfesores.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar profesor?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
-            }
+            new CustomDialog(null, "Eliminar Profesor", "¿Está seguro de que desea eliminar este profesor?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                Profesores profesorSeleccionado = (Profesores) modelo.getValueAt(fila, tablaProfesores.getColumnCount()-1);
+                Controlador.eliminarControladorProfesor(profesorSeleccionado);
+                Controlador.actualizarListaProfesores();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaProfesores();
+                new CustomDialog(null,"Profesor Eliminado", "Profesor " + profesorSeleccionado.toString() + " eliminado correctamente.","ONLY_OK").setVisible(true);
+
+            }else new CustomDialog(null,"Acción Cancelada", "Acción cancelada por el usuario.","ONLY_OK").setVisible(true);
         }
     }
 

@@ -1,6 +1,7 @@
 package Vista.Admin;
 
 import Vista.Admin.Tablas.*;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -195,14 +196,14 @@ public class VistaPrincipalAdmin extends JFrame {
                         mostrarVistaReportes();
                         break;
                     default:
-                        JOptionPane.showMessageDialog(null, "Funcionalidad no implementada");
+                        new CustomDialog(null, "Error", "Funcionalidad no implementada", "OK_CANCEL");
                         break;
                 }
             } else if ("Dashboard".equals(e.getActionCommand())) {
                 // Maneja el evento del logo aquí
                 mostrarVistaDashboardAdmin();
             } else {
-                JOptionPane.showMessageDialog(null, "Evento no reconocido");
+                new CustomDialog(null, "Error", "Evento no reconocido", "OK_CANCEL");
             }
         }
     }

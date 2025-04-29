@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Estudiantes;
 import Vista.Admin.Anadir.FormularioEstudiantesAdmin;
 import Vista.Admin.Modificar.ActualizarEstudiantesAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -153,7 +156,7 @@ public class GestionEstudiantesAdmin extends JPanel {
 
         header = tablaEstudiantes.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -258,9 +261,20 @@ public class GestionEstudiantesAdmin extends JPanel {
     private void eliminarEstudiante() {
         int fila = tablaEstudiantes.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar estudiante?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Estudiante", "¿Está seguro de que desea eliminar este estudiante?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaEstudiantes.convertRowIndexToModel(fila);
+                Estudiantes estudianteSeleccionado = (Estudiantes) modelo.getValueAt(filaModelo, tablaEstudiantes.getColumnCount() - 1);
+                Controlador.eliminarControladorEstudiante(estudianteSeleccionado);
+                Controlador.actualizarListaEstudiantes();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaEstudiantes();
+                new CustomDialog(null, "Estudiante Eliminado", "Estudiante eliminado correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

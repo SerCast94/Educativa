@@ -6,6 +6,7 @@ import Mapeo.Estudiantes;
 import Mapeo.Administradores;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -183,8 +184,7 @@ public class loginGUI extends JFrame {
 
         olvidoPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                JOptionPane.showMessageDialog(frame, "Funcionalidad de recuperación de contraseña");
-            }
+            new CustomDialog(frame, "Información", "Funcionalidad de recuperación de contraseña", "ONLY_OK").setVisible(true);            }
         });
 
         campoUsuario.addActionListener(new ActionListener() {
@@ -213,8 +213,7 @@ public class loginGUI extends JFrame {
             for (Estudiantes estudiante : Controlador.getListaEstudiantes()) {
                 if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(passwordHash)) {
                     estudianteLogeado = estudiante;
-                    JOptionPane.showMessageDialog(frame, "Bienvenido, " + estudiante.getNombre());
-                    frame.dispose();
+                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);                    frame.dispose();
                     abrirVentanaPrincipalEstudiante(estudianteLogeado);
                     return true;
                 }
@@ -224,8 +223,7 @@ public class loginGUI extends JFrame {
             for (Profesores profesor : Controlador.getListaProfesores()) {
                 if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(passwordHash)) {
                     profesorLogeado = profesor;
-                    JOptionPane.showMessageDialog(frame, "Bienvenido, " + profesor.getNombre());
-                    frame.dispose();
+                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);                    frame.dispose();
                     abrirVentanaPrincipalProfesor(profesorLogeado);
                     return true;
                 }
@@ -234,14 +232,16 @@ public class loginGUI extends JFrame {
             for (Administradores admin : Controlador.getListaAdministradores()) {
                 if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(passwordHash)) {
                     adminLogeado = admin;
-                    JOptionPane.showMessageDialog(frame, "Bienvenido, " + admin.getNombre());
+
+                    new CustomDialog(null,"Bienvenido","Bienvenido, " + admin.toString(),"ONLY_OK").setVisible(true);
+
                     frame.dispose();
                     abrirVentanaPrincipalAdmin(adminLogeado);
                     return true;
                 }
             }
         }
-        JOptionPane.showMessageDialog(frame, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+        new CustomDialog(frame, "Error", "Usuario o contraseña incorrectos", "ONLY_OK").setVisible(true);
         return false;
     }
 

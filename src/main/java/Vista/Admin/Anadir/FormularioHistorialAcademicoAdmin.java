@@ -8,6 +8,7 @@ import Mapeo.HistorialAcademico;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -117,7 +118,7 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
                     dateAprobacion.getText().trim().isEmpty() ||
                     txtComentarios.getText().trim().isEmpty()) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos obligatorios deben ser completados.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -136,12 +137,12 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaHistorialAcademico();
 
-                JOptionPane.showMessageDialog(null, "Historial académico registrado correctamente.");
+                new CustomDialog(null,"Éxito", "Historial académico registrado correctamente.","ONLY_OK").setVisible(true);
                 dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "La calificación debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "La calificación debe ser un número válido.","ONLY_OK").setVisible(true);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar el historial académico.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar el historial académico.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

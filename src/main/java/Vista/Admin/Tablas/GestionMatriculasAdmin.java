@@ -1,9 +1,12 @@
 package Vista.Admin.Tablas;
 
+import Controlador.Controlador;
 import Mapeo.Matriculas;
 import Vista.Admin.Anadir.FormularioMatriculasAdmin;
 import Vista.Admin.Modificar.ActualizarMatriculasAdmin;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -150,7 +153,7 @@ public class GestionMatriculasAdmin extends JPanel {
 
         header = tablaMatriculas.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
-        header.setBackground(new Color(251, 234, 230));
+        header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
         header.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
@@ -253,9 +256,20 @@ public class GestionMatriculasAdmin extends JPanel {
     private void eliminarMatricula() {
         int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Eliminar matrícula?", "Confirmar", JOptionPane.YES_NO_OPTION);
-            if (confirmar == JOptionPane.YES_OPTION) {
-                modelo.removeRow(fila);
+            new CustomDialog(null, "Eliminar Matrícula", "¿Está seguro de que desea eliminar esta matrícula?", "OK_CANCEL").setVisible(true);
+
+            if (CustomDialog.isAceptar()) {
+                int filaModelo = tablaMatriculas.convertRowIndexToModel(fila);
+                Matriculas matriculaSeleccionada = (Matriculas) modelo.getValueAt(filaModelo, tablaMatriculas.getColumnCount() - 1);
+                Controlador.eliminarControladorMatricula(matriculaSeleccionada);
+                Controlador.actualizarListaMatriculas();
+
+                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+                vistaPrincipalAdmin.mostrarVistaMatriculas();
+                new CustomDialog(null, "Matrícula Eliminada", "Matrícula eliminada correctamente.", "ONLY_OK").setVisible(true);
+
+            } else {
+                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
             }
         }
     }

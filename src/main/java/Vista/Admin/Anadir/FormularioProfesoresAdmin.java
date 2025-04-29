@@ -4,6 +4,7 @@ import Controlador.Controlador;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +142,7 @@ public class FormularioProfesoresAdmin extends JFrame {
                     new String(txtContrasena.getPassword()).trim().isEmpty() ||
                     cmbEstado.getSelectedItem() == null) {
 
-                JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -164,10 +165,10 @@ public class FormularioProfesoresAdmin extends JFrame {
                 VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
                 vistaPrincipal.mostrarVistaProfesores();
 
-                JOptionPane.showMessageDialog(null, "Profesor registrado correctamente.");
+                new CustomDialog(null,"Profesor registrado correctamente.", "Profesor registrado correctamente.", "ONLY_OK").setVisible(true);
                 dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error al registrar el profesor.", "Error", JOptionPane.ERROR_MESSAGE);
+                new CustomDialog(null,"Error", "Error al registrar el profesor.","ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
         });

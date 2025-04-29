@@ -1,26 +1,28 @@
 package Vista.Admin;
 
-import BackUtil.GeneradorBoletin;
+import BackUtil.GeneradorReportes;
 import Controlador.Controlador;
 import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Vista.Util.Boton;
+import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import static Controlador.ControladorBoletin.enviarInfoParaBoletin;
+import static Controlador.ControladorReportes.enviarInfoParaBoletin;
+import static Controlador.ControladorReportes.enviarInfoParaCertificadoBeca;
 import static Vista.Util.EstiloComponentes.customizeComboBox;
 import static Vista.Util.EstiloComponentes.setBordeNaranja;
 
 public class Reportes extends JPanel {
 
-    private JComboBox<Estudiantes> cbAlumno;
+    private JComboBox<Estudiantes> cbEstudiante;
     private JComboBox<Cursos> cbCurso;
-    private JComboBox<Estudiantes> cbAlumnoBeca;
-    private JComboBox<Estudiantes> cbAlumnoConvalidacion;
+    private JComboBox<Estudiantes> cbEstudianteBeca;
+    private JComboBox<Estudiantes> cbEstudianteConvalidacion;
 
     public Reportes() {
         initGUI();
@@ -65,20 +67,20 @@ public class Reportes extends JPanel {
         gridPanel.setBackground(Color.WHITE);
         gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        cbAlumno = new JComboBox<>();
+        cbEstudiante = new JComboBox<>();
         cbCurso = new JComboBox<>();
-        cbAlumnoBeca = new JComboBox<>();
-        cbAlumnoConvalidacion = new JComboBox<>();
+        cbEstudianteBeca = new JComboBox<>();
+        cbEstudianteConvalidacion = new JComboBox<>();
 
-        customizeComboBox(cbAlumno);
+        customizeComboBox(cbEstudiante);
         customizeComboBox(cbCurso);
-        customizeComboBox(cbAlumnoBeca);
-        customizeComboBox(cbAlumnoConvalidacion);
+        customizeComboBox(cbEstudianteBeca);
+        customizeComboBox(cbEstudianteConvalidacion);
 
-        gridPanel.add(createOptionPanel("Boletín de notas de Estudiante", cbAlumno, "Descargar", e -> descargarNotasEstudiante()));
+        gridPanel.add(createOptionPanel("Boletín de notas de Estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
         gridPanel.add(createOptionPanel("Boletín de notas de Clase", cbCurso, "Descargar", e -> descargarNotasClase()));
-        gridPanel.add(createOptionPanel("Certificado de Beca para Estudiante", cbAlumnoBeca, "Descargar", e -> descargarBecaEstudiante()));
-        gridPanel.add(createOptionPanel("Certificado de Convalidación para Estudiante", cbAlumnoConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
+        gridPanel.add(createOptionPanel("Certificado de Beca para Estudiante", cbEstudianteBeca, "Descargar", e -> descargarBecaEstudiante()));
+        gridPanel.add(createOptionPanel("Certificado de Convalidación para Estudiante", cbEstudianteConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
 
         panelConMargen.add(gridPanel, BorderLayout.CENTER);
         add(panelConMargen, BorderLayout.CENTER);
@@ -121,15 +123,23 @@ public class Reportes extends JPanel {
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
 
-        cbAlumno.removeAllItems();
-        cbAlumnoBeca.removeAllItems();
-        cbAlumnoConvalidacion.removeAllItems();
+        cbEstudiante.removeAllItems();
+        cbEstudianteBeca.removeAllItems();
+        cbEstudianteConvalidacion.removeAllItems();
 
         for (Estudiantes e : estudiantes) {
-            cbAlumno.addItem(e);
-            cbAlumnoBeca.addItem(e);
-            cbAlumnoConvalidacion.addItem(e);
+            cbEstudiante.addItem(e);
+
+            if (e.getBecas() != null && !e.getBecas().isEmpty()) {
+                cbEstudianteBeca.addItem(e);
+            }
+
+            if (e.getConvalidaciones() != null && !e.getConvalidaciones().isEmpty()) {
+                cbEstudianteConvalidacion.addItem(e);
+            }
+
         }
+
     }
 
     private void cargarCursos() {
@@ -145,12 +155,12 @@ public class Reportes extends JPanel {
     // Acciones
     private void descargarNotasEstudiante() {
 
-        if (cbAlumno.getSelectedIndex() == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un estudiante.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (cbEstudiante.getSelectedIndex() == -1) {
+            new CustomDialog(null, "Error", "Por favor, seleccione un estudiante.","ONLY_OK");
 
         }else {
-            Estudiantes estudiante = (Estudiantes) cbAlumno.getSelectedItem();
-            GeneradorBoletin.generarBoletin(enviarInfoParaBoletin(estudiante));
+            Estudiantes estudiante = (Estudiantes) cbEstudiante.getSelectedItem();
+            GeneradorReportes.generarBoletin(enviarInfoParaBoletin(estudiante));
         }
     }
 
@@ -158,20 +168,26 @@ public class Reportes extends JPanel {
         Cursos curso = (Cursos) cbCurso.getSelectedItem();
 
         if(cbCurso.getSelectedIndex() == -1){
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un curso.", "Error", JOptionPane.ERROR_MESSAGE);
+            new CustomDialog(null, "Error", "Por favor, seleccione un curso.","ONLY_OK");
         }else{
-            GeneradorBoletin.generarBoletinesPorCurso(curso);
+            GeneradorReportes.generarBoletinesPorCurso(curso);
         }
 
     }
 
     private void descargarBecaEstudiante() {
-        Estudiantes alumno = (Estudiantes) cbAlumnoBeca.getSelectedItem();
-        System.out.println("Descargando certificado de beca para: " + alumno);
+
+        Estudiantes Estudiante = (Estudiantes) cbEstudianteBeca.getSelectedItem();
+
+        if (Estudiante == null) {
+            new CustomDialog(null, "Error", "Por favor, seleccione un estudiante.", "ONLY_OK");
+        }else{
+            GeneradorReportes.generarCertificadoBeca(enviarInfoParaCertificadoBeca(Estudiante));
+        }
     }
 
     private void descargarConvalidacionEstudiante() {
-        Estudiantes alumno = (Estudiantes) cbAlumnoConvalidacion.getSelectedItem();
+        Estudiantes alumno = (Estudiantes) cbEstudianteConvalidacion.getSelectedItem();
         System.out.println("Descargando certificado de convalidación para: " + alumno);
     }
 }

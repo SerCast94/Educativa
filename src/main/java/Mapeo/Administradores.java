@@ -139,5 +139,9 @@ public class Administradores {
     }
 
 
+    @Override
+    public String toString() {
+        return nombre + " " + apellido;
+    }
 }
 
