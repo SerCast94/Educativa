@@ -2,35 +2,35 @@ package Vista.Admin.Tablas;
 
 import Controlador.Controlador;
 import Mapeo.Extraescolares;
-import Vista.Admin.Anadir.FormularioExtraescolaresAdmin;
-import Vista.Admin.Modificar.ActualizarExtraescolaresAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
+import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.Objects;
+import java.awt.event.*;
+import java.time.LocalDate;
+import java.util.*;
 
 import static Controlador.Controlador.listaExtraescolares;
 
 public class GestionExtraescolaresAdmin extends JPanel {
-    private JTable tablaExtraescolares;
-    private JButton btnAgregar;
+    private JTable tablaReservas;
     private DefaultTableModel modelo;
-    private JPopupMenu popupMenu;
     private JTableHeader header;
+    private CustomDatePicker datePicker;
+    private JButton btnReservar;
+    private final Map<String, Extraescolares> reservas = new HashMap<>();
+    private final String[] pistas = {"Pista Fútbol", "Pista Baloncesto", "Aula Usos Múltiples", "Santuario"};
+    private final String[] horas = {"16:00", "17:00", "18:00", "19:00", "20:00", "21:00"};
+    private JPopupMenu popupMenu;
 
     public GestionExtraescolaresAdmin() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarExtraescolaresAdmin();
+        cargarTablaConFecha(LocalDate.now());
     }
 
     private void initGUI() {
@@ -39,58 +39,12 @@ public class GestionExtraescolaresAdmin extends JPanel {
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioExtraescolaresAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaExtraescolares.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaExtraescolares.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaExtraescolares.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaExtraescolares.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaExtraescolares.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaExtraescolares.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaExtraescolares.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        // Verificar si el clic está en la parte baja de la tabla
-                        int visibleHeight = tablaExtraescolares.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
-                            popupMenu.show(tablaExtraescolares, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaExtraescolares, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
     private void initPanelSuperior() {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Gestión de Reservas de Instalaciones", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
@@ -98,30 +52,35 @@ public class GestionExtraescolaresAdmin extends JPanel {
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+        btnReservar = new Boton("Reservar Hora", Boton.ButtonType.PRIMARY);
+        btnReservar.setPreferredSize(new Dimension(160, 30));
 
-        btnAgregar = new Boton("Agregar Actividad", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        datePicker = new CustomDatePicker();
+        datePicker.setPreferredSize(new Dimension(150, 30));
 
-        panelBoton.add(btnAgregar);
+        panelBoton.add(new JLabel("Fecha:"));
+        panelBoton.add(datePicker);
+        panelBoton.add(Box.createHorizontalStrut(10));
+        panelBoton.add(btnReservar);
+
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
-
         add(panelSuperior, BorderLayout.NORTH);
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Descripción", "Tipo", "Profesor Responsable","Objecto"};
-               modelo = new DefaultTableModel(null, columnas) {
+        modelo = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tablaExtraescolares = new JTable(modelo) {
+        modelo.addColumn("Hora");
+        for (String pista : pistas) {
+            modelo.addColumn(pista);
+        }
+
+        tablaReservas = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -133,46 +92,23 @@ public class GestionExtraescolaresAdmin extends JPanel {
             }
         };
 
-        TableColumn columnaOculta = tablaExtraescolares.getColumnModel().getColumn(tablaExtraescolares.getColumnCount()-1);
-        columnaOculta.setMinWidth(0);
-        columnaOculta.setMaxWidth(0);
-        columnaOculta.setPreferredWidth(0);
-        columnaOculta.setResizable(false);
+        tablaReservas.setRowHeight(30);
+        tablaReservas.setShowGrid(false);
+        tablaReservas.setSelectionBackground(new Color(200, 220, 240));
+        tablaReservas.setIntercellSpacing(new Dimension(0, 0));
+        tablaReservas.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        tablaExtraescolares.setRowSorter(new TableRowSorter<>(modelo));
-        tablaExtraescolares.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-                return this;
-            }
-        });
-
-        tablaExtraescolares.setShowGrid(false);
-        tablaExtraescolares.setIntercellSpacing(new Dimension(0, 0));
-        tablaExtraescolares.setRowHeight(30);
-        tablaExtraescolares.setSelectionBackground(new Color(200, 220, 240));
-        tablaExtraescolares.setSelectionForeground(Color.BLACK);
-        tablaExtraescolares.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        header = tablaExtraescolares.getTableHeader();
+        header = tablaReservas.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
-        header.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)),
-                BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        ));
+        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(210, 180, 170)));
 
-        JScrollPane scroll = new JScrollPane(tablaExtraescolares);
+        JScrollPane scroll = new JScrollPane(tablaReservas);
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
-        JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
-        verticalScrollBar.setUI(new BasicScrollBarUI() {
+        scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -228,15 +164,10 @@ public class GestionExtraescolaresAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarExtraescolar());
-
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarExtraescolar());
+        eliminarItembtn.addActionListener(e -> eliminarReserva());
 
-        popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
         popupMenu.add(eliminarItembtn);
 
@@ -252,51 +183,147 @@ public class GestionExtraescolaresAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarExtraescolar() {
-        int fila = tablaExtraescolares.getSelectedRow();
-        if (fila != -1) {
-            int filaModelo = tablaExtraescolares.convertRowIndexToModel(fila);
-            Extraescolares extraescolarSeleccionada = (Extraescolares) modelo.getValueAt(filaModelo, tablaExtraescolares.getColumnCount() - 1);
-            new ActualizarExtraescolaresAdmin(extraescolarSeleccionada);
-        }
-    }
+    private void modificarReserva() {
+        int fila = tablaReservas.getSelectedRow();
+        int columna = tablaReservas.getSelectedColumn();
 
-    private void eliminarExtraescolar() {
-        int fila = tablaExtraescolares.getSelectedRow();
-        if (fila != -1) {
-            new CustomDialog(null, "Eliminar Actividad Extraescolar", "¿Está seguro de que desea eliminar esta actividad extraescolar?", "OK_CANCEL").setVisible(true);
+        if (fila != -1 && columna > 0) {
+            String hora = (String) modelo.getValueAt(fila, 0);
+            String pista = tablaReservas.getColumnName(columna);
+            LocalDate fecha = datePicker.getDate();
+            String fechaStr = fecha != null ? fecha.toString() : "";
 
-            if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaExtraescolares.convertRowIndexToModel(fila);
-                Extraescolares extraescolarSeleccionada = (Extraescolares) modelo.getValueAt(filaModelo, tablaExtraescolares.getColumnCount() - 1);
-                Controlador.eliminarControladorExtraescolar(extraescolarSeleccionada);
-                Controlador.actualizarListaExtraescolares();
-
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaActividadesExtraescolares();
-                new CustomDialog(null, "Actividad Extraescolar Eliminada", "Actividad extraescolar eliminada correctamente.", "ONLY_OK").setVisible(true);
-
-            } else {
-                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
+            String clave = hora + "-" + pista + "-" + fechaStr;
+            Extraescolares reserva = reservas.get(clave);
+            if (reserva != null) {
+                // Aquí puedes abrir un formulario de modificación
+                // new ModificarReservaAdmin(reserva);
             }
         }
     }
 
-    private void cargarExtraescolaresAdmin() {
-        modelo.setRowCount(0);
-        for (Extraescolares extraescolar : listaExtraescolares) {
-            String profesor = (extraescolar.getProfesor() != null) ?
-                    extraescolar.getProfesor().getNombre() + " " + extraescolar.getProfesor().getApellido() :
-                    "Sin asignar";
+    private void eliminarReserva() {
+        int fila = tablaReservas.getSelectedRow();
+        int columna = tablaReservas.getSelectedColumn();
 
-            Object[] fila = {
-                    extraescolar.getNombre(),
-                    extraescolar.getDescripcion(),
-                    extraescolar.getTipo().toString(),
-                    profesor,
-                    extraescolar
-            };
+        if (fila != -1 && columna > 0) {
+            String hora = (String) modelo.getValueAt(fila, 0);
+            String pista = tablaReservas.getColumnName(columna);
+            LocalDate fecha = datePicker.getDate();
+            String fechaStr = fecha != null ? fecha.toString() : "";
+
+            String clave = hora + "-" + pista + "-" + fechaStr;
+            Extraescolares reservaSeleccionada = reservas.get(clave);
+
+            if (reservaSeleccionada != null) {
+                new CustomDialog(null, "Eliminar Reserva", "¿Está seguro de que desea eliminar esta reserva?", "OK_CANCEL").setVisible(true);
+
+                if (CustomDialog.isAceptar()) {
+                    Controlador.eliminarControladorExtraescolar(reservaSeleccionada);
+                    cargarTablaConFecha(fecha);
+
+                    new CustomDialog(null, "Reserva Eliminada", "Reserva eliminada correctamente.", "ONLY_OK").setVisible(true);
+                } else {
+                    new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
+                }
+            }
+        }
+    }
+
+
+    private void initEventos() {
+        btnReservar.addActionListener(e -> reservar());
+
+        datePicker.addDateChangeListener(e -> {
+            LocalDate fecha = datePicker.getDate();
+
+            if (fecha != null) {
+                cargarTablaConFecha(fecha);
+            }
+        });
+
+        tablaReservas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = tablaReservas.rowAtPoint(e.getPoint());
+                if (fila >= 0) {
+                    tablaReservas.setRowSelectionInterval(fila, fila);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        popupMenu.show(tablaReservas, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+    }
+
+    private void cargarTablaConFecha(LocalDate fecha) {
+        modelo.setRowCount(0);
+        String fechaStr = fecha.toString();
+
+        reservas.clear();
+
+        // Cargar las reservas en el mapa
+        for (Extraescolares extraescolar : listaExtraescolares) {
+            // Convierte la fecha de la base de datos a LocalDate
+            LocalDate fechaReserva = LocalDate.parse(extraescolar.getFechaReserva());
+
+            // Compara las fechas
+            if (fechaReserva.equals(fecha)) {
+                String horaFormateada = extraescolar.getHora().substring(0, 5);
+                String clave = extraescolar.getHora() + "-" + extraescolar.getPista() + "-" + extraescolar.getFechaReserva();
+                reservas.put(clave, extraescolar);
+            }
+        }
+
+        // Llenar la tabla con los datos
+        for (String hora : horas) {
+            Object[] fila = new Object[pistas.length + 1];
+            fila[0] = hora;
+            for (int i = 0; i < pistas.length; i++) {
+                String clave = hora + "-" + pistas[i] + "-" + fechaStr;
+                Extraescolares reserva = reservas.get(clave);
+                fila[i + 1] = reserva != null ? "Reservado" : "Libre";
+            }
             modelo.addRow(fila);
+        }
+
+        modelo.fireTableDataChanged();
+        tablaReservas.repaint();
+    }
+
+    private void reservar() {
+        int fila = tablaReservas.getSelectedRow();
+        int columna = tablaReservas.getSelectedColumn();
+
+        if (fila == -1 || columna <= 0) {
+            new CustomDialog(null, "Selección Incorrecta", "Selecciona una hora y una pista válida.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        LocalDate fecha = datePicker.getDate();
+        if (fecha == null) {
+            new CustomDialog(null, "Fecha no seleccionada", "Por favor, selecciona una fecha.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        String fechaStr = fecha.toString();
+        String hora = (String) modelo.getValueAt(fila, 0);
+        String pista = tablaReservas.getColumnName(columna);
+        String clave = hora + "-" + pista + "-" + fechaStr;
+
+
+        if (reservas.containsKey(clave)) {
+            new CustomDialog(null, "Reserva Existente", "Esta hora ya está reservada para esta pista.", "ONLY_OK").setVisible(true);
+        } else {
+            Extraescolares nuevaReserva = new Extraescolares();
+            nuevaReserva.setFechaReserva(fechaStr);
+            nuevaReserva.setHora(hora);
+            nuevaReserva.setPista(pista);
+
+            Controlador.insertarControladorExtraescolar(nuevaReserva);
+            Controlador.actualizarListaExtraescolares();
+            cargarTablaConFecha(fecha);
+
+            new CustomDialog(null, "Reserva Confirmada", "Reserva confirmada: " + pista + " a las " + hora, "ONLY_OK").setVisible(true);
         }
     }
 }

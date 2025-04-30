@@ -114,7 +114,6 @@ public class Controlador {
         listaAdministradores = Consultas.selectAdministradores();
     }
 
-
     // Getters y Setters
 
     public static Session getSession() {

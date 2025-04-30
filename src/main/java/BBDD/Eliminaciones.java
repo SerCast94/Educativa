@@ -27,7 +27,7 @@ public class Eliminaciones {
 
     public static void deleteExtraescolares(Session session, Extraescolares extraescolar) {
         Transaction transaction = session.beginTransaction();
-        Extraescolares extraescolarEnSesion = session.get(Extraescolares.class, extraescolar.getIdExtraescolar());
+        Extraescolares extraescolarEnSesion = session.get(Extraescolares.class, extraescolar.getId());
         if (extraescolarEnSesion != null) {
             session.delete(extraescolarEnSesion);
         }

@@ -2,93 +2,52 @@ package Mapeo;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "extraescolares")
 public class Extraescolares {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_extraescolar")
-    private Integer idExtraescolar;
+    private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @Column(name = "fecha_reserva")
+    private String fechaReserva;
 
-    @Column(name = "descripcion")
-    private String descripcion;
+    @Column(name = "hora")
+    private String hora;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false)
-    private TipoExtraescolar tipo;
+    @Column(name = "pista")
+    private String pista;
 
-    @ManyToOne
-    @JoinColumn(name = "id_profesor")
-    private Profesores profesor;
-
-    public enum TipoExtraescolar {
-        academico, deportivo, religioso
+    // Getters y setters
+    public Long getId() {
+        return id;
     }
 
-
-    // Constructor
-    public Extraescolares() {
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Extraescolares(String nombre, String descripcion, TipoExtraescolar tipo, Profesores profesor) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.tipo = tipo;
-        this.profesor = profesor;
+    public String getFechaReserva() {
+        return fechaReserva;
     }
 
-    // Getters y Setters
-
-    public Integer getIdExtraescolar() {
-        return idExtraescolar;
+    public void setFechaReserva(String fechaReserva) {
+        this.fechaReserva = fechaReserva;
     }
 
-    public void setIdExtraescolar(Integer idExtraescolar) {
-        this.idExtraescolar = idExtraescolar;
+    public String getHora() {
+        return hora.substring(0, 5);
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getPista() {
+        return pista;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public TipoExtraescolar getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoExtraescolar tipo) {
-        this.tipo = tipo;
-    }
-
-    public Profesores getProfesor() {
-        return profesor;
-    }
-
-    public void setProfesor(Profesores profesor) {
-        this.profesor = profesor;
-    }
-
-    @Override
-    public String toString() {
-        return nombre + " (" + tipo + ")";
+    public void setPista(String pista) {
+        this.pista = pista;
     }
 }
-

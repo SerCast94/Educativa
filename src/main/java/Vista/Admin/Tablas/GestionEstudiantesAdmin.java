@@ -70,7 +70,7 @@ public class GestionEstudiantesAdmin extends JPanel {
                 if (row >= 0) {
                     tablaEstudiantes.setRowSelectionInterval(row, row);
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        // Verificar si el clic está en la parte baja de la tabla
+                        // Veriflicar si el clic está en la parte baja de la taba
                         int visibleHeight = tablaEstudiantes.getVisibleRect().height;
                         int clickY = e.getY();
                         if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior

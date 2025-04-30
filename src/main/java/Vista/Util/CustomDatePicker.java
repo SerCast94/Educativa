@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class CustomDatePicker extends DatePicker {
 
@@ -16,6 +17,7 @@ public class CustomDatePicker extends DatePicker {
         stylizeTextField();
         stylizeButton();
         overridePopupStyle();
+
     }
 
     private static DatePickerSettings buildSettings() {
@@ -186,4 +188,7 @@ public class CustomDatePicker extends DatePicker {
         return null;
     }
 
+    public void addActionListener(ActionListener actionListener) {
+
+    }
 }

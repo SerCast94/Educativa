@@ -3,6 +3,8 @@ package BBDD;
 import Controlador.Controlador;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+
+import java.time.LocalDate;
 import java.util.List;
 import Mapeo.*;
 
@@ -88,6 +90,15 @@ public class Consultas {
 
     public static List<Administradores> selectAdministradores() {
         Query<Administradores> query = session.createQuery("FROM Administradores", Administradores.class);
+        return query.getResultList();
+    }
+
+    public List<Extraescolares> obtenerExtraescolaresPorFecha(LocalDate fecha) {
+        String fechaStr = fecha.toString();
+
+        Query<Extraescolares> query = session.createQuery("SELECT e FROM Extraescolares e WHERE e.fechaReserva = :fecha", Extraescolares.class);
+        query.setParameter("fecha", fechaStr);
+
         return query.getResultList();
     }
 }
