@@ -2,6 +2,8 @@ package Mapeo;
 
 import jakarta.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "matriculas")

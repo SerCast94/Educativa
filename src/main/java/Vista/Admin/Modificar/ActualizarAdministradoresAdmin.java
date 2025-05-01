@@ -3,6 +3,7 @@ package Vista.Admin.Modificar;
 import Controlador.Controlador;
 import Mapeo.Administradores;
 import Mapeo.Profesores;
+import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -41,7 +42,7 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private Administradores administrador;
 
     public ActualizarAdministradoresAdmin() {
-        this.administrador = getListaAdministradores().getFirst();
+        this.administrador = VistaPrincipalAdmin.usuarioLogeado;
         initGUI();
         initEventos();
         cargarDatosAdministrador();

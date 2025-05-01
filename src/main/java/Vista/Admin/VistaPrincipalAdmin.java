@@ -1,5 +1,6 @@
 package Vista.Admin;
 
+import Mapeo.Administradores;
 import Vista.Admin.Modificar.ActualizarAdministradoresAdmin;
 import Vista.Admin.Tablas.*;
 import Vista.Util.CustomDialog;
@@ -13,9 +14,10 @@ public class VistaPrincipalAdmin extends JFrame {
     private MenuLateralAdmin menu;
     private JPanel contentPanel;
     private static VistaPrincipalAdmin instancia;
+    public static Administradores usuarioLogeado;
 
-
-    public VistaPrincipalAdmin() {
+    public VistaPrincipalAdmin(Administradores administrador) {
+        usuarioLogeado = administrador;
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);

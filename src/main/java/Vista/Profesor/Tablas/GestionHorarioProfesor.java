@@ -1,10 +1,9 @@
-package Vista.Admin.Tablas;
+package Vista.Profesor.Tablas;
 
+import BackUtil.GeneradorHorario;
 import Controlador.Controlador;
-import Mapeo.HistorialAcademico;
-import Vista.Admin.Anadir.FormularioHistorialAcademicoAdmin;
-import Vista.Admin.Modificar.ActualizarHistorialAcademicoAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
+import Mapeo.Horarios;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -17,20 +16,21 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static Controlador.Controlador.listaHistorialAcademico;
+import static Controlador.Controlador.listaHorarios;
+import static Vista.Profesor.VistaPrincipalProfesor.usuarioLogeado;
 
-public class GestionHistorialAcademicoAdmin extends JPanel {
-    private JTable tablaHistorial;
-    private JButton btnAgregar;
+public class GestionHorarioProfesor extends JPanel {
+    private JTable tablaHorarios;
+    private JButton btnDescargar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionHistorialAcademicoAdmin() {
+    public GestionHorarioProfesor() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarHistorial();
+        cargarHorariosProfesor();
     }
 
     private void initGUI() {
@@ -40,13 +40,14 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     }
 
     private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin());
+        btnDescargar.addActionListener(e -> GeneradorHorario.exportarHorarioProfesorAXML(usuarioLogeado.getHorarios()));
+
 
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHistorial.getRowSorter();
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
                 if (column >= 0 && sorter != null) {
                     SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
                     SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
@@ -55,28 +56,28 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             }
         });
 
-        tablaHistorial.addMouseMotionListener(new MouseAdapter() {
+        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int row = tablaHistorial.rowAtPoint(e.getPoint());
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaHistorial.setSelectionBackground(new Color(245, 156, 107, 204));
+                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
                 }
             }
         });
 
-        tablaHistorial.addMouseListener(new MouseAdapter() {
+        tablaHorarios.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                int row = tablaHistorial.rowAtPoint(e.getPoint());
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaHistorial.setRowSelectionInterval(row, row);
+                    tablaHorarios.setRowSelectionInterval(row, row);
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHistorial.getVisibleRect().height;
+                        int visibleHeight = tablaHorarios.getVisibleRect().height;
                         int clickY = e.getY();
                         if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY() - 80);
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
                         } else {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY());
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
                         }
                     }
                 }
@@ -89,7 +90,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Historial Académico - EDUCATIVA", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
@@ -100,19 +101,19 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Historial", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnDescargar = new Boton("Descargar Horario", Boton.ButtonType.PRIMARY);
+        btnDescargar.setIcon(icono);
+        btnDescargar.setPreferredSize(new Dimension(180, 30));
+        btnDescargar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-        panelBoton.add(btnAgregar);
+        panelBoton.add(btnDescargar);
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelSuperior, BorderLayout.NORTH);
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Asignatura", "Nota Final", "Fecha Aprobación", "Comentarios","Objeto"};
+        String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -120,7 +121,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             }
         };
 
-        tablaHistorial = new JTable(modelo) {
+        tablaHorarios = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -132,14 +133,14 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             }
         };
 
-        TableColumn columnaOculta = tablaHistorial.getColumnModel().getColumn(tablaHistorial.getColumnCount()-1);
+        TableColumn columnaOculta = tablaHorarios.getColumnModel().getColumn(tablaHorarios.getColumnCount()-1);
         columnaOculta.setMinWidth(0);
         columnaOculta.setMaxWidth(0);
         columnaOculta.setPreferredWidth(0);
         columnaOculta.setResizable(false);
 
-        tablaHistorial.setRowSorter(new TableRowSorter<>(modelo));
-        tablaHistorial.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        tablaHorarios.setRowSorter(new TableRowSorter<>(modelo));
+        tablaHorarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
@@ -149,14 +150,14 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             }
         });
 
-        tablaHistorial.setShowGrid(false);
-        tablaHistorial.setIntercellSpacing(new Dimension(0, 0));
-        tablaHistorial.setRowHeight(30);
-        tablaHistorial.setSelectionBackground(new Color(200, 220, 240));
-        tablaHistorial.setSelectionForeground(Color.BLACK);
-        tablaHistorial.setFont(new Font("Arial", Font.PLAIN, 14));
+        tablaHorarios.setShowGrid(false);
+        tablaHorarios.setIntercellSpacing(new Dimension(0, 0));
+        tablaHorarios.setRowHeight(30);
+        tablaHorarios.setSelectionBackground(new Color(200, 220, 240));
+        tablaHorarios.setSelectionForeground(Color.BLACK);
+        tablaHorarios.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        header = tablaHistorial.getTableHeader();
+        header = tablaHorarios.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
@@ -165,7 +166,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        JScrollPane scroll = new JScrollPane(tablaHistorial);
+        JScrollPane scroll = new JScrollPane(tablaHorarios);
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
@@ -229,11 +230,11 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
 
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
         configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarHistorial());
+        modificarItembtn.addActionListener(e -> modificarHorario());
 
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHistorialAcademico());
+        eliminarItembtn.addActionListener(e -> eliminarHorario());
 
         popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
@@ -251,29 +252,30 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarHistorial() {
-        int fila = tablaHistorial.getSelectedRow();
+    private void modificarHorario() {
+        int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
-            int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
-            HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
-            new ActualizarHistorialAcademicoAdmin(historialSeleccionado);
+            int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
+            Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
+            //new ActualizarHorariosProfesor(horarioSeleccionado);
         }
     }
 
-    private void eliminarHistorialAcademico() {
-        int fila = tablaHistorial.getSelectedRow();
+    private void eliminarHorario() {
+        int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
-            new CustomDialog(null, "Eliminar Historial Académico", "¿Está seguro de que desea eliminar este registro del historial académico?", "OK_CANCEL").setVisible(true);
+            new CustomDialog(null, "Eliminar Horario", "¿Está seguro de que desea eliminar este horario?", "OK_CANCEL").setVisible(true);
 
             if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
-                HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
-                Controlador.eliminarControladorHistorialAcademico(historialSeleccionado);
-                Controlador.actualizarListaHistorialAcademico();
+                int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
+                Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
+                Controlador.eliminarControladorHorario(horarioSeleccionado);
+                Controlador.actualizarListaHorarios();
 
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaHistorialAcademico();
-                new CustomDialog(null, "Historial Eliminado", "Registro del historial académico eliminado correctamente.", "ONLY_OK").setVisible(true);
+                VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
+                vistaPrincipalProfesor.mostrarVistaHorarios();
+
+                new CustomDialog(null, "Horario Eliminado", "Horario eliminado correctamente.", "ONLY_OK").setVisible(true);
 
             } else {
                 new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
@@ -281,18 +283,21 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         }
     }
 
-    private void cargarHistorial() {
+    private void cargarHorariosProfesor() {
         modelo.setRowCount(0);
-        for (HistorialAcademico historial : listaHistorialAcademico) {
-            Object[] fila = {
-                    historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
-                    historial.getAsignatura().getNombre(),
-                    historial.getNotaFinal(),
-                    historial.getFechaAprobacion().toString(),
-                    historial.getComentarios(),
-                    historial
-            };
-            modelo.addRow(fila);
+
+        for (Horarios horario : listaHorarios) {
+            if (horario.getAsignatura().getProfesor().equals(usuarioLogeado)) {
+                Object[] fila = {
+                        horario.getAsignatura().getNombre(),
+                        horario.getDiaSemana() ,
+                        horario.getHoraInicio().toString(),
+                        horario.getHoraFin().toString(),
+                        horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
+                        horario
+                };
+                modelo.addRow(fila);
+            }
         }
     }
 }

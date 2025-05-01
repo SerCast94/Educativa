@@ -1,14 +1,13 @@
-package Vista.Admin.Modificar;
+package Vista.Profesor.Modificar;
 
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
-import Mapeo.HistorialAcademico;
 import Mapeo.Estudiantes;
-import Vista.Admin.VistaPrincipalAdmin;
+import Mapeo.HistorialAcademico;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
@@ -17,13 +16,13 @@ import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
 
-public class ActualizarHistorialAcademicoAdmin extends JFrame {
+public class ActualizarHistorialAcademicoProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
 
     private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblAsignatura = new JLabel("Asignatura:");
+    private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha Aprobación:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
@@ -39,7 +38,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
 
     private HistorialAcademico historial;
 
-    public ActualizarHistorialAcademicoAdmin(HistorialAcademico historial) {
+    public ActualizarHistorialAcademicoProfesor(HistorialAcademico historial) {
         this.historial = historial;
         initGUI();
         initEventos();
@@ -79,7 +78,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblAsignatura, 2, 0);
+        agregarComponente(lblCurso, 2, 0);
         agregarComponente(cmbAsignaturas, 2, 1);
 
         agregarComponente(lblNotaFinal, 3, 0);
@@ -142,7 +141,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
     }
 
-    private void actualizarHistorialAcademicoValido() {
+    private void actualizarHistorialAcademicoValido(){
 
         if (cmbEstudiante.getSelectedItem() == null ||
                 cmbAsignaturas.getSelectedItem() == null ||
@@ -175,8 +174,8 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
             Controlador.actualizarControladorHistorialAcademico(historial);
             Controlador.actualizarListaHistorialAcademico();
 
-            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-            vistaPrincipal.mostrarVistaHistorialAcademico();
+            VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
+            vistaPrincipalProfesor.mostrarVistaHistorialAcademico();
 
             new CustomDialog(null,"Éxito", "Historial académico actualizado correctamente.","ONLY_OK").setVisible(true);
             dispose();

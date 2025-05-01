@@ -1,6 +1,7 @@
 package Controlador;
 
 import Mapeo.Estudiantes;
+import Mapeo.HistorialAcademico;
 import Mapeo.Matriculas;
 import Mapeo.Profesores;
 
@@ -10,6 +11,8 @@ import java.util.Map;
 
 public class ControladorDashBoard {
 
+
+    //DASHBOARD DE ADMINISTRADOR
     public static int numeroAlumnos() {
         return Controlador.getListaEstudiantes().size();
     }
@@ -137,6 +140,77 @@ public class ControladorDashBoard {
             }
         }
         return contador;
+    }
+
+
+    //DASHBOARD DE PROFESOR
+
+    public static int numeroAlumnosProfesor(Profesores profesor) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaMatriculas().size(); i++) {
+            if (Controlador.getListaMatriculas().get(i).getCurso().getProfesor().equals(profesor)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numAlumnosRecuperacionProfesor(Profesores profesor) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            HistorialAcademico historial = Controlador.getListaHistorialAcademico().get(i);
+            if (historial.getAsignatura().getProfesor().equals(profesor) && historial.getNotaFinal().compareTo(BigDecimal.valueOf(5)) < 0) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static BigDecimal promedioNotasProfesor(Profesores profesor) {
+        BigDecimal sumaNotas = BigDecimal.ZERO;
+        int contadorNotas = 0;
+
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            HistorialAcademico historial = Controlador.getListaHistorialAcademico().get(i);
+            if (historial.getAsignatura().getProfesor().equals(profesor)) {
+                sumaNotas = sumaNotas.add(historial.getNotaFinal());
+                contadorNotas++;
+            }
+        }
+
+        return contadorNotas > 0
+                ? sumaNotas.divide(BigDecimal.valueOf(contadorNotas), 2, BigDecimal.ROUND_HALF_UP)
+                : BigDecimal.ZERO;
+    }
+
+    public static int numAlumnosSobresalienteProfesor(Profesores profesor) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            HistorialAcademico historial = Controlador.getListaHistorialAcademico().get(i);
+            if (historial.getAsignatura().getProfesor().equals(profesor) && historial.getNotaFinal().compareTo(BigDecimal.valueOf(9)) >= 0) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numAsistenciaNoJustificadaProfesor(Profesores profesor) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaAsistencia().size(); i++) {
+            if (Controlador.getListaAsistencia().get(i).getCurso().getProfesor().equals(profesor) && Controlador.getListaAsistencia().get(i).getJustificado().equals(false)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numHorasTrabajadasProfesor(Profesores profesor){
+       int horasTrabajadas = 0;
+       horasTrabajadas = profesor.getHorarios().size();
+
+        System.out.println(horasTrabajadas);
+
+        return horasTrabajadas;
     }
 
 }

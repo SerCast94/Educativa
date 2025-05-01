@@ -337,6 +337,8 @@ public class Estudiantes {
         this.historialAcademico = historialAcademico;
     }
 
+
+
     @Override
     public String toString() {
         return nombre + " " + apellido;

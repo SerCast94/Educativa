@@ -1,10 +1,11 @@
-package Vista.Admin.Modificar;
+package Vista.Profesor.Anadir;
 
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
-import Mapeo.HistorialAcademico;
+import Mapeo.Asignaturas;
 import Mapeo.Estudiantes;
-import Vista.Admin.VistaPrincipalAdmin;
+import Mapeo.HistorialAcademico;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
@@ -12,18 +13,17 @@ import Vista.Util.CustomDialog;
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
 
-public class ActualizarHistorialAcademicoAdmin extends JFrame {
+public class FormularioHistorialAcademicoProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
 
     private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblAsignatura = new JLabel("Asignatura:");
+    private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha Aprobación:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
@@ -34,22 +34,18 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
 
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
-    private HistorialAcademico historial;
-
-    public ActualizarHistorialAcademicoAdmin(HistorialAcademico historial) {
-        this.historial = historial;
+    public FormularioHistorialAcademicoProfesor() {
         initGUI();
         initEventos();
         cargarEstudiantes();
         cargarAsignaturas();
-        cargarDatosHistorial();
     }
 
     private void initGUI() {
-        setTitle("Actualizar Historial Académico");
+        setTitle("Agregar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 450);
         setLocationRelativeTo(null);
@@ -62,7 +58,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Actualizar Historial Académico", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Agregar Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -74,12 +70,13 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         customizeComboBox(cmbAsignaturas);
         setBordeNaranja(txtNotaFinal);
         setBordeNaranja(txtComentarios);
+
         EspaciadoEnDatePicker(dateAprobacion);
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblAsignatura, 2, 0);
+        agregarComponente(lblCurso, 2, 0);
         agregarComponente(cmbAsignaturas, 2, 1);
 
         agregarComponente(lblNotaFinal, 3, 0);
@@ -106,14 +103,6 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         setVisible(true);
     }
 
-    private void cargarDatosHistorial() {
-        cmbEstudiante.setSelectedItem(historial.getEstudiante());
-        cmbAsignaturas.setSelectedItem(historial.getAsignatura());
-        txtNotaFinal.setText(String.valueOf(historial.getNotaFinal()));
-        dateAprobacion.setDate(historial.getFechaAprobacion().toLocalDate());
-        txtComentarios.setText(historial.getComentarios());
-    }
-
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
@@ -123,7 +112,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> actualizarHistorialAcademicoValido());
+        btnAceptar.addActionListener(e -> insertarHistorialAcademicoValido());
     }
 
     private void cargarEstudiantes() {
@@ -134,7 +123,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
     }
 
-    private void cargarAsignaturas(){
+    private void cargarAsignaturas() {
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
         for (Asignaturas a : asignaturas) {
@@ -142,13 +131,12 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
     }
 
-    private void actualizarHistorialAcademicoValido() {
+    private void insertarHistorialAcademicoValido() {
 
         if (cmbEstudiante.getSelectedItem() == null ||
                 cmbAsignaturas.getSelectedItem() == null ||
                 txtNotaFinal.getText().trim().isEmpty() ||
-                dateAprobacion.getDate() == null ||
-                txtComentarios.getText().trim().isEmpty()) {
+                dateAprobacion.getText().trim().isEmpty()){
 
             new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
             return;
@@ -166,24 +154,26 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
 
         try {
-            historial.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-            historial.setAsignatura((Asignaturas) cmbAsignaturas.getSelectedItem());
-            historial.setNotaFinal(new BigDecimal(txtNotaFinal.getText().trim()));
-            historial.setFechaAprobacion(Date.valueOf(dateAprobacion.getDate()));
-            historial.setComentarios(txtComentarios.getText().trim());
+            HistorialAcademico nuevoHistorial = new HistorialAcademico(
+                    (Estudiantes) cmbEstudiante.getSelectedItem(),
+                    (Asignaturas) cmbAsignaturas.getSelectedItem(),
+                    new BigDecimal(txtNotaFinal.getText().trim()),
+                    java.sql.Date.valueOf(dateAprobacion.getDate()),
+                    txtComentarios.getText().trim()
+            );
 
-            Controlador.actualizarControladorHistorialAcademico(historial);
+            Controlador.insertarControladorHistorialAcademico(nuevoHistorial);
             Controlador.actualizarListaHistorialAcademico();
 
-            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-            vistaPrincipal.mostrarVistaHistorialAcademico();
+            VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
+            vistaPrincipalProfesor.mostrarVistaHistorialAcademico();
 
-            new CustomDialog(null,"Éxito", "Historial académico actualizado correctamente.","ONLY_OK").setVisible(true);
+            new CustomDialog(null,"Éxito", "Historial académico registrado correctamente.","ONLY_OK").setVisible(true);
             dispose();
         } catch (NumberFormatException ex) {
             new CustomDialog(null,"Error", "La calificación debe ser un número válido.","ONLY_OK").setVisible(true);
         } catch (Exception ex) {
-            new CustomDialog(null,"Error", "Error al actualizar el historial académico: " + ex.getMessage(),"ONLY_OK").setVisible(true);
+            new CustomDialog(null,"Error", "Error al registrar el historial académico.","ONLY_OK").setVisible(true);
             Controlador.rollback();
         }
 

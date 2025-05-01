@@ -1,10 +1,10 @@
-package Vista.Admin.Tablas;
+package Vista.Profesor.Tablas;
 
 import Controlador.Controlador;
 import Mapeo.HistorialAcademico;
-import Vista.Admin.Anadir.FormularioHistorialAcademicoAdmin;
-import Vista.Admin.Modificar.ActualizarHistorialAcademicoAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Profesor.Anadir.FormularioHistorialAcademicoProfesor;
+import Vista.Profesor.Modificar.ActualizarHistorialAcademicoProfesor;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -19,14 +19,14 @@ import java.util.Objects;
 
 import static Controlador.Controlador.listaHistorialAcademico;
 
-public class GestionHistorialAcademicoAdmin extends JPanel {
+public class GestionHistorialAcademicoProfesor extends JPanel {
     private JTable tablaHistorial;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionHistorialAcademicoAdmin() {
+    public GestionHistorialAcademicoProfesor() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
@@ -40,7 +40,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     }
 
     private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin());
+       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoProfesor());
 
         header.addMouseListener(new MouseAdapter() {
             @Override
@@ -256,7 +256,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         if (fila != -1) {
             int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
             HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
-            new ActualizarHistorialAcademicoAdmin(historialSeleccionado);
+            new ActualizarHistorialAcademicoProfesor(historialSeleccionado);
         }
     }
 
@@ -271,8 +271,8 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
                 Controlador.eliminarControladorHistorialAcademico(historialSeleccionado);
                 Controlador.actualizarListaHistorialAcademico();
 
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaHistorialAcademico();
+                VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
+                vistaPrincipalProfesor.mostrarVistaHistorialAcademico();
                 new CustomDialog(null, "Historial Eliminado", "Registro del historial académico eliminado correctamente.", "ONLY_OK").setVisible(true);
 
             } else {
@@ -284,15 +284,18 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     private void cargarHistorial() {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {
-            Object[] fila = {
-                    historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
-                    historial.getAsignatura().getNombre(),
-                    historial.getNotaFinal(),
-                    historial.getFechaAprobacion().toString(),
-                    historial.getComentarios(),
-                    historial
-            };
-            modelo.addRow(fila);
+
+            if (historial.getAsignatura().getProfesor().equals(VistaPrincipalProfesor.usuarioLogeado)) {
+                Object[] fila = {
+                        historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
+                        historial.getAsignatura().getNombre(),
+                        historial.getNotaFinal(),
+                        historial.getFechaAprobacion().toString(),
+                        historial.getComentarios(),
+                        historial
+                };
+                modelo.addRow(fila);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import Mapeo.Estudiantes;
 import Mapeo.Administradores;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.CustomDialog;
 
 import javax.swing.*;
@@ -184,7 +185,7 @@ public class loginGUI extends JFrame {
 
         olvidoPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-            new CustomDialog(frame, "Información", "Funcionalidad de recuperación de contraseña", "ONLY_OK").setVisible(true);            }
+            new CustomDialog(frame, "Información", "Acuda a la Secretaría del centro para restaurar su contraseña", "ONLY_OK").setVisible(true);            }
         });
 
         campoUsuario.addActionListener(new ActionListener() {
@@ -213,7 +214,8 @@ public class loginGUI extends JFrame {
             for (Estudiantes estudiante : Controlador.getListaEstudiantes()) {
                 if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(passwordHash)) {
                     estudianteLogeado = estudiante;
-                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);                    frame.dispose();
+                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);
+                    frame.dispose();
                     abrirVentanaPrincipalEstudiante(estudianteLogeado);
                     return true;
                 }
@@ -223,7 +225,8 @@ public class loginGUI extends JFrame {
             for (Profesores profesor : Controlador.getListaProfesores()) {
                 if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(passwordHash)) {
                     profesorLogeado = profesor;
-                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);                    frame.dispose();
+                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);
+                    frame.dispose();
                     abrirVentanaPrincipalProfesor(profesorLogeado);
                     return true;
                 }
@@ -232,9 +235,7 @@ public class loginGUI extends JFrame {
             for (Administradores admin : Controlador.getListaAdministradores()) {
                 if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(passwordHash)) {
                     adminLogeado = admin;
-
                     new CustomDialog(null,"Bienvenido","Bienvenido, " + admin.toString(),"ONLY_OK").setVisible(true);
-
                     frame.dispose();
                     abrirVentanaPrincipalAdmin(adminLogeado);
                     return true;
@@ -246,17 +247,17 @@ public class loginGUI extends JFrame {
     }
 
     private void abrirVentanaPrincipalEstudiante(Estudiantes estudiante) {
-        // Placeholder for opening the student main window
+        // Placeholder
         System.out.println("Abriendo ventana principal para el estudiante: " + estudiante.getNombre());
     }
 
     private void abrirVentanaPrincipalAdmin(Administradores admin) {
-        new VistaPrincipalAdmin();
+        new VistaPrincipalAdmin(admin);
         dispose();
     }
 
     private void abrirVentanaPrincipalProfesor(Profesores profesor) {
-        // Placeholder for opening the teacher main window
-        System.out.println("Abriendo ventana principal para el profesor: " + profesor.getNombre());
+        new VistaPrincipalProfesor(profesor);
+        dispose();
     }
 }

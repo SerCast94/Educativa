@@ -2,7 +2,6 @@ package Vista.Admin.Anadir;
 
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
-import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Mapeo.HistorialAcademico;
 import Vista.Admin.VistaPrincipalAdmin;
@@ -23,13 +22,13 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
     private GridBagConstraints gbc;
 
     private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblCurso = new JLabel("Curso:");
+    private JLabel lblAsignatura = new JLabel("Asignatura:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha Aprobación:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
-    private JComboBox<Cursos> cmbAsignaturas = new JComboBox<>();
+    private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JTextField txtNotaFinal = crearTextField();
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
@@ -76,7 +75,7 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblCurso, 2, 0);
+        agregarComponente(lblAsignatura, 2, 0);
         agregarComponente(cmbAsignaturas, 2, 1);
 
         agregarComponente(lblNotaFinal, 3, 0);
@@ -112,41 +111,7 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbAsignaturas.getSelectedItem() == null ||
-                    txtNotaFinal.getText().trim().isEmpty() ||
-                    dateAprobacion.getText().trim().isEmpty() ||
-                    txtComentarios.getText().trim().isEmpty()) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                HistorialAcademico nuevoHistorial = new HistorialAcademico(
-                        (Estudiantes) cmbEstudiante.getSelectedItem(),
-                        (Asignaturas) cmbAsignaturas.getSelectedItem(),
-                        new BigDecimal(txtNotaFinal.getText().trim()),
-                        java.sql.Date.valueOf(dateAprobacion.getDate()),
-                        txtComentarios.getText().trim()
-                );
-
-                Controlador.insertarControladorHistorialAcademico(nuevoHistorial);
-                Controlador.actualizarListaHistorialAcademico();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaHistorialAcademico();
-
-                new CustomDialog(null,"Éxito", "Historial académico registrado correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (NumberFormatException ex) {
-                new CustomDialog(null,"Error", "La calificación debe ser un número válido.","ONLY_OK").setVisible(true);
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar el historial académico.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> insertarHistorialAcademicoValido());
     }
 
     private void cargarEstudiantes() {
@@ -158,10 +123,58 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
     }
 
     private void cargarAsignaturas() {
-        List<Cursos> cursos = Controlador.getListaCursos();
+        List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
-        for (Cursos c : cursos) {
-            cmbAsignaturas.addItem(c);
+        for (Asignaturas a : asignaturas) {
+            cmbAsignaturas.addItem(a);
+        }
+    }
+
+    private void insertarHistorialAcademicoValido(){
+
+        if (cmbEstudiante.getSelectedItem() == null ||
+                cmbAsignaturas.getSelectedItem() == null ||
+                txtNotaFinal.getText().trim().isEmpty() ||
+                dateAprobacion.getText().trim().isEmpty() ||
+                txtComentarios.getText().trim().isEmpty()) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            BigDecimal notaFinal = new BigDecimal(txtNotaFinal.getText().trim());
+            if (notaFinal.compareTo(BigDecimal.ZERO) < 0 || notaFinal.compareTo(new BigDecimal("10")) > 0) {
+                new CustomDialog(null, "Error", "La calificación debe estar entre 0 y 10.", "ONLY_OK").setVisible(true);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            new CustomDialog(null, "Error", "La calificación debe ser un número válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            HistorialAcademico nuevoHistorial = new HistorialAcademico(
+                    (Estudiantes) cmbEstudiante.getSelectedItem(),
+                    (Asignaturas) cmbAsignaturas.getSelectedItem(),
+                    new BigDecimal(txtNotaFinal.getText().trim()),
+                    java.sql.Date.valueOf(dateAprobacion.getDate()),
+                    txtComentarios.getText().trim()
+            );
+
+            Controlador.insertarControladorHistorialAcademico(nuevoHistorial);
+            Controlador.actualizarListaHistorialAcademico();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaHistorialAcademico();
+
+            new CustomDialog(null,"Éxito", "Historial académico registrado correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (NumberFormatException ex) {
+            new CustomDialog(null,"Error", "La calificación debe ser un número válido.","ONLY_OK").setVisible(true);
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al registrar el historial académico.","ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }
