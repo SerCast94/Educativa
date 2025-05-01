@@ -119,49 +119,7 @@ public class ActualizarHorariosAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbAsignaturas.getSelectedItem() == null ||
-                    cmbProfesor.getSelectedItem() == null ||
-                    cmbDiaSemana.getSelectedItem() == null ||
-                    spnHoraInicio.getValue() == null ||
-                    spnHoraFin.getValue() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                Calendar calendar = Calendar.getInstance();
-
-                calendar.setTime((java.util.Date) spnHoraInicio.getValue());
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Time horaInicio = new Time(calendar.getTimeInMillis());
-
-                calendar.setTime((java.util.Date) spnHoraFin.getValue());
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Time horaFin = new Time(calendar.getTimeInMillis());
-
-                horario.setAsignatura((Asignaturas) cmbAsignaturas.getSelectedItem());
-                horario.setProfesor((Profesores) cmbProfesor.getSelectedItem());
-                horario.setDiaSemana((Horarios.DiaSemana) cmbDiaSemana.getSelectedItem());
-                horario.setHoraInicio(horaInicio);
-                horario.setHoraFin(horaFin);
-
-                Controlador.actualizarControladorHorario(horario);
-                Controlador.actualizarListaHorarios();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaHorarios();
-
-                new CustomDialog(null,"Éxito", "Horario actualizado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar el horario.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarHorarioValido());
     }
 
     private void cargarDatosHorario() {
@@ -185,6 +143,59 @@ public class ActualizarHorariosAdmin extends JFrame {
         cmbProfesor.removeAllItems();
         for (Profesores profesor : profesores) {
             cmbProfesor.addItem(profesor);
+        }
+    }
+
+    private void actualizarHorarioValido() {
+
+        if (cmbAsignaturas.getSelectedItem() == null ||
+                cmbProfesor.getSelectedItem() == null ||
+                cmbDiaSemana.getSelectedItem() == null ||
+                spnHoraInicio.getValue() == null ||
+                spnHoraFin.getValue() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (spnHoraInicio.getValue() == null || spnHoraFin.getValue() == null) {
+            new CustomDialog(null,"Error", "Las horas de inicio y fin son obligatorias.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (spnHoraInicio.getValue().equals(spnHoraFin.getValue())) {
+            new CustomDialog(null,"Error", "La hora de inicio y la hora de fin no pueden ser iguales.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            Calendar calendar = Calendar.getInstance();
+
+            calendar.setTime((java.util.Date) spnHoraInicio.getValue());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Time horaInicio = new Time(calendar.getTimeInMillis());
+
+            calendar.setTime((java.util.Date) spnHoraFin.getValue());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Time horaFin = new Time(calendar.getTimeInMillis());
+
+            horario.setAsignatura((Asignaturas) cmbAsignaturas.getSelectedItem());
+            horario.setProfesor((Profesores) cmbProfesor.getSelectedItem());
+            horario.setDiaSemana((Horarios.DiaSemana) cmbDiaSemana.getSelectedItem());
+            horario.setHoraInicio(horaInicio);
+            horario.setHoraFin(horaFin);
+
+            Controlador.actualizarControladorHorario(horario);
+            Controlador.actualizarListaHorarios();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaHorarios();
+
+            new CustomDialog(null,"Éxito", "Horario actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar el horario.","ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

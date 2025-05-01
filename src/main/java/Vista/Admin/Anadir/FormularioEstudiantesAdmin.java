@@ -11,6 +11,7 @@ import org.hibernate.NonUniqueObjectException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static BackUtil.Encriptador.encryptMD5;
@@ -115,8 +116,6 @@ public class FormularioEstudiantesAdmin extends JFrame {
         setBordeNaranja(txtEmail);
         agregarComponente(txtEmail, 8, 1);
 
-
-
         agregarComponente(lblTutor, 10, 0);
         setBordeNaranja(cmbTutor);
         agregarComponente(cmbTutor, 10, 1);
@@ -158,54 +157,8 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    txtPassword.getPassword().length == 0 ||
-                    datePickerNacimiento.getDate() == null ||
-                    datePickerMatricula.getDate() == null ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtDireccion.getText().trim().isEmpty() ||
-                    cmbTutor.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-            }
-
-            Estudiantes nuevoEstudiante = new Estudiantes(
-                    txtNombre.getText(),
-                    txtApellido.getText(),
-                    txtDNI.getText(),
-                    java.sql.Date.valueOf(datePickerNacimiento.getDate()),
-                    txtDireccion.getText(),
-                    txtTelefono.getText(),
-                    txtEmail.getText(),
-                    java.sql.Date.valueOf(datePickerMatricula.getDate()),
-                    (Tutores) cmbTutor.getSelectedItem(),
-                    txtUsuario.getText(),
-                    encryptMD5(new String(txtPassword.getPassword())),
-                    Estudiantes.EstadoEstudiante.activo
-            );
-
-            try {
-                insertarControladorEstudiante(nuevoEstudiante);
-                Controlador.actualizarListaEstudiantes();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEstudiantes();
-
-                new CustomDialog(null,"Exitoso", "Estudiante agregado correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (NonUniqueObjectException ex) {
-                new CustomDialog(null,"Error", "El DNI ya existe.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e ->insertarEstudianteValido());
     }
-
 
     private void cargarTutores() {
         List<Tutores> tutores = Controlador.getListaTutores();
@@ -214,4 +167,95 @@ public class FormularioEstudiantesAdmin extends JFrame {
             cmbTutor.addItem(tutor);
         }
     }
+
+    private void insertarEstudianteValido() {
+
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String contrasena = new String(txtPassword.getPassword()).trim();
+        LocalDate fechaNacimiento = datePickerNacimiento.getDate();
+        LocalDate fechaMatricula = datePickerMatricula.getDate();
+        String correo = txtEmail.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        Tutores tutor = (Tutores) cmbTutor.getSelectedItem();
+        Estudiantes.EstadoEstudiante estado = Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString().toLowerCase());
+
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || usuario.isEmpty() || contrasena.isEmpty()
+                || fechaNacimiento == null || fechaMatricula == null || correo.isEmpty()
+                || telefono.isEmpty() || direccion.isEmpty() || tutor == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Validaciones específicas
+        if (!Estudiantes.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarContrasena(contrasena)) {
+            new CustomDialog(null, "Error", "La contraseña debe tener al menos 6 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (fechaNacimiento.isAfter(LocalDate.now())) {
+            new CustomDialog(null, "Error", "La fecha de nacimiento no puede ser en el futuro.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (fechaMatricula.isBefore(fechaNacimiento)) {
+            new CustomDialog(null, "Error", "La fecha de matrícula no puede ser anterior a la fecha de nacimiento.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Si todo es válido, crear el estudiante
+        Estudiantes nuevoEstudiante = new Estudiantes(
+                nombre,
+                apellido,
+                dni,
+                java.sql.Date.valueOf(fechaNacimiento),
+                direccion,
+                telefono,
+                correo,
+                java.sql.Date.valueOf(fechaMatricula),
+                tutor,
+                usuario,
+                encryptMD5(contrasena),
+                estado
+        );
+
+        try {
+            insertarControladorEstudiante(nuevoEstudiante);
+            Controlador.actualizarListaEstudiantes();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaEstudiantes();
+
+            new CustomDialog(null, "Éxito", "Estudiante agregado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (NonUniqueObjectException ex) {
+            new CustomDialog(null, "Error", "El DNI ya existe.", "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al agregar estudiante: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+        }
+    }
+
 }
+
+
+

@@ -6,7 +6,6 @@ import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -108,7 +107,9 @@ public class GestionExtraescolaresAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+        // Personalización de la barra de desplazamiento
+        JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
+        verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
@@ -183,24 +184,6 @@ public class GestionExtraescolaresAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarReserva() {
-        int fila = tablaReservas.getSelectedRow();
-        int columna = tablaReservas.getSelectedColumn();
-
-        if (fila != -1 && columna > 0) {
-            String hora = (String) modelo.getValueAt(fila, 0);
-            String pista = tablaReservas.getColumnName(columna);
-            LocalDate fecha = datePicker.getDate();
-            String fechaStr = fecha != null ? fecha.toString() : "";
-
-            String clave = hora + "-" + pista + "-" + fechaStr;
-            Extraescolares reserva = reservas.get(clave);
-            if (reserva != null) {
-                // Aquí puedes abrir un formulario de modificación
-                // new ModificarReservaAdmin(reserva);
-            }
-        }
-    }
 
     private void eliminarReserva() {
         int fila = tablaReservas.getSelectedRow();
@@ -213,13 +196,16 @@ public class GestionExtraescolaresAdmin extends JPanel {
             String fechaStr = fecha != null ? fecha.toString() : "";
 
             String clave = hora + "-" + pista + "-" + fechaStr;
+            System.out.println("Clave: " + clave);
             Extraescolares reservaSeleccionada = reservas.get(clave);
 
             if (reservaSeleccionada != null) {
                 new CustomDialog(null, "Eliminar Reserva", "¿Está seguro de que desea eliminar esta reserva?", "OK_CANCEL").setVisible(true);
 
                 if (CustomDialog.isAceptar()) {
+
                     Controlador.eliminarControladorExtraescolar(reservaSeleccionada);
+                    Controlador.actualizarListaExtraescolares();
                     cargarTablaConFecha(fecha);
 
                     new CustomDialog(null, "Reserva Eliminada", "Reserva eliminada correctamente.", "ONLY_OK").setVisible(true);
@@ -264,12 +250,12 @@ public class GestionExtraescolaresAdmin extends JPanel {
         // Cargar las reservas en el mapa
         for (Extraescolares extraescolar : listaExtraescolares) {
             // Convierte la fecha de la base de datos a LocalDate
-            LocalDate fechaReserva = LocalDate.parse(extraescolar.getFechaReserva());
+            LocalDate fechaReserva = extraescolar.getFechaReserva().toLocalDate();
 
             // Compara las fechas
             if (fechaReserva.equals(fecha)) {
-                String horaFormateada = extraescolar.getHora().substring(0, 5);
-                String clave = extraescolar.getHora() + "-" + extraescolar.getPista() + "-" + extraescolar.getFechaReserva();
+                String horaFormateada = extraescolar.getHora().toString().substring(0, 5);
+                String clave = horaFormateada + "-" + extraescolar.getPista() + "-" + extraescolar.getFechaReserva();
                 reservas.put(clave, extraescolar);
             }
         }
@@ -315,8 +301,8 @@ public class GestionExtraescolaresAdmin extends JPanel {
             new CustomDialog(null, "Reserva Existente", "Esta hora ya está reservada para esta pista.", "ONLY_OK").setVisible(true);
         } else {
             Extraescolares nuevaReserva = new Extraescolares();
-            nuevaReserva.setFechaReserva(fechaStr);
-            nuevaReserva.setHora(hora);
+            nuevaReserva.setFechaReserva(java.sql.Date.valueOf(fechaStr));
+            nuevaReserva.setHora(java.sql.Time.valueOf(hora + ":00"));
             nuevaReserva.setPista(pista);
 
             Controlador.insertarControladorExtraescolar(nuevaReserva);

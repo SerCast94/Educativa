@@ -105,37 +105,7 @@ public class FormularioAsignaturasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty() ||
-                    cmbProfesor.getSelectedItem() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            Asignaturas asignatura = new Asignaturas(
-                    txtNombre.getText().trim(),
-                    txtDescripcion.getText().trim(),
-                    (Profesores) cmbProfesor.getSelectedItem(),
-                    Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString())
-            );
-
-            try {
-                insertarControladorAsignatura(asignatura);
-                actualizarListaAsignaturas();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaAsignaturas();
-
-                new CustomDialog(null,"Nuevo registro generado", "Asignatura agregada correctamente","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al añadir asignatura: " , "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-
-        });
+        btnAceptar.addActionListener(e -> insertarAsignaturaValida());
     }
 
     private void cargarProfesores() {
@@ -144,5 +114,54 @@ public class FormularioAsignaturasAdmin extends JFrame {
         for (Profesores p : profesores) {
             cmbProfesor.addItem(p);
         }
+    }
+
+    private void insertarAsignaturaValida(){
+        if (txtNombre.getText().trim().isEmpty() ||
+                txtDescripcion.getText().trim().isEmpty() ||
+                cmbProfesor.getSelectedItem() == null ||
+                cmbEstado.getSelectedItem() == null) {
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtNombre.getText().length() > 100) {
+            new CustomDialog(null,"Error", "El nombre no puede exceder los 100 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtDescripcion.getText().length() > 255) {
+            new CustomDialog(null,"Error", "La descripción no puede exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (cmbProfesor.getSelectedItem() == null) {
+            new CustomDialog(null,"Error", "El profesor no puede ser nulo.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (cmbEstado.getSelectedItem() == null) {
+            new CustomDialog(null,"Error", "El estado no puede ser nulo.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+
+        Asignaturas asignatura = new Asignaturas(
+                txtNombre.getText().trim(),
+                txtDescripcion.getText().trim(),
+                (Profesores) cmbProfesor.getSelectedItem(),
+                Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString())
+        );
+
+        try {
+            insertarControladorAsignatura(asignatura);
+            actualizarListaAsignaturas();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaAsignaturas();
+
+            new CustomDialog(null,"Nuevo registro generado", "Asignatura agregada correctamente","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al añadir asignatura: " , "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
+
     }
 }

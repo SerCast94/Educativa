@@ -3,6 +3,8 @@ package Controlador;
 import Mapeo.Estudiantes;
 import Mapeo.Matriculas;
 import Mapeo.Profesores;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,19 +99,19 @@ public class ControladorDashBoard {
         return Controlador.getListaMatriculas().size() - Controlador.getListaBecas().size();
     }
 
-    public static double promedioNotas() {
-        double suma = 0;
+    public static BigDecimal promedioNotas() {
+        BigDecimal suma = BigDecimal.ZERO;
         for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
-            suma += Controlador.getListaHistorialAcademico().get(i).getNotaFinal();
+            suma = suma.add(Controlador.getListaHistorialAcademico().get(i).getNotaFinal());
         }
-        return suma / Controlador.getListaHistorialAcademico().size();
+        return suma.divide(BigDecimal.valueOf(Controlador.getListaHistorialAcademico().size()), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     public static Estudiantes mayorNota() {
-        double mayorNota = 0;
+        BigDecimal mayorNota = BigDecimal.ZERO;
         int posicion = 0;
         for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
-            if (Controlador.getListaHistorialAcademico().get(i).getNotaFinal() > mayorNota) {
+            if (Controlador.getListaHistorialAcademico().get(i).getNotaFinal().compareTo(mayorNota) > 0) {
                 mayorNota = Controlador.getListaHistorialAcademico().get(i).getNotaFinal();
                 posicion = i;
             }
@@ -120,7 +122,7 @@ public class ControladorDashBoard {
     public static int numAlumnosRecuperacion() {
         int contador = 0;
         for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
-            if (Controlador.getListaHistorialAcademico().get(i).getNotaFinal() < 5) {
+            if (Controlador.getListaHistorialAcademico().get(i).getNotaFinal().compareTo(BigDecimal.valueOf(5)) < 0) {
                 contador++;
             }
         }

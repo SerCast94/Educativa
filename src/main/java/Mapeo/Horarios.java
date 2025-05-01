@@ -37,13 +37,13 @@ public class Horarios {
     // Constructor por defecto
     public Horarios() {}
 
-    // Constructor con parámetros
+    // Constructor con uso de setters para validación
     public Horarios(Asignaturas asignatura, DiaSemana diaSemana, Time horaInicio, Time horaFin, Profesores profesor) {
-        this.asignatura = asignatura;
-        this.diaSemana = diaSemana;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
-        this.profesor = profesor;
+        setAsignatura(asignatura);
+        setDiaSemana(diaSemana);
+        setHoraInicio(horaInicio);
+        setHoraFin(horaFin);
+        setProfesor(profesor);
     }
 
     // Getters y Setters
@@ -61,6 +61,9 @@ public class Horarios {
     }
 
     public void setAsignatura(Asignaturas asignatura) {
+        if (asignatura == null) {
+            throw new IllegalArgumentException("La asignatura no puede ser null.");
+        }
         this.asignatura = asignatura;
     }
 
@@ -69,6 +72,9 @@ public class Horarios {
     }
 
     public void setDiaSemana(DiaSemana diaSemana) {
+        if (diaSemana == null) {
+            throw new IllegalArgumentException("El día de la semana no puede ser null.");
+        }
         this.diaSemana = diaSemana;
     }
 
@@ -77,6 +83,12 @@ public class Horarios {
     }
 
     public void setHoraInicio(Time horaInicio) {
+        if (horaInicio == null) {
+            throw new IllegalArgumentException("La hora de inicio no puede ser null.");
+        }
+        if (this.horaFin != null && horaInicio.after(this.horaFin)) {
+            throw new IllegalArgumentException("La hora de inicio no puede ser posterior a la hora de fin.");
+        }
         this.horaInicio = horaInicio;
     }
 
@@ -85,6 +97,12 @@ public class Horarios {
     }
 
     public void setHoraFin(Time horaFin) {
+        if (horaFin == null) {
+            throw new IllegalArgumentException("La hora de fin no puede ser null.");
+        }
+        if (this.horaInicio != null && horaFin.before(this.horaInicio)) {
+            throw new IllegalArgumentException("La hora de fin no puede ser anterior a la hora de inicio.");
+        }
         this.horaFin = horaFin;
     }
 
@@ -93,6 +111,9 @@ public class Horarios {
     }
 
     public void setProfesor(Profesores profesor) {
+        if (profesor == null) {
+            throw new IllegalArgumentException("El profesor no puede ser null.");
+        }
         this.profesor = profesor;
     }
 }

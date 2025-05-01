@@ -115,41 +115,57 @@ public class FormularioEventosAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty() ||
-                    datePickerInicio.getDate() == null ||
-                    datePickerFin.getDate() == null ||
-                    txtUbicacion.getText().trim().isEmpty() ||
-                    cmbTipoEvento.getSelectedItem() == null) {
+        btnAceptar.addActionListener(e -> insertarEventoValido());
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
+    }
 
-            try {
-                Eventos nuevoEvento = new Eventos(
-                        txtNombre.getText().trim(),
-                        txtDescripcion.getText().trim(),
-                        Date.valueOf(datePickerInicio.getDate()),
-                        Date.valueOf(datePickerFin.getDate()),
-                        txtUbicacion.getText().trim(),
-                        (Eventos.TipoEvento) cmbTipoEvento.getSelectedItem()
-                );
+    private void insertarEventoValido(){
 
-                insertarControladorEvento(nuevoEvento);
-                actualizarListaEventos();
+        if (txtNombre.getText().trim().isEmpty() ||
+                txtDescripcion.getText().trim().isEmpty() ||
+                datePickerInicio.getDate() == null ||
+                datePickerFin.getDate() == null ||
+                txtUbicacion.getText().trim().isEmpty() ||
+                cmbTipoEvento.getSelectedItem() == null) {
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEventos();
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null, "Éxito", "Evento registrado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null, "Error", "Error al registrar el evento.", "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        if (txtNombre.getText().length() > 100) {
+            new CustomDialog(null, "Error", "El nombre no puede exceder los 100 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtDescripcion.getText().length() > 255) {
+            new CustomDialog(null, "Error", "La descripción no puede exceder los 255 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtUbicacion.getText().length() > 255) {
+            new CustomDialog(null, "Error", "La ubicación no puede exceder los 255 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
+        try {
+            Eventos nuevoEvento = new Eventos(
+                    txtNombre.getText().trim(),
+                    txtDescripcion.getText().trim(),
+                    Date.valueOf(datePickerInicio.getDate()),
+                    Date.valueOf(datePickerFin.getDate()),
+                    txtUbicacion.getText().trim(),
+                    (Eventos.TipoEvento) cmbTipoEvento.getSelectedItem()
+            );
+
+            insertarControladorEvento(nuevoEvento);
+            actualizarListaEventos();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaEventos();
+
+            new CustomDialog(null, "Éxito", "Evento registrado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al registrar el evento.", "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
     }
 }

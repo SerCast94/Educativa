@@ -1,30 +1,32 @@
 package Mapeo;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "estudiantes_eventos")
-@IdClass(EstudiantesEventosId.class) // <- usar clase auxiliar para la PK compuesta
+@IdClass(EstudiantesEventosId.class) // Se usa una clase auxiliar para la clave primaria compuesta
 public class EstudiantesEventos {
+
     @Id
     @ManyToOne
     @JoinColumn(name = "id_estudiante", nullable = false)
-    private Estudiantes estudiante;
+    private Estudiantes estudiante;  // Relación muchos a uno con Estudiantes
 
     @Id
     @ManyToOne
     @JoinColumn(name = "id_evento", nullable = false)
-    private Eventos evento;
+    private Eventos evento;  // Relación muchos a uno con Eventos
 
     @Column(name = "comentario")
-    private String comentario;
+    private String comentario;  // Comentario del estudiante sobre el evento
 
     @Column(name = "confirmado")
-    private Boolean confirmado;
+    private Boolean confirmado;  // Confirmación de asistencia
 
-    // Constructor
-    public EstudiantesEventos() {
-    }
+    // Constructor por defecto
+    public EstudiantesEventos() {}
 
+    // Constructor con parámetros
     public EstudiantesEventos(Estudiantes estudiante, Eventos evento, String comentario, Boolean confirmado) {
         this.estudiante = estudiante;
         this.evento = evento;
@@ -32,18 +34,16 @@ public class EstudiantesEventos {
         this.confirmado = confirmado;
     }
 
-    // Métodos
-
+    // Métodos hashCode y equals
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return super.hashCode();  // Puedes personalizar esto si lo necesitas
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        return super.equals(obj);  // Puedes personalizar esto si lo necesitas
     }
-
 
     // Getters y Setters
 
@@ -52,7 +52,11 @@ public class EstudiantesEventos {
     }
 
     public void setEstudiante(Estudiantes estudiante) {
-        this.estudiante = estudiante;
+        if (estudiante != null) {
+            this.estudiante = estudiante;
+        } else {
+            throw new IllegalArgumentException("El estudiante no puede ser nulo.");
+        }
     }
 
     public Eventos getEvento() {
@@ -60,7 +64,11 @@ public class EstudiantesEventos {
     }
 
     public void setEvento(Eventos evento) {
-        this.evento = evento;
+        if (evento != null) {
+            this.evento = evento;
+        } else {
+            throw new IllegalArgumentException("El evento no puede ser nulo.");
+        }
     }
 
     public String getComentario() {
@@ -68,7 +76,13 @@ public class EstudiantesEventos {
     }
 
     public void setComentario(String comentario) {
-        this.comentario = comentario;
+        if (comentario != null && comentario.length() <= 255) {
+            this.comentario = comentario;
+        } else if (comentario != null && comentario.length() > 255) {
+            throw new IllegalArgumentException("El comentario no puede exceder los 255 caracteres.");
+        } else {
+            this.comentario = null;  // Permitir que el comentario sea nulo si no se establece
+        }
     }
 
     public Boolean getConfirmado() {
@@ -76,9 +90,11 @@ public class EstudiantesEventos {
     }
 
     public void setConfirmado(Boolean confirmado) {
-        this.confirmado = confirmado;
+        if (confirmado != null) {
+            this.confirmado = confirmado;
+        } else {
+            throw new IllegalArgumentException("El campo 'confirmado' no puede ser nulo.");
+        }
     }
 
-
 }
-

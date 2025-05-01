@@ -9,6 +9,7 @@ import Vista.Util.CustomDialog;
 import javax.swing.*;
 import java.awt.*;
 
+import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarListaTutores;
 import static Controlador.Controlador.insertarControladorTutor;
 import static Vista.Util.EstiloComponentes.*;
@@ -108,44 +109,55 @@ public class FormularioTutoresAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    new String(txtPassword.getPassword()).trim().isEmpty() ||
-                    cmbEstado.getSelectedItem() == null) {
+        btnAceptar.addActionListener(e -> insertarTutorValido());
+    }
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
+    private void insertarTutorValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        Tutores.EstadoTutor estado = Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString());
 
-            try {
-                Tutores nuevoTutor = new Tutores(
-                        txtDNI.getText().trim(),
-                        txtNombre.getText().trim(),
-                        txtApellido.getText().trim(),
-                        txtEmail.getText().trim(),
-                        txtTelefono.getText().trim(),
-                        txtUsuario.getText().trim(),
-                        new String(txtPassword.getPassword()).trim(),
-                        (Tutores.EstadoTutor) cmbEstado.getSelectedItem()
-                );
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || password.isEmpty() || estado == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                insertarControladorTutor(nuevoTutor);
-                actualizarListaTutores();
+        // Validaciones específicas
+        if (!Tutores.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaTutores();
+        if (!Tutores.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null,"Tutor registrado correctamente.", "Se ha registrado correctamente el tutor.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar el tutor.", "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        if (!Tutores.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Si todo es válido, crear el tutor
+        Tutores nuevoTutor = new Tutores(nombre, apellido, dni, telefono, correo, usuario, encryptMD5(password), estado);
+
+        try {
+            Controlador.insertarControladorTutor(nuevoTutor);
+            Controlador.actualizarListaTutores();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaTutores();
+
+            new CustomDialog(null, "Éxito", "Tutor agregado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al agregar tutor: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+        }
     }
 }

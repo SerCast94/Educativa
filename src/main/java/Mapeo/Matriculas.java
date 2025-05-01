@@ -31,15 +31,15 @@ public class Matriculas {
         activo, inactivo
     }
 
-    // Constructor
-    public Matriculas() {
-    }
+    // Constructor por defecto
+    public Matriculas() {}
 
+    // Constructor usando setters para validación
     public Matriculas(Estudiantes estudiante, Cursos curso, Date fechaMatricula, EstadoMatricula estado) {
-        this.estudiante = estudiante;
-        this.curso = curso;
-        this.fechaMatricula = fechaMatricula;
-        this.estado = estado;
+        setEstudiante(estudiante);
+        setCurso(curso);
+        setFechaMatricula(fechaMatricula);
+        setEstado(estado);
     }
 
     // Getters y Setters
@@ -57,6 +57,9 @@ public class Matriculas {
     }
 
     public void setEstudiante(Estudiantes estudiante) {
+        if (estudiante == null) {
+            throw new IllegalArgumentException("El estudiante no puede ser null.");
+        }
         this.estudiante = estudiante;
     }
 
@@ -65,6 +68,9 @@ public class Matriculas {
     }
 
     public void setCurso(Cursos curso) {
+        if (curso == null) {
+            throw new IllegalArgumentException("El curso no puede ser null.");
+        }
         this.curso = curso;
     }
 
@@ -73,6 +79,9 @@ public class Matriculas {
     }
 
     public void setFechaMatricula(Date fechaMatricula) {
+        if (fechaMatricula == null) {
+            throw new IllegalArgumentException("La fecha de matrícula no puede ser null.");
+        }
         this.fechaMatricula = fechaMatricula;
     }
 
@@ -81,9 +90,9 @@ public class Matriculas {
     }
 
     public void setEstado(EstadoMatricula estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado no puede ser null.");
+        }
         this.estado = estado;
     }
-
-
 }
-

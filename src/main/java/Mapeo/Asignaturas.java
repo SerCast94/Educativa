@@ -1,7 +1,6 @@
 package Mapeo;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,19 +40,18 @@ public class Asignaturas {
         activa, inactiva
     }
 
-
-
     // Constructor
     public Asignaturas() {
     }
+
     public Asignaturas(String nombre, String descripcion, Profesores profesor, EstadoAsignatura estado) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.profesor = profesor;
-        this.estado = estado;
+        setNombre(nombre);
+        setDescripcion(descripcion);
+        setProfesor(profesor);
+        setEstado(estado);
     }
 
-    // Getters y Setters
+    // Getters y Setters con validaciones
 
     public Integer getIdAsignatura() {
         return idAsignatura;
@@ -68,6 +66,12 @@ public class Asignaturas {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede estar vacío.");
+        }
+        if (nombre.length() > 100) {
+            throw new IllegalArgumentException("El nombre no puede exceder los 100 caracteres.");
+        }
         this.nombre = nombre;
     }
 
@@ -84,6 +88,9 @@ public class Asignaturas {
     }
 
     public void setProfesor(Profesores profesor) {
+        if (profesor == null) {
+            throw new IllegalArgumentException("El profesor no puede ser nulo.");
+        }
         this.profesor = profesor;
     }
 
@@ -92,6 +99,9 @@ public class Asignaturas {
     }
 
     public void setEstado(EstadoAsignatura estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado no puede ser nulo.");
+        }
         this.estado = estado;
     }
 

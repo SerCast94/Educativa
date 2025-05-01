@@ -12,6 +12,7 @@ import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -137,7 +138,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
             try {
                 historial.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
                 historial.setAsignatura((Asignaturas) cmbAsignaturas.getSelectedItem());
-                historial.setNotaFinal(Double.parseDouble(txtNotaFinal.getText().trim()));
+                historial.setNotaFinal(new BigDecimal(txtNotaFinal.getText().trim()));
                 historial.setFechaAprobacion(Date.valueOf(dateAprobacion.getDate()));
                 historial.setComentarios(txtComentarios.getText().trim());
 

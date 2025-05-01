@@ -111,40 +111,7 @@ public class ActualizarBecasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiantes.getSelectedItem() == null ||
-                    cmbTipoBeca.getSelectedItem() == null ||
-                    txtMonto.getText().trim().isEmpty() ||
-                    datePickerAsignacion.getDate() == null ||
-                    cmbEstadoBeca.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                beca.setEstudiante((Estudiantes) cmbEstudiantes.getSelectedItem());
-                beca.setTipoBeca((Becas.TipoBeca) cmbTipoBeca.getSelectedItem());
-                beca.setMonto(Double.parseDouble(txtMonto.getText().trim()));
-                beca.setFechaAsignacion(java.sql.Date.valueOf(datePickerAsignacion.getDate()));
-                beca.setEstadoBeca((Becas.EstadoBeca) cmbEstadoBeca.getSelectedItem());
-                beca.setComentarios(txtComentarios.getText().trim());
-
-                Controlador.actualizarControladorBeca(beca);
-                Controlador.actualizarListaBecas();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaBecas();
-
-                new CustomDialog(null,"Éxito", "Beca actualizada correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (NumberFormatException ex) {
-                new CustomDialog(null,"Error", "El monto debe ser un número válido.","ONLY_OK").setVisible(true);
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar la beca.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarBecaValida());
     }
 
     private void cargarEstudiantes() {
@@ -164,5 +131,50 @@ public class ActualizarBecasAdmin extends JFrame {
         }
         cmbEstadoBeca.setSelectedItem(beca.getEstadoBeca());
         txtComentarios.setText(beca.getComentarios());
+    }
+
+    private void actualizarBecaValida(){
+
+        if (cmbEstudiantes.getSelectedItem() == null ||
+                cmbTipoBeca.getSelectedItem() == null ||
+                txtMonto.getText().trim().isEmpty() ||
+                datePickerAsignacion.getDate() == null ||
+                cmbEstadoBeca.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtComentarios.getText().length() > 255) {
+            new CustomDialog(null, "Error", "Los comentarios no pueden exceder los 255 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtMonto.getText().length() > 10) {
+            new CustomDialog(null, "Error", "El monto no puede exceder los 10 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            beca.setEstudiante((Estudiantes) cmbEstudiantes.getSelectedItem());
+            beca.setTipoBeca((Becas.TipoBeca) cmbTipoBeca.getSelectedItem());
+            beca.setMonto(Double.parseDouble(txtMonto.getText().trim()));
+            beca.setFechaAsignacion(java.sql.Date.valueOf(datePickerAsignacion.getDate()));
+            beca.setEstadoBeca((Becas.EstadoBeca) cmbEstadoBeca.getSelectedItem());
+            beca.setComentarios(txtComentarios.getText().trim());
+
+            Controlador.actualizarControladorBeca(beca);
+            Controlador.actualizarListaBecas();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaBecas();
+
+            new CustomDialog(null,"Éxito", "Beca actualizada correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (NumberFormatException ex) {
+            new CustomDialog(null,"Error", "El monto debe ser un número válido.","ONLY_OK").setVisible(true);
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar la beca.","ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
+
     }
 }

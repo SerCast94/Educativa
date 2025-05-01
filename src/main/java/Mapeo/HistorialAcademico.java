@@ -1,9 +1,8 @@
 package Mapeo;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "historialacademico")
@@ -22,30 +21,27 @@ public class HistorialAcademico {
     @JoinColumn(name = "id_asignatura", nullable = false)
     private Asignaturas asignatura;
 
-    @Column(name = "nota_final")
-    private double notaFinal;
+    @Column(name = "nota_final", precision = 5, scale = 2)
+    private BigDecimal notaFinal;
 
     @Column(name = "fecha_aprobacion")
     private Date fechaAprobacion;
 
-    @Column(name = "comentarios")
+    @Column(name = "comentarios", columnDefinition = "TEXT")
     private String comentarios;
 
+    // Constructores
+    public HistorialAcademico() {}
 
-    // Constructor
-    public HistorialAcademico() {
-    }
-
-    public HistorialAcademico(Estudiantes estudiante, Asignaturas asignatura, double notaFinal, Date fechaAprobacion, String comentarios) {
-        this.estudiante = estudiante;
-        this.asignatura = asignatura;
-        this.notaFinal = notaFinal;
-        this.fechaAprobacion = fechaAprobacion;
-        this.comentarios = comentarios;
+    public HistorialAcademico(Estudiantes estudiante, Asignaturas asignatura, BigDecimal notaFinal, Date fechaAprobacion, String comentarios) {
+        setEstudiante(estudiante);
+        setAsignatura(asignatura);
+        setNotaFinal(notaFinal);
+        setFechaAprobacion(fechaAprobacion);
+        setComentarios(comentarios);
     }
 
     // Getters y Setters
-
     public Integer getIdHistorial() {
         return idHistorial;
     }
@@ -70,11 +66,11 @@ public class HistorialAcademico {
         this.asignatura = asignatura;
     }
 
-    public double getNotaFinal() {
+    public BigDecimal getNotaFinal() {
         return notaFinal;
     }
 
-    public void setNotaFinal(double notaFinal) {
+    public void setNotaFinal(BigDecimal notaFinal) {
         this.notaFinal = notaFinal;
     }
 
@@ -93,7 +89,4 @@ public class HistorialAcademico {
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
     }
-
-
 }
-

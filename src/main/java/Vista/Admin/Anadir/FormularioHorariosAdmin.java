@@ -113,55 +113,7 @@ public class FormularioHorariosAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbAsignatura.getSelectedItem() == null ||
-                    cmbDiaSemana.getSelectedItem() == null ||
-                    spnHoraInicio.getValue() == null ||
-                    spnHoraFin.getValue() == null ||
-                    cmbProfesor.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                java.util.Date horaInicioDate = (java.util.Date) spnHoraInicio.getValue();
-                java.util.Date horaFinDate = (java.util.Date) spnHoraFin.getValue();
-                Calendar calendar = Calendar.getInstance();
-
-                // Configurar horaInicio con segundos en 00
-                calendar.setTime(horaInicioDate);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Time horaInicio = new Time(calendar.getTimeInMillis());
-
-                // Configurar horaFin con segundos en 00
-                calendar.setTime(horaFinDate);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Time horaFin = new Time(calendar.getTimeInMillis());
-
-                Horarios nuevoHorario = new Horarios(
-                        (Asignaturas) cmbAsignatura.getSelectedItem(),
-                        (Horarios.DiaSemana) cmbDiaSemana.getSelectedItem(),
-                        horaInicio,
-                        horaFin,
-                        (Profesores) cmbProfesor.getSelectedItem()
-                );
-
-                insertarControladorHorario(nuevoHorario);
-                Controlador.actualizarListaHorarios();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaHorarios();
-
-                new CustomDialog(null, "Éxito", "Horario registrado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar el horario.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> insertarHorarioValido());
     }
 
 
@@ -178,6 +130,65 @@ public class FormularioHorariosAdmin extends JFrame {
         cmbProfesor.removeAllItems();
         for (Profesores profesor : profesores) {
             cmbProfesor.addItem(profesor);
+        }
+    }
+
+    private void insertarHorarioValido() {
+
+        if (cmbAsignatura.getSelectedItem() == null ||
+                cmbDiaSemana.getSelectedItem() == null ||
+                spnHoraInicio.getValue() == null ||
+                spnHoraFin.getValue() == null ||
+                cmbProfesor.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (spnHoraInicio.getValue() == null || spnHoraFin.getValue() == null) {
+            new CustomDialog(null,"Error", "Las horas de inicio y fin son obligatorias.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (spnHoraInicio.getValue().equals(spnHoraFin.getValue())) {
+            new CustomDialog(null,"Error", "La hora de inicio y la hora de fin no pueden ser iguales.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            java.util.Date horaInicioDate = (java.util.Date) spnHoraInicio.getValue();
+            java.util.Date horaFinDate = (java.util.Date) spnHoraFin.getValue();
+            Calendar calendar = Calendar.getInstance();
+
+            // Configurar horaInicio con segundos en 00
+            calendar.setTime(horaInicioDate);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Time horaInicio = new Time(calendar.getTimeInMillis());
+
+            // Configurar horaFin con segundos en 00
+            calendar.setTime(horaFinDate);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Time horaFin = new Time(calendar.getTimeInMillis());
+
+            Horarios nuevoHorario = new Horarios(
+                    (Asignaturas) cmbAsignatura.getSelectedItem(),
+                    (Horarios.DiaSemana) cmbDiaSemana.getSelectedItem(),
+                    horaInicio,
+                    horaFin,
+                    (Profesores) cmbProfesor.getSelectedItem()
+            );
+
+            insertarControladorHorario(nuevoHorario);
+            Controlador.actualizarListaHorarios();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaHorarios();
+
+            new CustomDialog(null, "Éxito", "Horario registrado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al registrar el horario.","ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

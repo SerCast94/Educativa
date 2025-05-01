@@ -106,37 +106,7 @@ public class FormularioMatriculasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiantes.getSelectedItem() == null ||
-                    cmbCursos.getSelectedItem() == null ||
-                    datePickerMatricula.getDate() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                Matriculas nuevaMatricula = new Matriculas(
-                        (Estudiantes) cmbEstudiantes.getSelectedItem(),
-                        (Cursos) cmbCursos.getSelectedItem(),
-                        Date.valueOf(datePickerMatricula.getDate()),
-                        Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString())
-                );
-
-                insertarControladorMatricula(nuevaMatricula);
-                actualizarListaMatriculas();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaMatriculas();
-
-                new CustomDialog(null,"Éxito", "Matrícula registrada correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar la matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> insertarMatriculaValida());
     }
 
     private void cargarEstudiantes() {
@@ -152,6 +122,39 @@ public class FormularioMatriculasAdmin extends JFrame {
         cmbCursos.removeAllItems();
         for (Cursos c : cursos) {
             cmbCursos.addItem(c);
+        }
+    }
+
+    private void insertarMatriculaValida(){
+
+        if (cmbEstudiantes.getSelectedItem() == null ||
+                cmbCursos.getSelectedItem() == null ||
+                datePickerMatricula.getDate() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            Matriculas nuevaMatricula = new Matriculas(
+                    (Estudiantes) cmbEstudiantes.getSelectedItem(),
+                    (Cursos) cmbCursos.getSelectedItem(),
+                    Date.valueOf(datePickerMatricula.getDate()),
+                    Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString())
+            );
+
+            insertarControladorMatricula(nuevaMatricula);
+            actualizarListaMatriculas();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaMatriculas();
+
+            new CustomDialog(null,"Éxito", "Matrícula registrada correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al registrar la matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

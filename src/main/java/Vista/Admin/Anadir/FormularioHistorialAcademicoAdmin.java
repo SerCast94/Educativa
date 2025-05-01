@@ -12,6 +12,7 @@ import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static Vista.Util.EstiloComponentes.*;
@@ -126,7 +127,7 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
                 HistorialAcademico nuevoHistorial = new HistorialAcademico(
                         (Estudiantes) cmbEstudiante.getSelectedItem(),
                         (Asignaturas) cmbAsignaturas.getSelectedItem(),
-                        Double.parseDouble(txtNotaFinal.getText().trim()),
+                        new BigDecimal(txtNotaFinal.getText().trim()),
                         java.sql.Date.valueOf(dateAprobacion.getDate()),
                         txtComentarios.getText().trim()
                 );

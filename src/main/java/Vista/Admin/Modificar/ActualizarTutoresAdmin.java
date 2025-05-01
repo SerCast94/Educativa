@@ -52,7 +52,7 @@ public class ActualizarTutoresAdmin extends JFrame {
         txtNombre.setText(tutor.getNombre());
         txtApellido.setText(tutor.getApellido());
         txtUsuario.setText(tutor.getUsuario());
-        txtPassword.setText(""); // No cargar la contraseña
+        txtPassword.setText("");
         txtEmail.setText(tutor.getEmail());
         txtTelefono.setText(tutor.getTelefono());
         cmbEstado.setSelectedItem(tutor.getEstado());
@@ -123,44 +123,68 @@ public class ActualizarTutoresAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> {
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty()) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            tutor.setDni(txtDNI.getText().trim());
-            tutor.setNombre(txtNombre.getText().trim());
-            tutor.setApellido(txtApellido.getText().trim());
-            tutor.setUsuario(txtUsuario.getText().trim());
-            tutor.setEmail(txtEmail.getText().trim());
-            tutor.setTelefono(txtTelefono.getText().trim());
-            tutor.setEstado((Tutores.EstadoTutor) cmbEstado.getSelectedItem());
-
-            String nuevaPassword = new String(txtPassword.getPassword()).trim();
-
-            if (!nuevaPassword.isEmpty()) {
-                tutor.setContrasena(encryptMD5(nuevaPassword));
-            }
-
-            try {
-                Controlador.actualizarControladorTutor(tutor);
-                Controlador.actualizarListaTutores();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaTutores();
-
-                new CustomDialog(null,"Tutor actualizado correctamente.", "Se ha actualizado correctamente el tutor.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar el tutor.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
+            actualizarTutorValido();
         });
+    }
+
+
+    private void actualizarTutorValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String nuevaPassword = new String(txtPassword.getPassword());
+        Tutores.EstadoTutor estado = Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString());
+
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || estado == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Validaciones específicas
+        if (!Tutores.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Tutores.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Tutores.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Si todo es válido, actualizar el tutor
+        tutor.setNombre(nombre);
+        tutor.setApellido(apellido);
+        tutor.setDni(dni);
+        tutor.setTelefono(telefono);
+        tutor.setEmail(correo);
+        tutor.setUsuario(usuario);
+        tutor.setEstado(estado);
+
+        if (!nuevaPassword.isEmpty()) {
+            tutor.setContrasena(encryptMD5(nuevaPassword));
+        }
+
+        try {
+            Controlador.actualizarControladorTutor(tutor);
+            Controlador.actualizarListaTutores();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaTutores();
+
+            new CustomDialog(null, "Éxito", "Tutor actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al actualizar tutor: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
     }
 }

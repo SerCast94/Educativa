@@ -9,6 +9,7 @@ import Vista.Util.CustomDialog;
 import javax.swing.*;
 import java.awt.*;
 
+import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarListaProfesores;
 import static Controlador.Controlador.insertarControladorProfesor;
 import static Vista.Util.EstiloComponentes.*;
@@ -131,47 +132,57 @@ public class FormularioProfesoresAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtDireccion.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    new String(txtContrasena.getPassword()).trim().isEmpty() ||
-                    cmbEstado.getSelectedItem() == null) {
+        btnAceptar.addActionListener(e -> insertarProfesorValido());
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
+    }
 
-            try {
-                Profesores nuevoProfesor = new Profesores(
-                        txtDNI.getText().trim(),
-                        txtNombre.getText().trim(),
-                        txtApellido.getText().trim(),
-                        txtEmail.getText().trim(),
-                        txtTelefono.getText().trim(),
-                        txtDireccion.getText().trim(),
-                        txtUsuario.getText().trim(),
-                        new String(txtContrasena.getPassword()).trim(),
-                        (Profesores.EstadoProfesor) cmbEstado.getSelectedItem()
-                );
+    private void insertarProfesorValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String password = new String(txtContrasena.getPassword());
+        Profesores.EstadoProfesor estado = Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString());
 
-                insertarControladorProfesor(nuevoProfesor);
-                actualizarListaProfesores();
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty() || password.isEmpty() || estado == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaProfesores();
+        // Validaciones específicas
+        if (!Profesores.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null,"Profesor registrado correctamente.", "Profesor registrado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar el profesor.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        if (!Profesores.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
+        if (!Profesores.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Si todo es válido, crear el profesor
+        Profesores nuevoProfesor = new Profesores(nombre, apellido, dni, correo, telefono, direccion, usuario, encryptMD5(password), estado);
+
+        try {
+            Controlador.insertarControladorProfesor(nuevoProfesor);
+            Controlador.actualizarListaProfesores();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaProfesores();
+
+            new CustomDialog(null, "Éxito", "Profesor agregado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al agregar profesor: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+        }
     }
 }

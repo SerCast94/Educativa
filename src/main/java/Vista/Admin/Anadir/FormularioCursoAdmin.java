@@ -105,37 +105,7 @@ public class FormularioCursoAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty() ||
-                    cmbProfesor.getSelectedItem() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            Cursos nuevoCurso = new Cursos(
-                    txtNombre.getText().trim(),
-                    txtDescripcion.getText().trim(),
-                    (Profesores) cmbProfesor.getSelectedItem(),
-                    Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString())
-            );
-
-            try {
-                insertarControladorCurso(nuevoCurso);
-                actualizarListaCursos();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaCursos();
-
-                new CustomDialog(null,"Éxito", "Curso registrado correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar el curso: " , "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> insertarCursoValido());
     }
 
     private void cargarProfesores() {
@@ -143,6 +113,47 @@ public class FormularioCursoAdmin extends JFrame {
         cmbProfesor.removeAllItems();
         for (Profesores p : profesores) {
             cmbProfesor.addItem(p);
+        }
+    }
+
+    private void insertarCursoValido(){
+
+        if (txtNombre.getText().trim().isEmpty() ||
+                txtDescripcion.getText().trim().isEmpty() ||
+                cmbProfesor.getSelectedItem() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtNombre.getText().length() > 100) {
+            new CustomDialog(null,"Error", "El nombre no puede exceder los 100 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtDescripcion.getText().length() > 255) {
+            new CustomDialog(null,"Error", "La descripción no puede exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        Cursos nuevoCurso = new Cursos(
+                txtNombre.getText().trim(),
+                txtDescripcion.getText().trim(),
+                (Profesores) cmbProfesor.getSelectedItem(),
+                Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString())
+        );
+
+        try {
+            insertarControladorCurso(nuevoCurso);
+            actualizarListaCursos();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaCursos();
+
+            new CustomDialog(null,"Éxito", "Curso registrado correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al registrar el curso: " , "ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

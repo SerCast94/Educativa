@@ -1,9 +1,10 @@
 package Mapeo;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "profesores")
@@ -53,35 +54,65 @@ public class Profesores {
         activo, inactivo
     }
 
-    // Constructor
+    // Constructor por defecto
+    public Profesores() {}
 
-    public Profesores() {
-    }
-
+    // Constructor principal usando setters
     public Profesores(String nombre, String apellido, String dni, String email, String telefono, String direccion, String usuario, String contrasena, EstadoProfesor estado) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.email = email;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.usuario = usuario;
-        this.contrasena = contrasena;
-        this.estado = estado;
+        setNombre(nombre);
+        setApellido(apellido);
+        setDni(dni);
+        setEmail(email);
+        setTelefono(telefono);
+        setDireccion(direccion);
+        setUsuario(usuario);
+        setContrasena(contrasena);
+        setEstado(estado);
     }
 
-    public Profesores(String nombre, String apellido, String dni, String email, String telefono, String direccion, String usuario, EstadoProfesor estado) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.email = email;
-        this.telefono = telefono;
-        this.direccion = direccion;
-        this.usuario = usuario;
-        this.estado = estado;
+    // Validación de DNI
+    static public boolean validarDNI(String dni) {
+        // Verificar si el DNI no es nulo ni vacío y tiene exactamente 9 caracteres (8 dígitos + 1 letra)
+        if (dni == null || dni.length() != 9) {
+            return false;
+        }
+
+        // Extraer los 8 primeros caracteres (números) y la última letra
+        String numero = dni.substring(0, 8);
+        char letra = dni.charAt(8);
+
+        // Verificar que los primeros 8 caracteres son números
+        if (!numero.matches("\\d{8}")) {
+            return false;
+        }
+
+        // Validar la letra
+        String letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+        int indice = Integer.parseInt(numero) % 23;
+
+        // Comparar la letra del DNI con la letra esperada
+        return letra == letrasValidas.charAt(indice);
     }
 
-    // Getters y Setters
+    // Validación de correo electrónico
+    static public boolean validarEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    // Validación de teléfono
+    static public boolean validarTelefono(String telefono) {
+        return telefono != null && telefono.matches("^\\+?\\d{7,15}$");
+    }
+
+    // Validación de contraseña
+    static public boolean validarContrasena(String contrasena) {
+        return contrasena != null && contrasena.length() >= 6;
+    }
+
+    // Getters y Setters con validación
 
     public Integer getIdProfesor() {
         return idProfesor;
@@ -96,7 +127,10 @@ public class Profesores {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede ser nulo o vacío.");
+        }
+        this.nombre = nombre.trim();
     }
 
     public String getApellido() {
@@ -104,7 +138,10 @@ public class Profesores {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        if (apellido == null || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("El apellido no puede ser nulo o vacío.");
+        }
+        this.apellido = apellido.trim();
     }
 
     public String getDni() {
@@ -112,7 +149,10 @@ public class Profesores {
     }
 
     public void setDni(String dni) {
-        this.dni = dni;
+        if (dni == null || dni.trim().isEmpty()) {
+            throw new IllegalArgumentException("El DNI no puede ser nulo o vacío.");
+        }
+        this.dni = dni.trim();
     }
 
     public String getEmail() {
@@ -120,7 +160,10 @@ public class Profesores {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email == null || !email.matches("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$")) {
+            throw new IllegalArgumentException("El email no es válido.");
+        }
+        this.email = email.trim();
     }
 
     public String getTelefono() {
@@ -128,7 +171,7 @@ public class Profesores {
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono;
+        this.telefono = (telefono != null) ? telefono.trim() : null;
     }
 
     public String getDireccion() {
@@ -136,7 +179,7 @@ public class Profesores {
     }
 
     public void setDireccion(String direccion) {
-        this.direccion = direccion;
+        this.direccion = (direccion != null) ? direccion.trim() : null;
     }
 
     public String getUsuario() {
@@ -144,7 +187,10 @@ public class Profesores {
     }
 
     public void setUsuario(String usuario) {
-        this.usuario = usuario;
+        if (usuario == null || usuario.trim().isEmpty()) {
+            throw new IllegalArgumentException("El usuario no puede ser nulo o vacío.");
+        }
+        this.usuario = usuario.trim();
     }
 
     public String getContrasena() {
@@ -152,6 +198,9 @@ public class Profesores {
     }
 
     public void setContrasena(String contrasena) {
+        if (contrasena == null || contrasena.length() < 4) {
+            throw new IllegalArgumentException("La contraseña no puede ser nula y debe tener al menos 4 caracteres.");
+        }
         this.contrasena = contrasena;
     }
 
@@ -160,6 +209,9 @@ public class Profesores {
     }
 
     public void setEstado(EstadoProfesor estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado no puede ser nulo.");
+        }
         this.estado = estado;
     }
 

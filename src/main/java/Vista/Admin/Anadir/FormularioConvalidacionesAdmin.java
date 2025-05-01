@@ -104,40 +104,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbAsignaturaOriginal.getSelectedItem() == null ||
-                    datePickerConvalidacion.getDate() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                Convalidaciones nuevaConvalidacion = new Convalidaciones(
-                        (Estudiantes) cmbEstudiante.getSelectedItem(),
-                        (Asignaturas) cmbAsignaturaOriginal.getSelectedItem(),
-                        java.sql.Date.valueOf(datePickerConvalidacion.getDate()),
-                        EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()),
-                        txtComentarios.getText().trim()
-                );
-
-                Controlador.insertarControladorConvalidacion(nuevaConvalidacion);
-                Controlador.actualizarListaConvalidaciones();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaConvalidaciones();
-
-                new CustomDialog(null,"Éxito", "Convalidación registrada correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (IllegalArgumentException ex) {
-                new CustomDialog(null,"Error", "El estado seleccionado no es válido.","ONLY_OK").setVisible(true);
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al registrar la convalidación: " + ex.getMessage(),"ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> insertarConvalidacionValida());
     }
 
     private void agregarComponente(Component componente, int fila, int columna) {
@@ -162,4 +129,48 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         }
     }
 
+    private void insertarConvalidacionValida(){
+
+        if (cmbEstudiante.getSelectedItem() == null ||
+                cmbAsignaturaOriginal.getSelectedItem() == null ||
+                datePickerConvalidacion.getDate() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtComentarios.getText().length() > 255) {
+            new CustomDialog(null,"Error", "Los comentarios no pueden exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (datePickerConvalidacion.getDate().isAfter(java.time.LocalDate.now())) {
+            new CustomDialog(null,"Error", "La fecha de convalidación no puede ser futura.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            Convalidaciones nuevaConvalidacion = new Convalidaciones(
+                    (Estudiantes) cmbEstudiante.getSelectedItem(),
+                    (Asignaturas) cmbAsignaturaOriginal.getSelectedItem(),
+                    java.sql.Date.valueOf(datePickerConvalidacion.getDate()),
+                    EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()),
+                    txtComentarios.getText().trim()
+            );
+
+            Controlador.insertarControladorConvalidacion(nuevaConvalidacion);
+            Controlador.actualizarListaConvalidaciones();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaConvalidaciones();
+
+            new CustomDialog(null,"Éxito", "Convalidación registrada correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (IllegalArgumentException ex) {
+            new CustomDialog(null,"Error", "El estado seleccionado no es válido.","ONLY_OK").setVisible(true);
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al registrar la convalidación: " + ex.getMessage(),"ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
+    }
 }
+

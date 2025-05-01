@@ -2,6 +2,7 @@ package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
 import Mapeo.Administradores;
+import Mapeo.Profesores;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -138,41 +139,68 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtDni.getText().trim().isEmpty() ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty()) {
+        btnAceptar.addActionListener(e -> actualizarAdministradorValido());
+    }
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
+    private void actualizarAdministradorValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDni.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String nuevaPassword = new String(txtPassword.getPassword());
+        Administradores.EstadoAdministrador estado = Administradores.EstadoAdministrador.valueOf(cmbEstado.getSelectedItem().toString());
 
-            administrador.setNombre(txtNombre.getText().trim());
-            administrador.setApellido(txtApellido.getText().trim());
-            administrador.setDni(txtDni.getText().trim());
-            administrador.setEmail(txtEmail.getText().trim());
-            administrador.setTelefono(txtTelefono.getText().trim());
-            administrador.setUsuario(txtUsuario.getText().trim());
-            administrador.setEstado(Administradores.EstadoAdministrador.valueOf(cmbEstado.getSelectedItem().toString()));
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || estado == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            String nuevaPassword = new String(txtPassword.getPassword());
-            if (!nuevaPassword.isEmpty()) {
-                administrador.setContrasena(encryptMD5(nuevaPassword));
-            }
+        // Validaciones específicas
+        if (!Administradores.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            try {
-                Controlador.actualizarControladorAdministrador(administrador);
-                Controlador.actualizarListaAdministradores();
+        if (!Administradores.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null,"Éxito", "Administrador actualizado correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar administrador: " + ex.getMessage(),"ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        if (!Administradores.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!nuevaPassword.isEmpty() && !Administradores.validarContrasena(nuevaPassword)) {
+            new CustomDialog(null, "Error", "La contraseña debe tener al menos 6 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        // Si todo es válido, actualizar el administrador
+        administrador.setNombre(nombre);
+        administrador.setApellido(apellido);
+        administrador.setDni(dni);
+        administrador.setTelefono(telefono);
+        administrador.setEmail(correo);
+        administrador.setUsuario(usuario);
+        administrador.setEstado(estado);
+
+        if (!nuevaPassword.isEmpty()) {
+            administrador.setContrasena(encryptMD5(nuevaPassword));
+        }
+
+        try {
+            Controlador.actualizarControladorAdministrador(administrador);
+            Controlador.actualizarListaAdministradores();
+
+            new CustomDialog(null, "Éxito", "Administrador actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al actualizar administrador: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
     }
 }

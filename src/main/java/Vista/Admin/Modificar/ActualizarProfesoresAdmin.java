@@ -1,6 +1,7 @@
 package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
+import Mapeo.Estudiantes;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
@@ -148,47 +149,74 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtDireccion.getText().trim().isEmpty()) {
+        btnAceptar.addActionListener(e -> actualizarProfesorValido());
+    }
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
+    private void actualizarProfesorValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String nuevaPassword = new String(txtPassword.getPassword());
+        Profesores.EstadoProfesor estado = Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString());
 
-            String nuevaPassword = new String(txtPassword.getPassword());
+        // Validaciones de campos obligatorios
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty() || estado == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            profesor.setNombre(txtNombre.getText().trim());
-            profesor.setApellido(txtApellido.getText().trim());
-            profesor.setDni(txtDNI.getText().trim());
-            profesor.setEmail(txtEmail.getText().trim());
-            profesor.setTelefono(txtTelefono.getText().trim());
-            profesor.setDireccion(txtDireccion.getText().trim());
-            profesor.setUsuario(txtUsuario.getText().trim());
-            profesor.setEstado(Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString()));
+        // Validaciones específicas
+        if (!Profesores.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            if (!nuevaPassword.isEmpty()) {
-                profesor.setContrasena(encryptMD5(nuevaPassword));
-            }
+        if (!Profesores.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            try {
-                Controlador.actualizarControladorProfesor(profesor);
-                Controlador.actualizarListaProfesores();
+        if (!Profesores.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaProfesores();
+        if (!nuevaPassword.isEmpty() && !Profesores.validarContrasena(nuevaPassword)) {
+            new CustomDialog(null, "Error", "La contraseña debe tener al menos 6 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null,"Exito", "Profesor actualizado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar profesor.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+
+        // Si todo es válido, actualizar el profesor
+        profesor.setNombre(nombre);
+        profesor.setApellido(apellido);
+        profesor.setDni(dni);
+        profesor.setTelefono(telefono);
+        profesor.setEmail(correo);
+        profesor.setDireccion(direccion);
+        profesor.setUsuario(usuario);
+        profesor.setEstado(estado);
+
+        if (!nuevaPassword.isEmpty()) {
+            profesor.setContrasena(encryptMD5(nuevaPassword));
+        }
+
+        try {
+            Controlador.actualizarControladorProfesor(profesor);
+            Controlador.actualizarListaProfesores();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaProfesores();
+
+            new CustomDialog(null, "Éxito", "Profesor actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al actualizar profesor: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
     }
 }

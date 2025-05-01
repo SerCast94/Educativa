@@ -11,8 +11,32 @@ public class EstudiantesEventosId implements Serializable {
     }
 
     public EstudiantesEventosId(Integer estudiante, Integer evento) {
-        this.estudiante = estudiante;
-        this.evento = evento;
+        setEstudiante(estudiante);
+        setEvento(evento);
+    }
+
+    public Integer getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Integer estudiante) {
+        if (estudiante == null) {
+            throw new IllegalArgumentException("El estudiante no puede ser nulo.");
+        }else{
+            this.estudiante = estudiante;
+        }
+    }
+
+    public Integer getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Integer evento) {
+        if (evento == null) {
+            throw new IllegalArgumentException("El evento no puede ser nulo.");
+        }else{
+            this.evento = evento;
+        }
     }
 
     // equals() y hashCode()

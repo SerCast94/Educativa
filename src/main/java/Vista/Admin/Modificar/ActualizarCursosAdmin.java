@@ -114,35 +114,7 @@ public class ActualizarCursosAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty() ||
-                    cmbProfesor.getSelectedItem() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            curso.setNombre(txtNombre.getText().trim());
-            curso.setDescripcion(txtDescripcion.getText().trim());
-            curso.setProfesor((Profesores) cmbProfesor.getSelectedItem());
-            curso.setEstado(Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString()));
-
-            try {
-                Controlador.actualizarControladorCurso(curso);
-                Controlador.actualizarListaCursos();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaCursos();
-
-                new CustomDialog(null,"Exito", "Curso actualizado correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar curso: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarCursoValido());
     }
 
     private void cargarProfesores() {
@@ -150,6 +122,45 @@ public class ActualizarCursosAdmin extends JFrame {
         cmbProfesor.removeAllItems();
         for (Profesores profesor : profesores) {
             cmbProfesor.addItem(profesor);
+        }
+    }
+
+    private void actualizarCursoValido(){
+
+        if (txtNombre.getText().trim().isEmpty() ||
+                txtDescripcion.getText().trim().isEmpty() ||
+                cmbProfesor.getSelectedItem() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtNombre.getText().length() > 100) {
+            new CustomDialog(null,"Error", "El nombre no puede exceder los 100 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtDescripcion.getText().length() > 255) {
+            new CustomDialog(null,"Error", "La descripción no puede exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        curso.setNombre(txtNombre.getText().trim());
+        curso.setDescripcion(txtDescripcion.getText().trim());
+        curso.setProfesor((Profesores) cmbProfesor.getSelectedItem());
+        curso.setEstado(Cursos.EstadoCurso.valueOf(cmbEstado.getSelectedItem().toString()));
+
+        try {
+            Controlador.actualizarControladorCurso(curso);
+            Controlador.actualizarListaCursos();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaCursos();
+
+            new CustomDialog(null,"Exito", "Curso actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar curso: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

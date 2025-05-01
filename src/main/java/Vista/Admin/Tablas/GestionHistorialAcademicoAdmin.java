@@ -287,7 +287,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
             Object[] fila = {
                     historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
                     historial.getAsignatura().getNombre(),
-                    (Double) historial.getNotaFinal(),
+                    historial.getNotaFinal(),
                     historial.getFechaAprobacion().toString(),
                     historial.getComentarios(),
                     historial

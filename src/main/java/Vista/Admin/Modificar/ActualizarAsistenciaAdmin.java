@@ -123,34 +123,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbCurso.getSelectedItem() == null ||
-                    datePicker.getDate() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            asistencia.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-            asistencia.setCurso((Cursos) cmbCurso.getSelectedItem());
-            asistencia.setFecha(Date.valueOf(datePicker.getDate()));
-            asistencia.setJustificado(chkJustificado.isSelected());
-            asistencia.setMotivoAusencia(txtMotivoAusencia.getText().trim());
-
-            try {
-                Controlador.actualizarControladorAsistencia(asistencia);
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaAsistencia();
-
-                new CustomDialog(null,"Éxito", "Asistencia actualizada correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar la asistencia.","ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarAsistenciaValida());
     }
 
     private void cargarEstudiantes() {
@@ -166,6 +139,41 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         cmbCurso.removeAllItems();
         for (Cursos curso : cursos) {
             cmbCurso.addItem(curso);
+        }
+    }
+
+    private void actualizarAsistenciaValida(){
+
+        if (cmbEstudiante.getSelectedItem() == null ||
+                cmbCurso.getSelectedItem() == null ||
+                datePicker.getDate() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (txtMotivoAusencia.getText().trim().length() > 255) {
+            new CustomDialog(null,"Error", "El motivo de ausencia no puede exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        asistencia.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
+        asistencia.setCurso((Cursos) cmbCurso.getSelectedItem());
+        asistencia.setFecha(Date.valueOf(datePicker.getDate()));
+        asistencia.setJustificado(chkJustificado.isSelected());
+        asistencia.setMotivoAusencia(txtMotivoAusencia.getText().trim());
+
+        try {
+            Controlador.actualizarControladorAsistencia(asistencia);
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaAsistencia();
+
+            new CustomDialog(null,"Éxito", "Asistencia actualizada correctamente.","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar la asistencia.","ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

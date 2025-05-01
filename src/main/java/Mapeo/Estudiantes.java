@@ -1,8 +1,11 @@
 package Mapeo;
+import Vista.Util.CustomDialog;
 import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "estudiantes")
@@ -110,7 +113,49 @@ public class Estudiantes {
         this.estado = estado;
     }
 
-    // Getters y Setters
+    // Validación de DNI
+     static public boolean validarDNI(String dni) {
+        // Verificar si el DNI no es nulo ni vacío y tiene exactamente 9 caracteres (8 dígitos + 1 letra)
+        if (dni == null || dni.length() != 9) {
+            return false;
+        }
+
+        // Extraer los 8 primeros caracteres (números) y la última letra
+        String numero = dni.substring(0, 8);
+        char letra = dni.charAt(8);
+
+        // Verificar que los primeros 8 caracteres son números
+        if (!numero.matches("\\d{8}")) {
+            return false;
+        }
+
+        // Validar la letra
+        String letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+        int indice = Integer.parseInt(numero) % 23;
+
+        // Comparar la letra del DNI con la letra esperada
+        return letra == letrasValidas.charAt(indice);
+    }
+
+    // Validación de correo electrónico
+    static public boolean validarEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    // Validación de teléfono
+    static public boolean validarTelefono(String telefono) {
+        return telefono != null && telefono.matches("^\\+?\\d{7,15}$");
+    }
+
+    // Validación de contraseña
+    static public boolean validarContrasena(String contrasena) {
+        return contrasena != null && contrasena.length() >= 6;
+    }
+
+    // Getters y Setters con validaciones
 
     public Integer getIdEstudiante() {
         return idEstudiante;
@@ -125,7 +170,11 @@ public class Estudiantes {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre != null && nombre.length() <= 100) {
+            this.nombre = nombre;
+        } else {
+            throw new IllegalArgumentException("El nombre no debe exceder los 100 caracteres.");
+        }
     }
 
     public String getApellido() {
@@ -133,7 +182,11 @@ public class Estudiantes {
     }
 
     public void setApellido(String apellido) {
-        this.apellido = apellido;
+        if (apellido != null && apellido.length() <= 100) {
+            this.apellido = apellido;
+        } else {
+            throw new IllegalArgumentException("El apellido no debe exceder los 100 caracteres.");
+        }
     }
 
     public String getDni() {
@@ -141,7 +194,11 @@ public class Estudiantes {
     }
 
     public void setDni(String dni) {
-        this.dni = dni;
+        if (validarDNI(dni)) {
+            this.dni = dni;
+        } else {
+            throw new IllegalArgumentException("El DNI debe tener entre 8 y 20 dígitos.");
+        }
     }
 
     public Date getFechaNacimiento() {
@@ -149,7 +206,11 @@ public class Estudiantes {
     }
 
     public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+        if (fechaNacimiento.before(new Date(System.currentTimeMillis()))) {
+            this.fechaNacimiento = fechaNacimiento;
+        } else {
+            throw new IllegalArgumentException("La fecha de nacimiento no puede ser futura.");
+        }
     }
 
     public String getDireccion() {
@@ -165,7 +226,11 @@ public class Estudiantes {
     }
 
     public void setTelefono(String telefono) {
-        this.telefono = telefono;
+        if (validarTelefono(telefono)) {
+            this.telefono = telefono;
+        } else {
+            throw new IllegalArgumentException("El teléfono no tiene un formato válido.");
+        }
     }
 
     public String getEmail() {
@@ -173,7 +238,11 @@ public class Estudiantes {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (validarEmail(email)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("El email no tiene un formato válido.");
+        }
     }
 
     public Date getFechaMatricula() {
@@ -205,7 +274,11 @@ public class Estudiantes {
     }
 
     public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+        if (validarContrasena(contrasena)) {
+            this.contrasena = contrasena;
+        } else {
+            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres.");
+        }
     }
 
     public EstadoEstudiante getEstado() {
@@ -268,6 +341,4 @@ public class Estudiantes {
     public String toString() {
         return nombre + " " + apellido;
     }
-
 }
-

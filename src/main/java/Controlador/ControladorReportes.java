@@ -2,6 +2,7 @@ package Controlador;
 
 import Mapeo.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -61,14 +62,22 @@ public class ControladorReportes {
     }
 
     private static String calcularMedia(Estudiantes estudiante) {
-        double sumaNotas = 0;
+        BigDecimal sumaNotas = BigDecimal.ZERO;
         int cantidadNotas = 0;
+
         for (HistorialAcademico historial : estudiante.getHistorialAcademico()) {
-            sumaNotas += historial.getNotaFinal();
+            sumaNotas = sumaNotas.add(historial.getNotaFinal());
             cantidadNotas++;
         }
-        double media = cantidadNotas > 0 ? sumaNotas / cantidadNotas : 0;
-        return String.format("%.2f", media);
+
+        BigDecimal media;
+        if (cantidadNotas > 0) {
+            media = sumaNotas.divide(BigDecimal.valueOf(cantidadNotas), 2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            media = BigDecimal.ZERO;
+        }
+
+        return media.toString();
     }
 
     public static Map<String, String> enviarInfoParaCertificadoBeca(Estudiantes estudiante) {

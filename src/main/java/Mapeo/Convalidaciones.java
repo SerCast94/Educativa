@@ -1,4 +1,5 @@
 package Mapeo;
+
 import jakarta.persistence.*;
 import java.sql.Date;
 
@@ -19,7 +20,7 @@ public class Convalidaciones {
     @JoinColumn(name = "id_asignatura_original", nullable = false)
     private Asignaturas asignaturaOriginal;
 
-    @Column(name = "fecha_convalidacion")
+    @Column(name = "fecha_convalidacion", nullable = false)
     private Date fechaConvalidacion;
 
     @Enumerated(EnumType.STRING)
@@ -38,15 +39,14 @@ public class Convalidaciones {
     }
 
     public Convalidaciones(Estudiantes estudiante, Asignaturas asignaturaOriginal, Date fechaConvalidacion, EstadoConvalidacion estadoConvalidacion, String comentarios) {
-        this.estudiante = estudiante;
-        this.asignaturaOriginal = asignaturaOriginal;
-        this.fechaConvalidacion = fechaConvalidacion;
-        this.estadoConvalidacion = estadoConvalidacion;
-        this.comentarios = comentarios;
+        setEstudiante(estudiante);
+        setAsignaturaOriginal(asignaturaOriginal);
+        setFechaConvalidacion(fechaConvalidacion);
+        setEstadoConvalidacion(estadoConvalidacion);
+        setComentarios(comentarios);
     }
 
-
-    // Getters y Setters
+    // Getters y Setters con validaciones
 
     public Integer getIdConvalidacion() {
         return idConvalidacion;
@@ -61,6 +61,9 @@ public class Convalidaciones {
     }
 
     public void setEstudiante(Estudiantes estudiante) {
+        if (estudiante == null) {
+            throw new IllegalArgumentException("El estudiante no puede ser nulo.");
+        }
         this.estudiante = estudiante;
     }
 
@@ -69,6 +72,9 @@ public class Convalidaciones {
     }
 
     public void setAsignaturaOriginal(Asignaturas asignaturaOriginal) {
+        if (asignaturaOriginal == null) {
+            throw new IllegalArgumentException("La asignatura original no puede ser nula.");
+        }
         this.asignaturaOriginal = asignaturaOriginal;
     }
 
@@ -77,6 +83,9 @@ public class Convalidaciones {
     }
 
     public void setFechaConvalidacion(Date fechaConvalidacion) {
+        if (fechaConvalidacion == null) {
+            throw new IllegalArgumentException("La fecha de convalidación no puede ser nula.");
+        }
         this.fechaConvalidacion = fechaConvalidacion;
     }
 
@@ -85,6 +94,9 @@ public class Convalidaciones {
     }
 
     public void setEstadoConvalidacion(EstadoConvalidacion estadoConvalidacion) {
+        if (estadoConvalidacion == null) {
+            throw new IllegalArgumentException("El estado de la convalidación no puede ser nulo.");
+        }
         this.estadoConvalidacion = estadoConvalidacion;
     }
 
@@ -93,8 +105,9 @@ public class Convalidaciones {
     }
 
     public void setComentarios(String comentarios) {
+        if (comentarios != null && comentarios.length() > 255) {
+            throw new IllegalArgumentException("Los comentarios no pueden exceder los 255 caracteres.");
+        }
         this.comentarios = comentarios;
     }
-
-
 }

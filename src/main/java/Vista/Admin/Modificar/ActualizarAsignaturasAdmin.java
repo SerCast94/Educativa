@@ -114,35 +114,7 @@ public class ActualizarAsignaturasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty() ||
-                    txtDescripcion.getText().trim().isEmpty() ||
-                    cmbProfesor.getSelectedItem() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            asignatura.setNombre(txtNombre.getText().trim());
-            asignatura.setDescripcion(txtDescripcion.getText().trim());
-            asignatura.setProfesor((Profesores) cmbProfesor.getSelectedItem());
-            asignatura.setEstado(Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString()));
-
-            try {
-                Controlador.actualizarControladorAsignatura(asignatura);
-                Controlador.actualizarListaAsignaturas();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaAsignaturas();
-
-                new CustomDialog(null,"Asignatura actualizada", "Asignatura actualizada correctamente","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar asignatura: " , "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarAsignaturaValida());
     }
 
     private void cargarProfesores() {
@@ -150,6 +122,54 @@ public class ActualizarAsignaturasAdmin extends JFrame {
         cmbProfesor.removeAllItems();
         for (Profesores profesor : profesores) {
             cmbProfesor.addItem(profesor);
+        }
+    }
+
+    private void actualizarAsignaturaValida(){
+
+        if (txtNombre.getText().trim().isEmpty() ||
+                txtDescripcion.getText().trim().isEmpty() ||
+                cmbProfesor.getSelectedItem() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtNombre.getText().length() > 100) {
+            new CustomDialog(null,"Error", "El nombre no puede exceder los 100 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (txtDescripcion.getText().length() > 255) {
+            new CustomDialog(null,"Error", "La descripción no puede exceder los 255 caracteres.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (cmbProfesor.getSelectedItem() == null) {
+            new CustomDialog(null,"Error", "El profesor no puede ser nulo.","ONLY_OK").setVisible(true);
+            return;
+        }
+        if (cmbEstado.getSelectedItem() == null) {
+            new CustomDialog(null,"Error", "El estado no puede ser nulo.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+
+        asignatura.setNombre(txtNombre.getText().trim());
+        asignatura.setDescripcion(txtDescripcion.getText().trim());
+        asignatura.setProfesor((Profesores) cmbProfesor.getSelectedItem());
+        asignatura.setEstado(Asignaturas.EstadoAsignatura.valueOf(cmbEstado.getSelectedItem().toString()));
+
+        try {
+            Controlador.actualizarControladorAsignatura(asignatura);
+            Controlador.actualizarListaAsignaturas();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaAsignaturas();
+
+            new CustomDialog(null,"Asignatura actualizada", "Asignatura actualizada correctamente","ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar asignatura: " , "ONLY_OK").setVisible(true);
+            Controlador.rollback();
         }
     }
 }

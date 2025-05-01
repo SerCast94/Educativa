@@ -1,4 +1,5 @@
 package Mapeo;
+
 import jakarta.persistence.*;
 import java.sql.Date;
 
@@ -32,15 +33,15 @@ public class Asistencia {
     public Asistencia() {
     }
 
-    public Asistencia(Estudiantes estudiante, Cursos curso, Date fecha, Boolean asistio, String motivoAusencia) {
-        this.estudiante = estudiante;
-        this.curso = curso;
-        this.fecha = fecha;
-        this.justificado = asistio;
-        this.motivoAusencia = motivoAusencia;
+    public Asistencia(Estudiantes estudiante, Cursos curso, Date fecha, Boolean justificado, String motivoAusencia) {
+        setEstudiante(estudiante);
+        setCurso(curso);
+        setFecha(fecha);
+        setJustificado(justificado);
+        setMotivoAusencia(motivoAusencia);
     }
 
-    // Getters y Setters
+    // Getters y Setters con validaciones
 
     public Integer getIdAsistencia() {
         return idAsistencia;
@@ -55,6 +56,9 @@ public class Asistencia {
     }
 
     public void setEstudiante(Estudiantes estudiante) {
+        if (estudiante == null) {
+            throw new IllegalArgumentException("El estudiante no puede ser nulo.");
+        }
         this.estudiante = estudiante;
     }
 
@@ -63,6 +67,9 @@ public class Asistencia {
     }
 
     public void setCurso(Cursos curso) {
+        if (curso == null) {
+            throw new IllegalArgumentException("El curso no puede ser nulo.");
+        }
         this.curso = curso;
     }
 
@@ -71,6 +78,9 @@ public class Asistencia {
     }
 
     public void setFecha(Date fecha) {
+        if (fecha == null) {
+            throw new IllegalArgumentException("La fecha no puede ser nula.");
+        }
         this.fecha = fecha;
     }
 
@@ -78,8 +88,8 @@ public class Asistencia {
         return justificado;
     }
 
-    public void setJustificado(Boolean asistio) {
-        this.justificado = asistio;
+    public void setJustificado(Boolean justificado) {
+        this.justificado = justificado;
     }
 
     public String getMotivoAusencia() {
@@ -87,11 +97,9 @@ public class Asistencia {
     }
 
     public void setMotivoAusencia(String motivoAusencia) {
+        if (motivoAusencia != null && motivoAusencia.length() > 255) {
+            throw new IllegalArgumentException("El motivo de ausencia no puede exceder los 255 caracteres.");
+        }
         this.motivoAusencia = motivoAusencia;
     }
-
-
-
-
 }
-

@@ -17,11 +17,11 @@ public class Cursos {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", length = 255)
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "id_profesor")
+    @JoinColumn(name = "id_profesor", nullable = false)
     private Profesores profesor;
 
     @Enumerated(EnumType.STRING)
@@ -37,9 +37,6 @@ public class Cursos {
     @OneToMany(mappedBy = "curso", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Matriculas> matriculas = new ArrayList<>();
 
-
-
-
     public enum EstadoCurso {
         activo, inactivo
     }
@@ -49,13 +46,13 @@ public class Cursos {
     }
 
     public Cursos(String nombre, String descripcion, Profesores profesor, EstadoCurso estado) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.profesor = profesor;
-        this.estado = estado;
+        setNombre(nombre);
+        setDescripcion(descripcion);
+        setProfesor(profesor);
+        setEstado(estado);
     }
 
-    // Getters y Setters
+    // Getters y Setters con validaciones
 
     public Integer getIdCurso() {
         return idCurso;
@@ -70,6 +67,9 @@ public class Cursos {
     }
 
     public void setNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del curso no puede ser nulo o vacío.");
+        }
         this.nombre = nombre;
     }
 
@@ -78,6 +78,9 @@ public class Cursos {
     }
 
     public void setDescripcion(String descripcion) {
+        if (descripcion != null && descripcion.length() > 255) {
+            throw new IllegalArgumentException("La descripción no puede exceder los 255 caracteres.");
+        }
         this.descripcion = descripcion;
     }
 
@@ -86,6 +89,9 @@ public class Cursos {
     }
 
     public void setProfesor(Profesores profesor) {
+        if (profesor == null) {
+            throw new IllegalArgumentException("El profesor no puede ser nulo.");
+        }
         this.profesor = profesor;
     }
 
@@ -94,6 +100,9 @@ public class Cursos {
     }
 
     public void setEstado(EstadoCurso estado) {
+        if (estado == null) {
+            throw new IllegalArgumentException("El estado del curso no puede ser nulo.");
+        }
         this.estado = estado;
     }
 
@@ -121,13 +130,10 @@ public class Cursos {
         this.matriculas = matriculas;
     }
 
-
-
-    //ToString
+    // ToString
 
     @Override
     public String toString() {
         return nombre;
     }
 }
-

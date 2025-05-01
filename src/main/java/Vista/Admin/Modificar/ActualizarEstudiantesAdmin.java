@@ -11,8 +11,10 @@ import Vista.Util.CustomDialog;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import static BackUtil.Encriptador.encryptMD5;
+import static Controlador.Controlador.actualizarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
 public class ActualizarEstudiantesAdmin extends JFrame {
@@ -173,81 +175,8 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.setText("Actualizar");
-        btnAceptar.addActionListener(e -> {
-            if (txtDNI.getText().trim().isEmpty() ||
-                    txtNombre.getText().trim().isEmpty() ||
-                    txtApellido.getText().trim().isEmpty() ||
-                    txtUsuario.getText().trim().isEmpty() ||
-                    datePickerNacimiento.getDate() == null ||
-                    datePickerMatricula.getDate() == null ||
-                    txtEmail.getText().trim().isEmpty() ||
-                    txtTelefono.getText().trim().isEmpty() ||
-                    txtDireccion.getText().trim().isEmpty() ||
-                    cmbTutor.getSelectedItem() == null) {
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-            }
-
-            String nuevaPassword = new String(txtPassword.getPassword());
-
-            if (!nuevaPassword.isEmpty()) {
-
-                estudiante.setNombre(txtNombre.getText().trim());
-                estudiante.setApellido(txtApellido.getText().trim());
-                estudiante.setDni(txtDNI.getText().trim());
-                estudiante.setFechaNacimiento(Date.valueOf(datePickerNacimiento.getDate()));
-                estudiante.setDireccion(txtDireccion.getText().trim());
-                estudiante.setTelefono(txtTelefono.getText().trim());
-                estudiante.setEmail(txtEmail.getText().trim());
-                estudiante.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
-                estudiante.setTutor((Tutores) cmbTutor.getSelectedItem());
-                estudiante.setUsuario(txtUsuario.getText().trim());
-                estudiante.setContrasena(encryptMD5(nuevaPassword));
-                estudiante.setEstado(Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString()));
-
-                try {
-                    Controlador.actualizarControladorEstudiante(estudiante);
-                    Controlador.actualizarListaEstudiantes();
-
-                    VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                    vistaPrincipal.mostrarVistaEstudiantes();
-
-                    new CustomDialog(null,"Exito", "Estudiante actualizado correctamente.","ONLY_OK").setVisible(true);
-                    dispose();
-                } catch (Exception ex) {
-                    new CustomDialog(null,"Error", "Error al actualizar estudiante.","ONLY_OK").setVisible(true);
-                    Controlador.rollback();
-                }
-
-            }else{
-                estudiante.setNombre(txtNombre.getText().trim());
-                estudiante.setApellido(txtApellido.getText().trim());
-                estudiante.setDni(txtDNI.getText().trim());
-                estudiante.setFechaNacimiento(Date.valueOf(datePickerNacimiento.getDate()));
-                estudiante.setDireccion(txtDireccion.getText().trim());
-                estudiante.setTelefono(txtTelefono.getText().trim());
-                estudiante.setEmail(txtEmail.getText().trim());
-                estudiante.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
-                estudiante.setTutor((Tutores) cmbTutor.getSelectedItem());
-                estudiante.setUsuario(txtUsuario.getText().trim());
-                estudiante.setEstado(Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString()));
-
-                try {
-                    Controlador.actualizarControladorEstudiante(estudiante);
-                    Controlador.actualizarListaEstudiantes();
-
-                    VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                    vistaPrincipal.mostrarVistaEstudiantes();
-
-                    new CustomDialog(null,"Exito", "Estudiante actualizado correctamente.","ONLY_OK").setVisible(true);
-                    dispose();
-                } catch (Exception ex) {
-                    new CustomDialog(null,"Error", "Error al actualizar estudiante.","ONLY_OK").setVisible(true);
-                    Controlador.rollback();
-                }
-            }
-
-        });
+        btnAceptar.addActionListener(e -> actualizarEstudianteValido());
     }
 
     private void cargarTutores() {
@@ -255,6 +184,82 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         cmbTutor.removeAllItems();
         for (Tutores tutor : tutores) {
             cmbTutor.addItem(tutor);
+        }
+    }
+
+    private void actualizarEstudianteValido() {
+        String nombre = txtNombre.getText().trim();
+        String apellido = txtApellido.getText().trim();
+        String dni = txtDNI.getText().trim();
+        String usuario = txtUsuario.getText().trim();
+        String correo = txtEmail.getText().trim();
+        String telefono = txtTelefono.getText().trim();
+        String contrasena = new String(txtPassword.getPassword()).trim();
+        LocalDate fechaNacimiento = datePickerNacimiento.getDate();
+        LocalDate fechaMatricula = datePickerMatricula.getDate();
+        Estudiantes.EstadoEstudiante estado = Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString().toUpperCase());
+
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || usuario.isEmpty() ||
+                correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null) {
+            new CustomDialog(null, "Error", "Todos los campos deben estar completos.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarDNI(dni)) {
+            new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarEmail(correo)) {
+            new CustomDialog(null, "Error", "El correo electrónico no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!Estudiantes.validarTelefono(telefono)) {
+            new CustomDialog(null, "Error", "El teléfono ingresado no es válido.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (!contrasena.isEmpty() && !Estudiantes.validarContrasena(contrasena)) {
+            new CustomDialog(null, "Error", "La contraseña debe tener al menos 6 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (fechaNacimiento.isAfter(LocalDate.now())) {
+            new CustomDialog(null, "Error", "La fecha de nacimiento no puede ser en el futuro.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if (fechaMatricula.isBefore(fechaNacimiento)) {
+            new CustomDialog(null, "Error", "La fecha de matrícula no puede ser anterior a la fecha de nacimiento.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            estudiante.setNombre(nombre);
+            estudiante.setApellido(apellido);
+            estudiante.setDni(dni);
+            estudiante.setUsuario(usuario);
+            estudiante.setEmail(correo);
+            estudiante.setTelefono(telefono);
+            estudiante.setFechaNacimiento(Date.valueOf(fechaNacimiento));
+            estudiante.setFechaMatricula(Date.valueOf(fechaMatricula));
+            estudiante.setEstado(estado);
+
+            if (!contrasena.isEmpty()) {
+                estudiante.setContrasena(encryptMD5(contrasena));
+            }
+
+            actualizarControladorEstudiante(estudiante);
+            Controlador.actualizarListaEstudiantes();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaEstudiantes();
+
+            new CustomDialog(null, "Éxito", "Estudiante actualizado correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al actualizar estudiante: " + ex.getMessage(), "ONLY_OK").setVisible(true);
         }
     }
 }

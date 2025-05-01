@@ -119,36 +119,7 @@ public class ActualizarMatriculasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbCurso.getSelectedItem() == null ||
-                    datePickerMatricula.getDate() == null ||
-                    cmbEstado.getSelectedItem() == null) {
-
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-
-            try {
-                matricula.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-                matricula.setCurso((Cursos) cmbCurso.getSelectedItem());
-                matricula.setEstado(Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString()));
-                matricula.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
-
-                Controlador.actualizarControladorMatricula(matricula);
-                Controlador.actualizarListaMatriculas();
-
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaMatriculas();
-
-                new CustomDialog(null,"Éxito", "Matrícula actualizada correctamente.","ONLY_OK").setVisible(true);
-
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
-        });
+        btnAceptar.addActionListener(e -> actualizarMatriculaValida());
     }
 
     private void cargarEstudiantes() {
@@ -165,5 +136,38 @@ public class ActualizarMatriculasAdmin extends JFrame {
         for (Cursos curso : cursos) {
             cmbCurso.addItem(curso);
         }
+    }
+
+    private void actualizarMatriculaValida(){
+
+        if (cmbEstudiante.getSelectedItem() == null ||
+                cmbCurso.getSelectedItem() == null ||
+                datePickerMatricula.getDate() == null ||
+                cmbEstado.getSelectedItem() == null) {
+
+            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            return;
+        }
+
+        try {
+            matricula.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
+            matricula.setCurso((Cursos) cmbCurso.getSelectedItem());
+            matricula.setEstado(Matriculas.EstadoMatricula.valueOf(cmbEstado.getSelectedItem().toString()));
+            matricula.setFechaMatricula(Date.valueOf(datePickerMatricula.getDate()));
+
+            Controlador.actualizarControladorMatricula(matricula);
+            Controlador.actualizarListaMatriculas();
+
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaMatriculas();
+
+            new CustomDialog(null,"Éxito", "Matrícula actualizada correctamente.","ONLY_OK").setVisible(true);
+
+            dispose();
+        } catch (Exception ex) {
+            new CustomDialog(null,"Error", "Error al actualizar matrícula: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
+
     }
 }

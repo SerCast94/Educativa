@@ -10,6 +10,7 @@ import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static Controlador.Controlador.actualizarListaBecas;
@@ -111,7 +112,19 @@ public class FormularioBecasAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
+        btnAceptar.addActionListener(e -> insertarBecasValido());
+    }
+
+    private void cargarEstudiantes() {
+        List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
+        cmbEstudiantes.removeAllItems();
+        for (Estudiantes est : estudiantes) {
+            cmbEstudiantes.addItem(est);
+        }
+    }
+
+    private void insertarBecasValido() {
+
             if (cmbEstudiantes.getSelectedItem() == null ||
                     cmbTipoBeca.getSelectedItem() == null ||
                     txtMonto.getText().trim().isEmpty() ||
@@ -119,6 +132,25 @@ public class FormularioBecasAdmin extends JFrame {
                     cmbEstadoBeca.getSelectedItem() == null) {
 
                 new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+                return;
+            }
+            if (txtComentarios.getText().length() > 255) {
+                new CustomDialog(null, "Error", "Los comentarios no pueden exceder los 255 caracteres.", "ONLY_OK").setVisible(true);
+                return;
+            }
+            if (txtMonto.getText().length() > 10) {
+                new CustomDialog(null, "Error", "El monto no puede exceder los 10 caracteres.", "ONLY_OK").setVisible(true);
+                return;
+            }
+
+            try {
+                double monto = Double.parseDouble(txtMonto.getText().trim());
+                if (monto < 0) {
+                    new CustomDialog(null, "Error", "El monto no puede estar vacío.", "ONLY_OK").setVisible(true);
+                    return;
+                }
+            }catch (NumberFormatException ex) {
+                new CustomDialog(null, "Error", "El monto debe ser un número válido.", "ONLY_OK").setVisible(true);
                 return;
             }
 
@@ -147,14 +179,5 @@ public class FormularioBecasAdmin extends JFrame {
                 new CustomDialog(null, "Error", "Error al asignar la beca.", "ONLY_OK").setVisible(true);
                 Controlador.rollback();
             }
-        });
-    }
-
-    private void cargarEstudiantes() {
-        List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
-        cmbEstudiantes.removeAllItems();
-        for (Estudiantes est : estudiantes) {
-            cmbEstudiantes.addItem(est);
-        }
     }
 }
