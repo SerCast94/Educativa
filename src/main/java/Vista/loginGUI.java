@@ -6,7 +6,9 @@ import Mapeo.Estudiantes;
 import Mapeo.Administradores;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Profesor.VistaPrincipalProfesor;
+import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
 import javax.swing.*;
@@ -22,7 +24,7 @@ public class loginGUI extends JFrame {
     private JPanel mainPanel, leftPanel, rightPanel;
     private JTextField campoUsuario;
     private JPasswordField campoPassword;
-    private JButton botonIngresar;
+    private Boton botonIngresar;
     private JLabel logoLabel, nombreCentroLabel, descripcionLabel, olvidoPasswordLabel, appNameLabel;
     static Controlador controlador;
     static ControladorLogin controladorLogin;
@@ -164,7 +166,7 @@ public class loginGUI extends JFrame {
         rightPanel.add(Box.createVerticalStrut(30), gbc);
 
         // Botón Ingresar
-        botonIngresar = new JButton("Ingresar");
+        botonIngresar = new Boton("Ingresar",Boton.ButtonType.PRIMARY);
         botonIngresar.setFont(new Font("Arial", Font.BOLD, 16));
         botonIngresar.setBackground(new Color(230, 108, 81));
         botonIngresar.setForeground(Color.BLACK);
@@ -247,8 +249,8 @@ public class loginGUI extends JFrame {
     }
 
     private void abrirVentanaPrincipalEstudiante(Estudiantes estudiante) {
-        // Placeholder
-        System.out.println("Abriendo ventana principal para el estudiante: " + estudiante.getNombre());
+        new VistaPrincipalEstudiante(estudiante);
+        dispose();
     }
 
     private void abrirVentanaPrincipalAdmin(Administradores admin) {

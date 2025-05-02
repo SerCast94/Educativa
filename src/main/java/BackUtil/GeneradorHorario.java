@@ -40,7 +40,7 @@ public class GeneradorHorario {
                     xml.append("    <dia>").append(horario.getDiaSemana()).append("</dia>\n");
                     xml.append("    <tramo_horario>").append(horario.getHoraInicio()).append(" - ").append(horario.getHoraFin()).append("</tramo_horario>\n");
                     xml.append("    <asignatura>").append(horario.getAsignatura().getNombre()).append("</asignatura>\n");
-                    xml.append("    <profesor>").append(horario.getProfesor().getNombre()).append("</profesor>\n");
+                    xml.append("    <profesor>").append(horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido()).append("</profesor>\n");
                     xml.append("  </entrada>\n");
                 }
                 xml.append("</horario>");
@@ -121,7 +121,7 @@ public class GeneradorHorario {
     public static void obtenerHTML(String rutaXML, String rutaHTML) {
         try {
             File xmlFile = new File(rutaXML);
-            File xsltFile = new File("src/main/resources/transformHorarios.xslt");
+            File xsltFile = new File("src/main/resources/xslt/transformHorarios.xslt");
             File outputFile = new File(rutaHTML);
 
             TransformerFactory factory = TransformerFactory.newInstance();

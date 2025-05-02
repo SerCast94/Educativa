@@ -1,46 +1,57 @@
-package Vista.Admin.Tablas;
+package Vista.Estudiante.Tablas;
 
-import Controlador.Controlador;
+import BackUtil.GeneradorHorario;
+import Mapeo.CursosAsignaturas;
 import Mapeo.Horarios;
-import Vista.Admin.Anadir.FormularioHorariosAdmin;
-import Vista.Admin.Modificar.ActualizarHorariosAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
-import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHorarios;
+import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
 
-public class GestionHorarioAdmin extends JPanel {
+
+public class GestionHorarioEstudiante extends JPanel {
     private JTable tablaHorarios;
-    private JButton btnAgregar;
+    private JButton btnDescargar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionHorarioAdmin() {
+    public GestionHorarioEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarHorariosAdmin();
+        cargarHorariosEstudiante();
     }
 
     private void initGUI() {
         initPanelSuperior();
         initTabla();
-        initPopupMenu();
     }
 
     private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioHorariosAdmin());
+        btnDescargar.addActionListener(e -> {
+            List<Horarios> horariosEstudiante = new ArrayList<>();
+            for (Horarios horario : listaHorarios) {
+                for (CursosAsignaturas cursoAsignatura : horario.getAsignatura().getCursosAsignaturas()) {
+                    if (cursoAsignatura.getCurso().equals(usuarioLogeado.getMatriculas().get(0).getCurso())) {
+                        horariosEstudiante.add(horario);
+                        break;
+                    }
+                }
+            }
+            GeneradorHorario.exportarHorarioAXML(horariosEstudiante);
+        });
 
         header.addMouseListener(new MouseAdapter() {
             @Override
@@ -64,24 +75,6 @@ public class GestionHorarioAdmin extends JPanel {
                 }
             }
         });
-
-        tablaHorarios.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHorarios.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void initPanelSuperior() {
@@ -97,23 +90,24 @@ public class GestionHorarioAdmin extends JPanel {
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
+
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Horario", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        btnDescargar = new Boton("Descargar Horario", Boton.ButtonType.PRIMARY);
+        btnDescargar.setIcon(icono);
+        btnDescargar.setPreferredSize(new Dimension(180, 30));
+        btnDescargar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        panelBoton.add(btnDescargar);
 
-        panelBoton.add(btnAgregar);
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelSuperior, BorderLayout.NORTH);
     }
 
     private void initTabla() {
-        String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
-               modelo = new DefaultTableModel(null, columnas) {
+        String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor", "Objeto"};
+        modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -132,7 +126,7 @@ public class GestionHorarioAdmin extends JPanel {
             }
         };
 
-        TableColumn columnaOculta = tablaHorarios.getColumnModel().getColumn(tablaHorarios.getColumnCount()-1);
+        TableColumn columnaOculta = tablaHorarios.getColumnModel().getColumn(tablaHorarios.getColumnCount() - 1);
         columnaOculta.setMinWidth(0);
         columnaOculta.setMaxWidth(0);
         columnaOculta.setPreferredWidth(0);
@@ -209,90 +203,25 @@ public class GestionHorarioAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
-    private void initPopupMenu() {
-        popupMenu = new JPopupMenu() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(new Color(240, 240, 240, 220));
-                g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
-
-                g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
-                g2.dispose();
-            }
-        };
-        popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        popupMenu.setOpaque(false);
-
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarHorario());
-
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
-        configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHorario());
-
-        popupMenu.add(modificarItembtn);
-        popupMenu.add(Box.createVerticalStrut(5));
-        popupMenu.add(eliminarItembtn);
-
-        UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
-        UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
-    }
-
-    private void configurarBotonPopup(Boton boton) {
-        boton.setPreferredSize(new Dimension(150, 30));
-        boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);
-        boton.setFocusPainted(false);
-        boton.setOpaque(false);
-    }
-
-    private void modificarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
-        if (fila != -1) {
-            int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-            Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-            new ActualizarHorariosAdmin(horarioSeleccionado);
-        }
-    }
-
-    private void eliminarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
-        if (fila != -1) {
-            new CustomDialog(null, "Eliminar Horario", "¿Está seguro de que desea eliminar este horario?", "OK_CANCEL").setVisible(true);
-
-            if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-                Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-                Controlador.eliminarControladorHorario(horarioSeleccionado);
-                Controlador.actualizarListaHorarios();
-
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaHorarios();
-                new CustomDialog(null, "Horario Eliminado", "Horario eliminado correctamente.", "ONLY_OK").setVisible(true);
-
-            } else {
-                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
-            }
-        }
-    }
-
-    private void cargarHorariosAdmin() {
+    private void cargarHorariosEstudiante() {
         modelo.setRowCount(0);
         for (Horarios horario : listaHorarios) {
-            Object[] fila = {
-                    horario.getAsignatura().getNombre(),
-                    horario.getDiaSemana() ,
-                    horario.getHoraInicio().toString(),
-                    horario.getHoraFin().toString(),
-                    horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
-                    horario
-            };
-            modelo.addRow(fila);
+            List<CursosAsignaturas> cursosAsignaturas = horario.getAsignatura().getCursosAsignaturas();
+
+            for (CursosAsignaturas cursoAsignatura : cursosAsignaturas) {
+                if (cursoAsignatura.getCurso().equals(VistaPrincipalEstudiante.usuarioLogeado.getMatriculas().get(0).getCurso())) {
+                    Object[] fila = {
+                            horario.getAsignatura().getNombre(),
+                            horario.getDiaSemana(),
+                            horario.getHoraInicio().toString(),
+                            horario.getHoraFin().toString(),
+                            horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
+                            horario
+                    };
+                    modelo.addRow(fila);
+                    break;
+                }
+            }
         }
     }
 }

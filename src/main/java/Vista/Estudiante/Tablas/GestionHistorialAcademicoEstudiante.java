@@ -1,10 +1,9 @@
-package Vista.Profesor.Tablas;
+package Vista.Estudiante.Tablas;
 
 import Controlador.Controlador;
 import Mapeo.HistorialAcademico;
-import Vista.Profesor.Anadir.FormularioHistorialAcademicoProfesor;
-import Vista.Profesor.Modificar.ActualizarHistorialAcademicoProfesor;
-import Vista.Profesor.VistaPrincipalProfesor;
+import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -19,14 +18,13 @@ import java.util.Objects;
 
 import static Controlador.Controlador.listaHistorialAcademico;
 
-public class GestionHistorialAcademicoProfesor extends JPanel {
+public class GestionHistorialAcademicoEstudiante extends JPanel {
     private JTable tablaHistorial;
-    private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionHistorialAcademicoProfesor() {
+    public GestionHistorialAcademicoEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
@@ -36,11 +34,9 @@ public class GestionHistorialAcademicoProfesor extends JPanel {
     private void initGUI() {
         initPanelSuperior();
         initTabla();
-        initPopupMenu();
     }
 
     private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoProfesor());
 
         header.addMouseListener(new MouseAdapter() {
             @Override
@@ -64,24 +60,6 @@ public class GestionHistorialAcademicoProfesor extends JPanel {
                 }
             }
         });
-
-        tablaHistorial.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaHistorial.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHistorial.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHistorial.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void initPanelSuperior() {
@@ -97,22 +75,13 @@ public class GestionHistorialAcademicoProfesor extends JPanel {
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-
-        btnAgregar = new Boton("Agregar Historial", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        panelBoton.add(btnAgregar);
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelSuperior, BorderLayout.NORTH);
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Asignatura", "Nota Final", "Fecha", "Comentarios","Objeto"};
+        String[] columnas = {"Asignatura", "Nota Final", "Fecha", "Comentarios","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -203,91 +172,17 @@ public class GestionHistorialAcademicoProfesor extends JPanel {
 
         JPanel panelConMargen = new JPanel(new BorderLayout());
         panelConMargen.setBackground(new Color(0xFBEAE6));
-        panelConMargen.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 10));
+        panelConMargen.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 10));
         panelConMargen.add(scroll, BorderLayout.CENTER);
 
         add(panelConMargen, BorderLayout.CENTER);
     }
 
-    private void initPopupMenu() {
-        popupMenu = new JPopupMenu() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(new Color(240, 240, 240, 220));
-                g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
-
-                g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
-                g2.dispose();
-            }
-        };
-        popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        popupMenu.setOpaque(false);
-
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarHistorial());
-
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
-        configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHistorialAcademico());
-
-        popupMenu.add(modificarItembtn);
-        popupMenu.add(Box.createVerticalStrut(5));
-        popupMenu.add(eliminarItembtn);
-
-        UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
-        UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
-    }
-
-    private void configurarBotonPopup(Boton boton) {
-        boton.setPreferredSize(new Dimension(150, 30));
-        boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);
-        boton.setFocusPainted(false);
-        boton.setOpaque(false);
-    }
-
-    private void modificarHistorial() {
-        int fila = tablaHistorial.getSelectedRow();
-        if (fila != -1) {
-            int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
-            HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
-            new ActualizarHistorialAcademicoProfesor(historialSeleccionado);
-        }
-    }
-
-    private void eliminarHistorialAcademico() {
-        int fila = tablaHistorial.getSelectedRow();
-        if (fila != -1) {
-            new CustomDialog(null, "Eliminar Historial Académico", "¿Está seguro de que desea eliminar este registro del historial académico?", "OK_CANCEL").setVisible(true);
-
-            if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaHistorial.convertRowIndexToModel(fila);
-                HistorialAcademico historialSeleccionado = (HistorialAcademico) modelo.getValueAt(filaModelo, tablaHistorial.getColumnCount() - 1);
-                Controlador.eliminarControladorHistorialAcademico(historialSeleccionado);
-                Controlador.actualizarListaHistorialAcademico();
-
-                VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
-                vistaPrincipalProfesor.mostrarVistaHistorialAcademico();
-                new CustomDialog(null, "Historial Eliminado", "Registro del historial académico eliminado correctamente.", "ONLY_OK").setVisible(true);
-
-            } else {
-                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
-            }
-        }
-    }
-
     private void cargarHistorial() {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {
-
-            if (historial.getAsignatura().getProfesor().equals(VistaPrincipalProfesor.usuarioLogeado)) {
+            if (historial.getEstudiante().equals(VistaPrincipalEstudiante.usuarioLogeado)) {
                 Object[] fila = {
-                        historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
                         historial.getAsignatura().getNombre(),
                         historial.getNotaFinal(),
                         historial.getFechaAprobacion().toString(),

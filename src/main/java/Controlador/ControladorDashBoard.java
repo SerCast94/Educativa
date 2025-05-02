@@ -1,12 +1,10 @@
 package Controlador;
 
-import Mapeo.Estudiantes;
-import Mapeo.HistorialAcademico;
-import Mapeo.Matriculas;
-import Mapeo.Profesores;
+import Mapeo.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ControladorDashBoard {
@@ -208,9 +206,76 @@ public class ControladorDashBoard {
        int horasTrabajadas = 0;
        horasTrabajadas = profesor.getHorarios().size();
 
-        System.out.println(horasTrabajadas);
 
         return horasTrabajadas;
     }
 
+
+    //DASHBOARD DE ESTUDIANTE
+
+    public static int notaMediaAsignaturasEstudiante(Estudiantes estudiante) {
+        BigDecimal suma = BigDecimal.ZERO;
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            if (Controlador.getListaHistorialAcademico().get(i).getEstudiante().equals(estudiante)) {
+                suma = suma.add(Controlador.getListaHistorialAcademico().get(i).getNotaFinal());
+                contador++;
+            }
+        }
+        return contador > 0 ? suma.divide(BigDecimal.valueOf(contador), 2, BigDecimal.ROUND_HALF_UP).intValue() : 0;
+    }
+
+    public static int numAsignaturasSuspensasEstudiante(Estudiantes estudiante) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            if (Controlador.getListaHistorialAcademico().get(i).getEstudiante().equals(estudiante) && Controlador.getListaHistorialAcademico().get(i).getNotaFinal().compareTo(BigDecimal.valueOf(5)) < 0) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numAsignaturasAprobadasEstudiante(Estudiantes estudiante) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaHistorialAcademico().size(); i++) {
+            if (Controlador.getListaHistorialAcademico().get(i).getEstudiante().equals(estudiante) && Controlador.getListaHistorialAcademico().get(i).getNotaFinal().compareTo(BigDecimal.valueOf(5)) >= 0) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numFaltasSinJustificarEstudiante(Estudiantes estudiante) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaAsistencia().size(); i++) {
+            if (Controlador.getListaAsistencia().get(i).getEstudiante().equals(estudiante) && Controlador.getListaAsistencia().get(i).getJustificado().equals(false)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numFaltasJustificadasEstudiante(Estudiantes estudiante) {
+        int contador = 0;
+        for (int i = 0; i < Controlador.getListaAsistencia().size(); i++) {
+            if (Controlador.getListaAsistencia().get(i).getEstudiante().equals(estudiante) && Controlador.getListaAsistencia().get(i).getJustificado().equals(true)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
+
+    public static int numEventosPorConfirmarEstudiante(Estudiantes estudiante) {
+        int contador = 0;
+
+        for (Eventos evento : Controlador.getListaEventos()) {
+            List<EstudiantesEventos> estudianteEvento = evento.getEstudiantesEventos();
+            for (EstudiantesEventos estEvento : estudianteEvento) {
+                if (estEvento.getEstudiante().equals(estudiante)) {
+                    contador++;
+                }
+            }
+        }
+        return contador;
+    }
 }

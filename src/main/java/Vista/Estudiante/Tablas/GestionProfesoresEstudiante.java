@@ -1,45 +1,39 @@
-package Vista.Admin.Tablas;
+package Vista.Estudiante.Tablas;
 
-import Controlador.Controlador;
+import Mapeo.Asignaturas;
+import Mapeo.CursosAsignaturas;
 import Mapeo.Profesores;
-import Vista.Admin.Anadir.FormularioProfesoresAdmin;
-import Vista.Admin.Modificar.ActualizarProfesoresAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
-import Vista.Util.Boton;
-import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaProfesores;
+import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
 
-public class GestionProfesoresAdmin extends JPanel {
+public class GestionProfesoresEstudiante extends JPanel {
     private JTable tablaProfesores;
-    private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionProfesoresAdmin() {
+    public GestionProfesoresEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarProfesoresAdmin();
+        cargarProfesoresEstudiante();
     }
 
     private void initGUI() {
         initPanelSuperior();
         initTabla();
-        initPopupMenu();
     }
 
     private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioProfesoresAdmin());
 
         header.addMouseListener(new MouseAdapter() {
             @Override
@@ -63,34 +57,6 @@ public class GestionProfesoresAdmin extends JPanel {
                 }
             }
         });
-
-        tablaProfesores.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaProfesores.rowAtPoint(e.getPoint());
-                tablaProfesores.setRowSelectionInterval(row, row);
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    popupMenu.show(tablaProfesores, e.getX(), e.getY());
-                }
-            }
-        });
-
-        tablaProfesores.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaProfesores.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaProfesores.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaProfesores.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaProfesores, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaProfesores, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void initPanelSuperior() {
@@ -109,24 +75,18 @@ public class GestionProfesoresAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Profesor", Boton.ButtonType.PRIMARY);
-        btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
-        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        panelBoton.add(btnAgregar);
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelSuperior, BorderLayout.NORTH);
     }
 
     private void initTabla() {
-        String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Dirección", "Usuario", "Estado","Objeto"};
-       modelo = new DefaultTableModel(null, columnas) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+        String[] columnas = {"Nombre", "Apellido", "Email", "Teléfono","Objeto"};
+             modelo = new DefaultTableModel(null, columnas) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
         };
         tablaProfesores = new JTable(modelo) {
             @Override
@@ -211,97 +171,40 @@ public class GestionProfesoresAdmin extends JPanel {
 
         JPanel panelConMargen = new JPanel(new BorderLayout());
         panelConMargen.setBackground(new Color(0xFBEAE6));
-        panelConMargen.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 10));
+        panelConMargen.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 10));
         panelConMargen.add(scroll, BorderLayout.CENTER);
 
         add(panelConMargen, BorderLayout.CENTER);
     }
 
-    private void initPopupMenu() {
-        popupMenu = new JPopupMenu() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(new Color(240, 240, 240, 220));
-                g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
-
-                g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
-                g2.dispose();
-            }
-        };
-        popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        popupMenu.setOpaque(false);
-
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarProfesor());
-
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
-        configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarProfesor());
-
-        popupMenu.add(modificarItembtn);
-        popupMenu.add(Box.createVerticalStrut(5));
-        popupMenu.add(eliminarItembtn);
-
-        UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
-        UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
-    }
-
-    private void configurarBotonPopup(Boton boton) {
-        boton.setPreferredSize(new Dimension(150, 30));
-        boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);
-        boton.setFocusPainted(false);
-        boton.setOpaque(false);
-    }
-
-    private void modificarProfesor() {
-        int fila = tablaProfesores.getSelectedRow();
-        if (fila != -1) {
-            Profesores profesorSeleccionado = (Profesores) modelo.getValueAt(fila, tablaProfesores.getColumnCount()-1);
-            new ActualizarProfesoresAdmin(profesorSeleccionado);
-
-        }
-    }
-
-    private void eliminarProfesor() {
-        int fila = tablaProfesores.getSelectedRow();
-        if (fila != -1) {
-            new CustomDialog(null, "Eliminar Profesor", "¿Está seguro de que desea eliminar este profesor?", "OK_CANCEL").setVisible(true);
-
-            if (CustomDialog.isAceptar()) {
-                Profesores profesorSeleccionado = (Profesores) modelo.getValueAt(fila, tablaProfesores.getColumnCount()-1);
-                Controlador.eliminarControladorProfesor(profesorSeleccionado);
-                Controlador.actualizarListaProfesores();
-
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaProfesores();
-                new CustomDialog(null,"Profesor Eliminado", "Profesor " + profesorSeleccionado.toString() + " eliminado correctamente.","ONLY_OK").setVisible(true);
-
-            }else new CustomDialog(null,"Acción Cancelada", "Acción cancelada por el usuario.","ONLY_OK").setVisible(true);
-        }
-    }
-
-    private void cargarProfesoresAdmin() {
+    private void cargarProfesoresEstudiante() {
         modelo.setRowCount(0);
-        for (Profesores profesor : listaProfesores) {
-            Object[] fila = {
-                    profesor.getNombre(),
-                    profesor.getApellido(),
-                    profesor.getDni(),
-                    profesor.getEmail(),
-                    profesor.getTelefono(),
-                    profesor.getDireccion(),
-                    profesor.getUsuario(),
-                    profesor.getEstado().name(),
-                    profesor
-            };
-            modelo.addRow(fila);
+        if (usuarioLogeado.getMatriculas() != null && !usuarioLogeado.getMatriculas().isEmpty()) {
+            for (Profesores profesor : listaProfesores) {
+                boolean imparteClase = false;
+                List<CursosAsignaturas> cursoAsignaturas = usuarioLogeado.getMatriculas().get(0).getCurso().getCursosAsignaturas();
+
+                for (CursosAsignaturas cursoAsignatura : cursoAsignaturas) {
+                    Asignaturas asignatura = cursoAsignatura.getAsignatura();
+                    if (asignatura.getProfesor().equals(profesor)) {
+                        imparteClase = true;
+                        break;
+                    }
+                }
+
+                if (imparteClase) {
+                    Object[] fila = {
+                            profesor.getNombre(),
+                            profesor.getApellido(),
+                            profesor.getEmail(),
+                            profesor.getTelefono(),
+                            profesor
+                    };
+                    modelo.addRow(fila);
+                }
+            }
         }
     }
+
 }
 

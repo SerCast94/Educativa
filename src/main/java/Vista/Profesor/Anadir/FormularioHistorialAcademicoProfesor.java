@@ -25,7 +25,7 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
-    private JLabel lblFechaAprobacion = new JLabel("Fecha Aprobación:");
+    private JLabel lblFechaAprobacion = new JLabel("Fecha:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
 
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();

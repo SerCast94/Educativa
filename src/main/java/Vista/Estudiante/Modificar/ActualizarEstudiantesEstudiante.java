@@ -1,11 +1,11 @@
-package Vista.Admin.Modificar;
+package Vista.Estudiante.Modificar;
 
 import Controlador.Controlador;
 import Mapeo.Estudiantes;
 import Mapeo.Tutores;
-import Vista.Admin.VistaPrincipalAdmin;
-import Vista.Util.CustomDatePicker;
+import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
+import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
 
 import javax.swing.*;
@@ -13,11 +13,12 @@ import java.awt.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
-public class ActualizarEstudiantesAdmin extends JFrame {
+public class ActualizarEstudiantesEstudiante extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
@@ -54,7 +55,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
 
     private Estudiantes estudiante;
 
-    public ActualizarEstudiantesAdmin(Estudiantes estudiante) {
+    public ActualizarEstudiantesEstudiante(Estudiantes estudiante) {
         this.estudiante = estudiante;
         initGUI();
         initEventos();
@@ -252,9 +253,6 @@ public class ActualizarEstudiantesAdmin extends JFrame {
 
             actualizarControladorEstudiante(estudiante);
             Controlador.actualizarListaEstudiantes();
-
-            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-            vistaPrincipal.mostrarVistaEstudiantes();
 
             new CustomDialog(null, "Éxito", "Estudiante actualizado correctamente.", "ONLY_OK").setVisible(true);
             dispose();

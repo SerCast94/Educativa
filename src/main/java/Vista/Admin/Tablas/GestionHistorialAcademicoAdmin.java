@@ -89,7 +89,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Historial Académico - EDUCATIVA", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
@@ -112,7 +112,7 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Estudiante", "Asignatura", "Nota Final", "Fecha Aprobación", "Comentarios","Objeto"};
+        String[] columnas = {"Estudiante", "Asignatura", "Nota Final", "Fecha", "Comentarios","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {

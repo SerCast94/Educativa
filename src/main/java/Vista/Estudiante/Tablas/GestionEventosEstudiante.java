@@ -1,10 +1,11 @@
-package Vista.Admin.Tablas;
+package Vista.Estudiante.Tablas;
 
 import Controlador.Controlador;
-import Mapeo.Horarios;
-import Vista.Admin.Anadir.FormularioHorariosAdmin;
-import Vista.Admin.Modificar.ActualizarHorariosAdmin;
-import Vista.Admin.VistaPrincipalAdmin;
+import Mapeo.EstudiantesEventos;
+import Mapeo.Eventos;
+import Vista.Estudiante.Anadir.FormularioEstudiantesEventoEstudiante;
+import Vista.Estudiante.Modificar.ActualizarEstudiantesEventoEstudiante;
+import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 
@@ -15,22 +16,25 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-import static Controlador.Controlador.listaHorarios;
+import static Controlador.Controlador.listaEventos;
+import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
+import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
-public class GestionHorarioAdmin extends JPanel {
-    private JTable tablaHorarios;
+public class GestionEventosEstudiante extends JPanel {
+    private JTable tablaEventos;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
-    public GestionHorarioAdmin() {
+    public GestionEventosEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
         initEventos();
-        cargarHorariosAdmin();
+        cargarEventosEstudiante();
     }
 
     private void initGUI() {
@@ -40,13 +44,13 @@ public class GestionHorarioAdmin extends JPanel {
     }
 
     private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioHorariosAdmin());
+        btnAgregar.addActionListener(e -> inscribirseEvento());
 
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEventos.getRowSorter();
                 if (column >= 0 && sorter != null) {
                     SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
                     SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
@@ -55,33 +59,35 @@ public class GestionHorarioAdmin extends JPanel {
             }
         });
 
-        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
+        tablaEventos.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                int row = tablaEventos.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
+                    tablaEventos.setSelectionBackground(new Color(245, 156, 107, 204));
                 }
             }
         });
 
-        tablaHorarios.addMouseListener(new MouseAdapter() {
+        tablaEventos.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                int row = tablaEventos.rowAtPoint(e.getPoint());
                 if (row >= 0) {
-                    tablaHorarios.setRowSelectionInterval(row, row);
+                    tablaEventos.setRowSelectionInterval(row, row);
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHorarios.getVisibleRect().height;
+                        // Verificar si el clic está en la parte baja de la tabla
+                        int visibleHeight = tablaEventos.getVisibleRect().height;
                         int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
+                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
+                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
                         } else {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
+                            popupMenu.show(tablaEventos, e.getX(), e.getY());
                         }
                     }
                 }
             }
         });
+
     }
 
     private void initPanelSuperior() {
@@ -89,7 +95,7 @@ public class GestionHorarioAdmin extends JPanel {
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Horario", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Eventos", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
@@ -100,9 +106,9 @@ public class GestionHorarioAdmin extends JPanel {
         ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Horario", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Inscribirse", Boton.ButtonType.PRIMARY);
         btnAgregar.setIcon(icono);
-        btnAgregar.setPreferredSize(new Dimension(180, 30));
+        btnAgregar.setPreferredSize(new Dimension(160, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         panelBoton.add(btnAgregar);
@@ -112,15 +118,15 @@ public class GestionHorarioAdmin extends JPanel {
     }
 
     private void initTabla() {
-        String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
-               modelo = new DefaultTableModel(null, columnas) {
+        String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo", "Inscrito", "Objeto"};
+        modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        tablaHorarios = new JTable(modelo) {
+        tablaEventos = new JTable(modelo) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -132,14 +138,32 @@ public class GestionHorarioAdmin extends JPanel {
             }
         };
 
-        TableColumn columnaOculta = tablaHorarios.getColumnModel().getColumn(tablaHorarios.getColumnCount()-1);
+        tablaEventos.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JCheckBox checkBox = new JCheckBox();
+                checkBox.setHorizontalAlignment(SwingConstants.CENTER);
+                checkBox.setSelected(value != null && value.equals("Sí"));
+                checkPersonalizadoGris(checkBox);
+
+                checkBox.setEnabled(true);
+                checkBox.setFocusable(false);
+                checkBox.setRequestFocusEnabled(false);
+                checkBox.setRolloverEnabled(false);
+                checkBox.setOpaque(true);
+                checkBox.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                return checkBox;
+            }
+        });
+
+        TableColumn columnaOculta = tablaEventos.getColumnModel().getColumn(tablaEventos.getColumnCount()-1);
         columnaOculta.setMinWidth(0);
         columnaOculta.setMaxWidth(0);
         columnaOculta.setPreferredWidth(0);
         columnaOculta.setResizable(false);
 
-        tablaHorarios.setRowSorter(new TableRowSorter<>(modelo));
-        tablaHorarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        tablaEventos.setRowSorter(new TableRowSorter<>(modelo));
+        tablaEventos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus, int row, int column) {
@@ -149,14 +173,14 @@ public class GestionHorarioAdmin extends JPanel {
             }
         });
 
-        tablaHorarios.setShowGrid(false);
-        tablaHorarios.setIntercellSpacing(new Dimension(0, 0));
-        tablaHorarios.setRowHeight(30);
-        tablaHorarios.setSelectionBackground(new Color(200, 220, 240));
-        tablaHorarios.setSelectionForeground(Color.BLACK);
-        tablaHorarios.setFont(new Font("Arial", Font.PLAIN, 14));
+        tablaEventos.setShowGrid(false);
+        tablaEventos.setIntercellSpacing(new Dimension(0, 0));
+        tablaEventos.setRowHeight(30);
+        tablaEventos.setSelectionBackground(new Color(200, 220, 240));
+        tablaEventos.setSelectionForeground(Color.BLACK);
+        tablaEventos.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        header = tablaHorarios.getTableHeader();
+        header = tablaEventos.getTableHeader();
         header.setFont(new Font("Arial", Font.BOLD, 14));
         header.setBackground(new Color(255, 204, 153));
         header.setForeground(new Color(70, 70, 70));
@@ -165,7 +189,7 @@ public class GestionHorarioAdmin extends JPanel {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        JScrollPane scroll = new JScrollPane(tablaHorarios);
+        JScrollPane scroll = new JScrollPane(tablaEventos);
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
@@ -229,11 +253,11 @@ public class GestionHorarioAdmin extends JPanel {
 
         Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
         configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarHorario());
+        modificarItembtn.addActionListener(e -> modificarEvento());
 
         Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
         configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHorario());
+        eliminarItembtn.addActionListener(e -> eliminarEvento());
 
         popupMenu.add(modificarItembtn);
         popupMenu.add(Box.createVerticalStrut(5));
@@ -251,29 +275,46 @@ public class GestionHorarioAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-    private void modificarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
+
+    private void inscribirseEvento(){
+        int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
-            int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-            Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-            new ActualizarHorariosAdmin(horarioSeleccionado);
+            int filaModelo = tablaEventos.convertRowIndexToModel(fila);
+            Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
+              new FormularioEstudiantesEventoEstudiante(usuarioLogeado, eventoSeleccionado);
         }
     }
 
-    private void eliminarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
+
+    private void modificarEvento() {
+        int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
-            new CustomDialog(null, "Eliminar Horario", "¿Está seguro de que desea eliminar este horario?", "OK_CANCEL").setVisible(true);
+            int filaModelo = tablaEventos.convertRowIndexToModel(fila);
+            Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
+             new ActualizarEstudiantesEventoEstudiante(usuarioLogeado, eventoSeleccionado);
+        }
+    }
+
+
+    private void eliminarEvento() {
+        int fila = tablaEventos.getSelectedRow();
+        if (fila != -1) {
+            new CustomDialog(null, "Eliminar Evento", "¿Está seguro de que desea eliminar este evento?", "OK_CANCEL").setVisible(true);
 
             if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-                Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-                Controlador.eliminarControladorHorario(horarioSeleccionado);
-                Controlador.actualizarListaHorarios();
+                int filaModelo = tablaEventos.convertRowIndexToModel(fila);
+                Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
+                List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
+                for (EstudiantesEventos estudianteEvento : listaEstudiantesEventos) {
+                    if (estudianteEvento.getEvento().equals(eventoSeleccionado)) {
+                        Controlador.eliminarControladorEstudianteEvento(estudianteEvento);
+                    }else new CustomDialog(null, "Error", "No se pudo eliminar el evento.", "ONLY_OK").setVisible(true);
+                }
+                Controlador.actualizarListaEstudiantesEventos();
 
-                VistaPrincipalAdmin vistaPrincipalAdmin = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipalAdmin.mostrarVistaHorarios();
-                new CustomDialog(null, "Horario Eliminado", "Horario eliminado correctamente.", "ONLY_OK").setVisible(true);
+                VistaPrincipalEstudiante vistaPrincipalEstudiante = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
+                vistaPrincipalEstudiante.mostrarVistaEventos();
+                new CustomDialog(null, "Evento Eliminado", "Inscripción eliminada correctamente.", "ONLY_OK").setVisible(true);
 
             } else {
                 new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
@@ -281,18 +322,37 @@ public class GestionHorarioAdmin extends JPanel {
         }
     }
 
-    private void cargarHorariosAdmin() {
+    private void cargarEventosEstudiante() {
         modelo.setRowCount(0);
-        for (Horarios horario : listaHorarios) {
-            Object[] fila = {
-                    horario.getAsignatura().getNombre(),
-                    horario.getDiaSemana() ,
-                    horario.getHoraInicio().toString(),
-                    horario.getHoraFin().toString(),
-                    horario.getProfesor().getNombre() + " " + horario.getProfesor().getApellido(),
-                    horario
-            };
-            modelo.addRow(fila);
+        if (usuarioLogeado != null) {
+            for (Eventos evento : listaEventos) {
+                boolean inscrito = false;
+
+                // Obtener la lista de EstudiantesEventos para el evento actual
+                List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
+
+                // Verificar si el usuario logeado está inscrito en el evento y tiene "confirmado" en true
+                for (EstudiantesEventos estudianteEvento : listaEstudiantesEventos) {
+                    if (estudianteEvento.getEstudiante().equals(usuarioLogeado)
+                            && estudianteEvento.getEvento().equals(evento)
+                            && Boolean.TRUE.equals(estudianteEvento.getConfirmado())) {
+                        inscrito = true;
+                        break;
+                    }
+                }
+
+                Object[] fila = {
+                        evento.getNombre(),
+                        evento.getDescripcion() != null ? evento.getDescripcion() : "-",
+                        evento.getFechaInicio().toString(),
+                        evento.getFechaFin().toString(),
+                        evento.getUbicacion() != null ? evento.getUbicacion() : "-",
+                        evento.getTipoEvento().toString().toUpperCase(),
+                        inscrito ? "Sí" : "No",
+                        evento
+                };
+                modelo.addRow(fila);
+            }
         }
     }
 }

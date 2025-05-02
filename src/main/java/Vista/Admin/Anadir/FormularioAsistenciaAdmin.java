@@ -152,7 +152,7 @@ public class FormularioAsistenciaAdmin extends JFrame {
                 (Estudiantes) cmbEstudiante.getSelectedItem(),
                 (Cursos) cmbCurso.getSelectedItem(),
                 Date.valueOf(datePicker.getDate()),
-                chkJustificado.isSelected(),
+                (Boolean) chkJustificado.isSelected(),
                 txtMotivoAusencia.getText().trim()
         );
         try {

@@ -142,4 +142,9 @@ public class Eventos {
         this.estudiantesEventos = estudiantesEventos;
     }
 
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

@@ -196,7 +196,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
             String fechaStr = fecha != null ? fecha.toString() : "";
 
             String clave = hora + "-" + pista + "-" + fechaStr;
-            System.out.println("Clave: " + clave);
+
             Extraescolares reservaSeleccionada = reservas.get(clave);
 
             if (reservaSeleccionada != null) {

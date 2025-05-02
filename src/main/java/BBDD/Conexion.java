@@ -15,7 +15,6 @@ public class Conexion {
         try {
             sesion = new Configuration().configure().buildSessionFactory().openSession();
         }catch (Throwable ex){
-            System.err.println(ex.getMessage());
             throw new ExceptionInInitializerError(ex);
         }
         return sesion;
