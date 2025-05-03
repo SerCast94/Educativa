@@ -1,6 +1,5 @@
 package Vista.Profesor;
 
-import Mapeo.Profesores;
 import Vista.Profesor.Modificar.ActualizarProfesoresProfesor;
 import Vista.Profesor.Tablas.GestionAsistenciaProfesor;
 import Vista.Profesor.Tablas.GestionHistorialAcademicoProfesor;
@@ -12,14 +11,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static Controlador.ControladorLogin.profesorLogeado;
+
 public class VistaPrincipalProfesor extends JFrame {
     private MenuLateralProfesor menu;
     private JPanel contentPanel;
     private static VistaPrincipalProfesor instancia;
-    public static Profesores usuarioLogeado;
 
-    public VistaPrincipalProfesor(Profesores profesor) {
-        this.usuarioLogeado = profesor;
+    public VistaPrincipalProfesor() {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
@@ -70,7 +69,7 @@ public class VistaPrincipalProfesor extends JFrame {
 
 
     public void mostrarVistaModificarPerfilProfesor() {
-        new ActualizarProfesoresProfesor(usuarioLogeado);
+        new ActualizarProfesoresProfesor(profesorLogeado);
     }
 
 

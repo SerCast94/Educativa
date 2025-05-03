@@ -1,6 +1,8 @@
-package Vista.Estudiante;
+package Vista.Tutor;
 
 import Controlador.ControladorDashBoard;
+import Vista.Estudiante.VistaPrincipalEstudiante;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,9 +11,9 @@ import java.util.Objects;
 
 import static Controlador.ControladorLogin.estudianteLogeado;
 
-public class DashboardEstudiante extends JPanel {
+public class DashboardTutor extends JPanel {
 
-    public DashboardEstudiante() {
+    public DashboardTutor() {
         setLayout(new BorderLayout());
         initPanelSuperior();
         initGridPanel();

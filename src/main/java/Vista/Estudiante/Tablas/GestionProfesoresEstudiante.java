@@ -13,12 +13,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaProfesores;
-import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
+import static Controlador.ControladorLogin.estudianteLogeado;
 
 public class GestionProfesoresEstudiante extends JPanel {
     private JTable tablaProfesores;
     private DefaultTableModel modelo;
-    private JPopupMenu popupMenu;
     private JTableHeader header;
 
     public GestionProfesoresEstudiante() {
@@ -179,10 +178,10 @@ public class GestionProfesoresEstudiante extends JPanel {
 
     private void cargarProfesoresEstudiante() {
         modelo.setRowCount(0);
-        if (usuarioLogeado.getMatriculas() != null && !usuarioLogeado.getMatriculas().isEmpty()) {
+        if (estudianteLogeado.getMatriculas() != null && !estudianteLogeado.getMatriculas().isEmpty()) {
             for (Profesores profesor : listaProfesores) {
                 boolean imparteClase = false;
-                List<CursosAsignaturas> cursoAsignaturas = usuarioLogeado.getMatriculas().get(0).getCurso().getCursosAsignaturas();
+                List<CursosAsignaturas> cursoAsignaturas = estudianteLogeado.getMatriculas().get(0).getCurso().getCursosAsignaturas();
 
                 for (CursosAsignaturas cursoAsignatura : cursoAsignaturas) {
                     Asignaturas asignatura = cursoAsignatura.getAsignatura();

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaEventos;
-import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
+import static Controlador.ControladorLogin.estudianteLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
 public class GestionEventosEstudiante extends JPanel {
@@ -281,7 +281,7 @@ public class GestionEventosEstudiante extends JPanel {
         if (fila != -1) {
             int filaModelo = tablaEventos.convertRowIndexToModel(fila);
             Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
-              new FormularioEstudiantesEventoEstudiante(usuarioLogeado, eventoSeleccionado);
+              new FormularioEstudiantesEventoEstudiante(estudianteLogeado, eventoSeleccionado);
         }
     }
 
@@ -291,7 +291,7 @@ public class GestionEventosEstudiante extends JPanel {
         if (fila != -1) {
             int filaModelo = tablaEventos.convertRowIndexToModel(fila);
             Eventos eventoSeleccionado = (Eventos) modelo.getValueAt(filaModelo, tablaEventos.getColumnCount() - 1);
-             new ActualizarEstudiantesEventoEstudiante(usuarioLogeado, eventoSeleccionado);
+             new ActualizarEstudiantesEventoEstudiante(estudianteLogeado, eventoSeleccionado);
         }
     }
 
@@ -324,7 +324,7 @@ public class GestionEventosEstudiante extends JPanel {
 
     private void cargarEventosEstudiante() {
         modelo.setRowCount(0);
-        if (usuarioLogeado != null) {
+        if (estudianteLogeado != null) {
             for (Eventos evento : listaEventos) {
                 boolean inscrito = false;
 
@@ -333,7 +333,7 @@ public class GestionEventosEstudiante extends JPanel {
 
                 // Verificar si el usuario logeado está inscrito en el evento y tiene "confirmado" en true
                 for (EstudiantesEventos estudianteEvento : listaEstudiantesEventos) {
-                    if (estudianteEvento.getEstudiante().equals(usuarioLogeado)
+                    if (estudianteEvento.getEstudiante().equals(estudianteLogeado)
                             && estudianteEvento.getEvento().equals(evento)
                             && Boolean.TRUE.equals(estudianteEvento.getConfirmado())) {
                         inscrito = true;

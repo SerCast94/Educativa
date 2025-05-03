@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaAsistencia;
+import static Controlador.ControladorLogin.profesorLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
 public class GestionAsistenciaProfesor extends JPanel {
@@ -304,7 +305,7 @@ public class GestionAsistenciaProfesor extends JPanel {
         modelo.setRowCount(0);
         for (Asistencia asistencia : listaAsistencia) {
 
-            if (asistencia.getCurso().getProfesor().equals(VistaPrincipalProfesor.usuarioLogeado)){
+            if (asistencia.getCurso().getProfesor().equals(profesorLogeado)){
                 Object[] fila = {
                         asistencia.getEstudiante().getNombre() + " " + asistencia.getEstudiante().getApellido(),
                         asistencia.getCurso().getNombre(),

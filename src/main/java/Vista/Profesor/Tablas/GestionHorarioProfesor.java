@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHorarios;
-import static Vista.Profesor.VistaPrincipalProfesor.usuarioLogeado;
+import static Controlador.ControladorLogin.profesorLogeado;
 
 public class GestionHorarioProfesor extends JPanel {
     private JTable tablaHorarios;
@@ -40,7 +40,7 @@ public class GestionHorarioProfesor extends JPanel {
     }
 
     private void initEventos() {
-        btnDescargar.addActionListener(e -> GeneradorHorario.exportarHorarioProfesorAXML(usuarioLogeado.getHorarios()));
+        btnDescargar.addActionListener(e -> GeneradorHorario.exportarHorarioProfesorAXML(profesorLogeado.getHorarios()));
 
 
         header.addMouseListener(new MouseAdapter() {
@@ -287,7 +287,7 @@ public class GestionHorarioProfesor extends JPanel {
         modelo.setRowCount(0);
 
         for (Horarios horario : listaHorarios) {
-            if (horario.getAsignatura().getProfesor().equals(usuarioLogeado)) {
+            if (horario.getAsignatura().getProfesor().equals(profesorLogeado)) {
                 Object[] fila = {
                         horario.getAsignatura().getNombre(),
                         horario.getDiaSemana() ,

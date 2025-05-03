@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaAsistencia;
+import static Controlador.ControladorLogin.estudianteLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
 public class GestionAsistenciaEstudiante extends JPanel {
@@ -197,7 +198,7 @@ public class GestionAsistenciaEstudiante extends JPanel {
     private void cargarAsistenciasEstudiante() {
         modelo.setRowCount(0);
         for (Asistencia asistencia : listaAsistencia) {
-            if(asistencia.getEstudiante().equals(VistaPrincipalEstudiante.usuarioLogeado)){
+            if(asistencia.getEstudiante().equals(estudianteLogeado)){
                 Object[] fila = {
                         asistencia.getFecha().toString(),
                         asistencia.getJustificado() ? "Sí" : "No",

@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Controlador.Controlador.getListaEstudiantesEventos;
+import static Controlador.Controlador.getListaEventos;
+
 public class ControladorDashBoard {
 
 
@@ -266,16 +269,14 @@ public class ControladorDashBoard {
     }
 
     public static int numEventosPorConfirmarEstudiante(Estudiantes estudiante) {
-        int contador = 0;
-
-        for (Eventos evento : Controlador.getListaEventos()) {
-            List<EstudiantesEventos> estudianteEvento = evento.getEstudiantesEventos();
-            for (EstudiantesEventos estEvento : estudianteEvento) {
-                if (estEvento.getEstudiante().equals(estudiante)) {
-                    contador++;
+        int eventosActivos = getListaEventos().size();
+        for(Eventos eventos : getListaEventos()) {
+            for(EstudiantesEventos ee : getListaEstudiantesEventos()) {
+                if(ee.getEstudiante().equals(estudiante) && ee.getEvento().equals(eventos)) {
+                    eventosActivos--;
                 }
             }
         }
-        return contador;
+        return eventosActivos;
     }
 }

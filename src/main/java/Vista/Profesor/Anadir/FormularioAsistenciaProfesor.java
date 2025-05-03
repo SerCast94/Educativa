@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import static Controlador.Controlador.actualizarListaAsistencia;
 import static Controlador.Controlador.insertarControladorAsistencia;
+import static Controlador.ControladorLogin.profesorLogeado;
 import static Vista.Util.EstiloComponentes.*;
 
 public class FormularioAsistenciaProfesor extends JFrame {
@@ -165,7 +166,7 @@ public class FormularioAsistenciaProfesor extends JFrame {
         cmbCurso.removeAllItems();
 
         for (Cursos c : cursos) {
-            if(c.getProfesor().equals(VistaPrincipalProfesor.usuarioLogeado)){
+            if(c.getProfesor().equals(profesorLogeado)){
                 cmbCurso.addItem(c);
             }
         }

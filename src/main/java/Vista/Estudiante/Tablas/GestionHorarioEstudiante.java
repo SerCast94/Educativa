@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHorarios;
-import static Vista.Estudiante.VistaPrincipalEstudiante.usuarioLogeado;
+import static Controlador.ControladorLogin.estudianteLogeado;
 
 
 public class GestionHorarioEstudiante extends JPanel {
@@ -44,7 +44,7 @@ public class GestionHorarioEstudiante extends JPanel {
             List<Horarios> horariosEstudiante = new ArrayList<>();
             for (Horarios horario : listaHorarios) {
                 for (CursosAsignaturas cursoAsignatura : horario.getAsignatura().getCursosAsignaturas()) {
-                    if (cursoAsignatura.getCurso().equals(usuarioLogeado.getMatriculas().get(0).getCurso())) {
+                    if (cursoAsignatura.getCurso().equals(estudianteLogeado.getMatriculas().get(0).getCurso())) {
                         horariosEstudiante.add(horario);
                         break;
                     }
@@ -209,7 +209,7 @@ public class GestionHorarioEstudiante extends JPanel {
             List<CursosAsignaturas> cursosAsignaturas = horario.getAsignatura().getCursosAsignaturas();
 
             for (CursosAsignaturas cursoAsignatura : cursosAsignaturas) {
-                if (cursoAsignatura.getCurso().equals(VistaPrincipalEstudiante.usuarioLogeado.getMatriculas().get(0).getCurso())) {
+                if (cursoAsignatura.getCurso().equals(estudianteLogeado.getMatriculas().get(0).getCurso())) {
                     Object[] fila = {
                             horario.getAsignatura().getNombre(),
                             horario.getDiaSemana(),

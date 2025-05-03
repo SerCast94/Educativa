@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHistorialAcademico;
+import static Controlador.ControladorLogin.profesorLogeado;
 
 public class GestionHistorialAcademicoProfesor extends JPanel {
     private JTable tablaHistorial;
@@ -285,7 +286,7 @@ public class GestionHistorialAcademicoProfesor extends JPanel {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {
 
-            if (historial.getAsignatura().getProfesor().equals(VistaPrincipalProfesor.usuarioLogeado)) {
+            if (historial.getAsignatura().getProfesor().equals(profesorLogeado)) {
                 Object[] fila = {
                         historial.getEstudiante().getNombre() + " " + historial.getEstudiante().getApellido(),
                         historial.getAsignatura().getNombre(),

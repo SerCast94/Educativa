@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
+import static Controlador.ControladorLogin.profesorLogeado;
+
 public class DashboardProfesor extends JPanel {
 
     public DashboardProfesor() {
@@ -54,12 +56,12 @@ public class DashboardProfesor extends JPanel {
 
 
         String[][] datos = {
-                {"Estudiantes del profesor", String.valueOf(ControladorDashBoard.numeroAlumnosProfesor(VistaPrincipalProfesor.usuarioLogeado)), "student"},
-                {"Estudiantes suspensos", String.valueOf(ControladorDashBoard.numAlumnosRecuperacionProfesor(VistaPrincipalProfesor.usuarioLogeado)), "attendance"},
-                {"Promedio notas", String.valueOf(ControladorDashBoard.promedioNotasProfesor(VistaPrincipalProfesor.usuarioLogeado)), "average"},
-                {"Estudiantes sobresalientes", String.valueOf(ControladorDashBoard.numAlumnosSobresalienteProfesor(VistaPrincipalProfesor.usuarioLogeado)), "course"},
-                {"Faltas Injustificadas", String.valueOf(ControladorDashBoard.numAsistenciaNoJustificadaProfesor(VistaPrincipalProfesor.usuarioLogeado)), "attendance"},
-                {"Horas Semanales", String.valueOf(ControladorDashBoard.numHorasTrabajadasProfesor(VistaPrincipalProfesor.usuarioLogeado)), "average"}
+                {"Estudiantes del profesor", String.valueOf(ControladorDashBoard.numeroAlumnosProfesor(profesorLogeado)), "student"},
+                {"Estudiantes suspensos", String.valueOf(ControladorDashBoard.numAlumnosRecuperacionProfesor(profesorLogeado)), "attendance"},
+                {"Promedio notas", String.valueOf(ControladorDashBoard.promedioNotasProfesor(profesorLogeado)), "average"},
+                {"Estudiantes sobresalientes", String.valueOf(ControladorDashBoard.numAlumnosSobresalienteProfesor(profesorLogeado)), "course"},
+                {"Faltas Injustificadas", String.valueOf(ControladorDashBoard.numAsistenciaNoJustificadaProfesor(profesorLogeado)), "attendance"},
+                {"Horas Semanales", String.valueOf(ControladorDashBoard.numHorasTrabajadasProfesor(profesorLogeado)), "average"}
         };
 
         // Crear las cajas con los datos

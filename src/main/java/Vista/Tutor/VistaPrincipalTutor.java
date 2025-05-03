@@ -1,23 +1,33 @@
-package Vista.Estudiante;
+package Vista.Tutor;
 
 import Mapeo.Estudiantes;
+import Mapeo.Tutores;
+import Vista.Estudiante.DashboardEstudiante;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEstudiante;
 import Vista.Estudiante.Tablas.*;
+import Vista.Estudiante.VistaPrincipalEstudiante;
+import Vista.Tutor.Modificar.ActualizarTutoresTutor;
 import Vista.Util.CustomDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import static Controlador.ControladorLogin.estudianteLogeado;
+import static Controlador.ControladorLogin.tutorLogeado;
 
-public class VistaPrincipalEstudiante extends JFrame {
-    private MenuLateralEstudiante menu;
+public class VistaPrincipalTutor extends JFrame {
+    private MenuLateralTutor menu;
     private JPanel contentPanel;
-    private static VistaPrincipalEstudiante instancia;
+    private static VistaPrincipalTutor instancia;
 
-    public VistaPrincipalEstudiante() {
+
+
+    public VistaPrincipalTutor() {
+
+
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
@@ -25,7 +35,7 @@ public class VistaPrincipalEstudiante extends JFrame {
         setLayout(new BorderLayout());
         contentPanel = new JPanel(new BorderLayout());
 
-        menu = new MenuLateralEstudiante(new MenuListener());
+        menu = new MenuLateralTutor(new MenuListener());
         add(menu, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
         menu.setVisible(true);
@@ -80,9 +90,21 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    public void cambiarPerfilEstudiante(){
+        SeleccionarEstudianteDialog dialog = new SeleccionarEstudianteDialog(tutorLogeado);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+        mostrarVistaDashboardEstudiante();
+        new CustomDialog(null, "Perfil Modificado", "El perfil del estudiante ha sido modificado correctamente", "OK_CANCEL");
+    }
 
     public void mostrarVistaModificarPerfilEstudiante() {
         new ActualizarEstudiantesEstudiante(estudianteLogeado);
+    }
+
+
+    public void mostrarVistaModificarPerfilTutor() {
+        new ActualizarTutoresTutor(tutorLogeado);
     }
 
     private class MenuListener implements ActionListener {
@@ -110,8 +132,14 @@ public class VistaPrincipalEstudiante extends JFrame {
                     case "Profesores":
                         mostrarVistaProfesores();
                         break;
-                    case "Modificar Perfil":
+                    case "Cambiar Estudiante":
+                        cambiarPerfilEstudiante();
+                        break;
+                    case "Modificar Estudiante":
                         mostrarVistaModificarPerfilEstudiante();
+                        break;
+                    case "Modificar Perfil":
+                        mostrarVistaModificarPerfilTutor();
                         break;
                     default:
                         new CustomDialog(null, "Error", "Funcionalidad no implementada", "OK_CANCEL");

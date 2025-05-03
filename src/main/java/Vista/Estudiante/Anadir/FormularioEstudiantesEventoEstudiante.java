@@ -138,20 +138,22 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
                 return;
             }
 
-            try {
-                EstudiantesEventos ee = new EstudiantesEventos(estudiante, evento, comentario, confirmado);
+            if(confirmado) {
+                try {
+                    EstudiantesEventos ee = new EstudiantesEventos(estudiante, evento, comentario, confirmado);
 
-                insertarControladorEstudianteEvento(ee);
-                actualizarListaEstudiantesEventos();
+                    insertarControladorEstudianteEvento(ee);
+                    actualizarListaEstudiantesEventos();
 
-                VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEventos();
+                    VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
+                    vistaPrincipal.mostrarVistaEventos();
 
-                new CustomDialog(null, "Éxito", "Inscripción en evento realizada correctamente.", "ONLY_OK").setVisible(true);
-                dispose();
-            } catch (Exception ex) {
-                new CustomDialog(null, "Error", "No se pudo inscribir: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-            }
+                    new CustomDialog(null, "Éxito", "Inscripción en evento realizada correctamente.", "ONLY_OK").setVisible(true);
+                    dispose();
+                } catch (Exception ex) {
+                    new CustomDialog(null, "Error", "No se pudo inscribir: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+                }
+            }else new CustomDialog(null, "Error", "No se puede inscribir a un evento sin confirmar asistencia.", "ONLY_OK").setVisible(true);
         });
 
         cmbEvento.addItemListener(e -> {

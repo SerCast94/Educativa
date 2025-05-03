@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static Controlador.Controlador.listaHistorialAcademico;
+import static Controlador.ControladorLogin.estudianteLogeado;
 
 public class GestionHistorialAcademicoEstudiante extends JPanel {
     private JTable tablaHistorial;
@@ -67,7 +68,7 @@ public class GestionHistorialAcademicoEstudiante extends JPanel {
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Historial Académico - EDUCATIVA", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
@@ -181,7 +182,7 @@ public class GestionHistorialAcademicoEstudiante extends JPanel {
     private void cargarHistorial() {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {
-            if (historial.getEstudiante().equals(VistaPrincipalEstudiante.usuarioLogeado)) {
+            if (historial.getEstudiante().equals(estudianteLogeado)) {
                 Object[] fila = {
                         historial.getAsignatura().getNombre(),
                         historial.getNotaFinal(),

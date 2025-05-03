@@ -12,6 +12,7 @@ import java.awt.*;
 
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.getListaAdministradores;
+import static Controlador.ControladorLogin.adminLogeado;
 import static Vista.Util.EstiloComponentes.*;
 
 public class ActualizarAdministradoresAdmin extends JFrame {
@@ -39,24 +40,22 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private JPasswordField txtPassword = crearPasswordField();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
 
-    private Administradores administrador;
 
     public ActualizarAdministradoresAdmin() {
-        this.administrador = VistaPrincipalAdmin.usuarioLogeado;
         initGUI();
         initEventos();
         cargarDatosAdministrador();
     }
 
     private void cargarDatosAdministrador() {
-        txtNombre.setText(administrador.getNombre());
-        txtApellido.setText(administrador.getApellido());
-        txtDni.setText(administrador.getDni());
-        txtEmail.setText(administrador.getEmail());
-        txtTelefono.setText(administrador.getTelefono());
-        txtUsuario.setText(administrador.getUsuario());
+        txtNombre.setText(adminLogeado.getNombre());
+        txtApellido.setText(adminLogeado.getApellido());
+        txtDni.setText(adminLogeado.getDni());
+        txtEmail.setText(adminLogeado.getEmail());
+        txtTelefono.setText(adminLogeado.getTelefono());
+        txtUsuario.setText(adminLogeado.getUsuario());
         txtPassword.setText("");  // No mostrar la contraseña actual
-        cmbEstado.setSelectedItem(administrador.getEstado().name());
+        cmbEstado.setSelectedItem(adminLogeado.getEstado().name());
     }
 
     private void initGUI() {
@@ -181,20 +180,20 @@ public class ActualizarAdministradoresAdmin extends JFrame {
         }
 
         // Si todo es válido, actualizar el administrador
-        administrador.setNombre(nombre);
-        administrador.setApellido(apellido);
-        administrador.setDni(dni);
-        administrador.setTelefono(telefono);
-        administrador.setEmail(correo);
-        administrador.setUsuario(usuario);
-        administrador.setEstado(estado);
+        adminLogeado.setNombre(nombre);
+        adminLogeado.setApellido(apellido);
+        adminLogeado.setDni(dni);
+        adminLogeado.setTelefono(telefono);
+        adminLogeado.setEmail(correo);
+        adminLogeado.setUsuario(usuario);
+        adminLogeado.setEstado(estado);
 
         if (!nuevaPassword.isEmpty()) {
-            administrador.setContrasena(encryptMD5(nuevaPassword));
+            adminLogeado.setContrasena(encryptMD5(nuevaPassword));
         }
 
         try {
-            Controlador.actualizarControladorAdministrador(administrador);
+            Controlador.actualizarControladorAdministrador(adminLogeado);
             Controlador.actualizarListaAdministradores();
 
             new CustomDialog(null, "Éxito", "Administrador actualizado correctamente.", "ONLY_OK").setVisible(true);
