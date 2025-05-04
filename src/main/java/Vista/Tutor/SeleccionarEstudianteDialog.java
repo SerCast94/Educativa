@@ -80,16 +80,8 @@ public class SeleccionarEstudianteDialog extends JDialog {
 
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            Estudiantes seleccionado = (Estudiantes) cmbEstudiantes.getSelectedItem();
-            if (seleccionado != null) {
-                estudianteSeleccionado = seleccionado;
-                setEstudianteLogeado(seleccionado);
-                dispose();
-            } else {
-                new CustomDialog(null, "Advertencia", "Debe seleccionar un estudiante.", "ONLY_OK").setVisible(true);
-            }
-        });
+        btnAceptar.addActionListener(e ->  establecerPerfilEstudianteValido());
+
     }
 
     private void cargarEstudiantes(Tutores tutorLogeado) {
@@ -104,4 +96,15 @@ public class SeleccionarEstudianteDialog extends JDialog {
         return estudianteSeleccionado;
     }
 
+    private void establecerPerfilEstudianteValido(){
+
+        Estudiantes seleccionado = (Estudiantes) cmbEstudiantes.getSelectedItem();
+        if (seleccionado != null) {
+            estudianteSeleccionado = seleccionado;
+            setEstudianteLogeado(seleccionado);
+            dispose();
+        } else {
+            new CustomDialog(null, "Advertencia", "Debe seleccionar un estudiante.", "ONLY_OK").setVisible(true);
+        }
+    }
 }

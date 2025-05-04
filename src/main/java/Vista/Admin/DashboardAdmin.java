@@ -30,15 +30,6 @@ public class DashboardAdmin extends JPanel {
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        // por si quiero boton
-//        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-//        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-//        JButton btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
-//        btnAgregar.setIcon(icono);
-//        btnAgregar.setPreferredSize(new Dimension(180, 30));
-//        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-//        panelBoton.add(btnAgregar);
-
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
         add(panelSuperior, BorderLayout.NORTH);
     }
@@ -83,9 +74,9 @@ public class DashboardAdmin extends JPanel {
 
     private JPanel crearCaja(String titulo, String contador, String foto) {
         JPanel caja = new JPanel(new GridBagLayout());
-        caja.setBackground(new Color(247, 232, 227)); // Fondo principal
+        caja.setBackground(new Color(247, 232, 227));
         caja.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 198, 177), 3), // Borde
+                BorderFactory.createLineBorder(new Color(241, 198, 177), 3),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
 
@@ -93,7 +84,7 @@ public class DashboardAdmin extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(10, 0, 10, 0); // Espaciado entre componentes
+        gbc.insets = new Insets(10, 0, 10, 0);
 
         // Ícono
         ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + foto + ".png")));
@@ -107,12 +98,12 @@ public class DashboardAdmin extends JPanel {
         JLabel tituloLabel = new JLabel(
                 "<html><div style='"
                         + "text-align: center;"
-                        + "width: 120px;"                   // Ancho fijo (ajústalo según tu diseño)
+                        + "width: 120px;"
                         + "display: -webkit-box;"
-                        + "-webkit-line-clamp: 2;"          // Limita a 2 líneas
+                        + "-webkit-line-clamp: 2;"
                         + "-webkit-box-orient: vertical;"
-                        + "overflow: hidden;"               // Oculta el texto que exceda
-                        + "line-height: 1.3;"               // Espaciado entre líneas
+                        + "overflow: hidden;"
+                        + "line-height: 1.3;"
                         + "'>"
                         + titulo
                         + "</div></html>"

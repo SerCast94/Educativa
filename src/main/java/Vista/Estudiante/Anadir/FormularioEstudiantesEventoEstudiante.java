@@ -129,32 +129,7 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            String comentario = txtComentario.getText().trim();
-            Boolean confirmado = (Boolean) chkConfirmado.isSelected();
-
-            if (comentario.length() > 255) {
-                new CustomDialog(null, "Error", "El comentario no puede tener más de 255 caracteres.", "ONLY_OK").setVisible(true);
-                return;
-            }
-
-            if(confirmado) {
-                try {
-                    EstudiantesEventos ee = new EstudiantesEventos(estudiante, evento, comentario, confirmado);
-
-                    insertarControladorEstudianteEvento(ee);
-                    actualizarListaEstudiantesEventos();
-
-                    VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
-                    vistaPrincipal.mostrarVistaEventos();
-
-                    new CustomDialog(null, "Éxito", "Inscripción en evento realizada correctamente.", "ONLY_OK").setVisible(true);
-                    dispose();
-                } catch (Exception ex) {
-                    new CustomDialog(null, "Error", "No se pudo inscribir: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-                }
-            }else new CustomDialog(null, "Error", "No se puede inscribir a un evento sin confirmar asistencia.", "ONLY_OK").setVisible(true);
-        });
+        btnAceptar.addActionListener(e -> agregarEstudianteValido());
 
         cmbEvento.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -184,5 +159,33 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         valFechaFin.setText(evento.getFechaFin().toString());
         valTipo.setText(evento.getTipoEvento().toString());
         valUbicacion.setText(evento.getUbicacion());
+    }
+
+    private void agregarEstudianteValido(){
+
+        String comentario = txtComentario.getText().trim();
+        Boolean confirmado = (Boolean) chkConfirmado.isSelected();
+
+        if (comentario.length() > 255) {
+            new CustomDialog(null, "Error", "El comentario no puede tener más de 255 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
+
+        if(confirmado) {
+            try {
+                EstudiantesEventos ee = new EstudiantesEventos(estudiante, evento, comentario, confirmado);
+
+                insertarControladorEstudianteEvento(ee);
+                actualizarListaEstudiantesEventos();
+
+                VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
+                vistaPrincipal.mostrarVistaEventos();
+
+                new CustomDialog(null, "Éxito", "Inscripción en evento realizada correctamente.", "ONLY_OK").setVisible(true);
+                dispose();
+            } catch (Exception ex) {
+                new CustomDialog(null, "Error", "No se pudo inscribir: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            }
+        }else new CustomDialog(null, "Error", "No se puede inscribir a un evento sin confirmar asistencia.", "ONLY_OK").setVisible(true);
     }
 }

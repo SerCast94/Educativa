@@ -4,7 +4,6 @@ import Mapeo.CursosAsignaturas;
 import Mapeo.Horarios;
 import Vista.Util.CustomDialog;
 import Vista.Util.CustomFileChooser;
-
 import javax.swing.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -16,8 +15,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Clase que genera un horario en formato XML y HTML
+ * Usado para exportar el horario de los profesores y el horario general
+ */
+
 public class GeneradorHorario {
 
+
+    /**
+     * Genera un horario en formato XML y HTML para estudiantes
+     * @param horarios lista de horarios a exportar
+     */
     public static void exportarHorarioAXML(List<Horarios> horarios) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
@@ -66,6 +75,11 @@ public class GeneradorHorario {
             }
         }
     }
+
+    /**
+     * Genera un horario en formato XML y HTML para profesores
+     * @param horarios lista de horarios a exportar
+     */
 
     public static void exportarHorarioProfesorAXML(List<Horarios> horarios) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
@@ -118,29 +132,41 @@ public class GeneradorHorario {
         }
     }
 
+    /**
+     * Genera un archivo HTML a partir de un archivo XML usando una plantilla XSLT para estudiantes
+     * @param rutaXML ruta del archivo XML
+     * @param rutaHTML ruta del archivo HTML a generar
+     */
+
     public static void obtenerHTML(String rutaXML, String rutaHTML) {
         try {
-            File xmlFile = new File(rutaXML);
-            File xsltFile = new File("src/main/resources/xslt/transformHorarios.xslt");
-            File outputFile = new File(rutaHTML);
+            File archivoXML = new File(rutaXML);
+            File archivoXSLT = new File("src/main/resources/xslt/transformHorarios.xslt");
+            File archivoSalida = new File(rutaHTML);
 
             TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
-            transformer.transform(new StreamSource(xmlFile), new StreamResult(outputFile));
+            Transformer transformer = factory.newTransformer(new StreamSource(archivoXSLT));
+            transformer.transform(new StreamSource(archivoXML), new StreamResult(archivoSalida));
         } catch (TransformerException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Genera un archivo HTML a partir de un archivo XML usando una plantilla XSLT para profesores
+     * @param rutaXML ruta del archivo XML
+     * @param rutaHTML ruta del archivo HTML a generar
+     */
+
     public static void obtenerProfesorHTML(String rutaXML, String rutaHTML) {
         try {
-            File xmlFile = new File(rutaXML);
-            File xsltFile = new File("src/main/resources/xslt/transformHorariosProfesor.xslt");
-            File outputFile = new File(rutaHTML);
+            File archivoXML = new File(rutaXML);
+            File archivoXSLT = new File("src/main/resources/xslt/transformHorariosProfesor.xslt");
+            File archivoSalida = new File(rutaHTML);
 
             TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
-            transformer.transform(new StreamSource(xmlFile), new StreamResult(outputFile));
+            Transformer transformer = factory.newTransformer(new StreamSource(archivoXSLT));
+            transformer.transform(new StreamSource(archivoXML), new StreamResult(archivoSalida));
         } catch (TransformerException e) {
             e.printStackTrace();
         }

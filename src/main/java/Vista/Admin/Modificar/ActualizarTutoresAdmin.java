@@ -122,9 +122,7 @@ public class ActualizarTutoresAdmin extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
-            actualizarTutorValido();
-        });
+        btnAceptar.addActionListener(e -> actualizarTutorValido());
     }
 
 

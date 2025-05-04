@@ -15,35 +15,40 @@ import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import static Controlador.ControladorReportes.enviarInfoParaBoletin;
 
+/**
+ * Clase que genera reportes en formato PDF
+ */
 public class GeneradorReportes {
 
+    /**
+     * Desactiva los mensajes de advertencia de PDFBox
+     */
     static {
-        // Configurar el logger para mostrar solo mensajes de error severo
         Logger.getLogger("org.apache.pdfbox").setLevel(Level.SEVERE);
-        for (java.util.logging.Handler handler : Logger.getLogger("").getHandlers()) {
-            if (handler instanceof ConsoleHandler) {
-                handler.setLevel(Level.SEVERE);
+        for (java.util.logging.Handler manejador : Logger.getLogger("").getHandlers()) {
+            if (manejador instanceof ConsoleHandler) {
+                manejador.setLevel(Level.SEVERE);
             }
         }
     }
 
+    /**
+     * Genera un boletín de notas en formato PDF
+     * @param datos mapa con los datos a incluir en el boletín
+     */
     public static void generarBoletin(Map<String, String> datos) {
-        // Guardar el LookAndFeel actual
+
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            // Cambiar el LookAndFeel a Nimbus
             CustomFileChooser.applyNimbusLookAndFeel();
 
-            // Cargar el archivo PDF con campos
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
-            // Obtener el formulario interactivo
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
-            // Configurar campos del formulario
+            // sustitución y bloqueo de campos
             if (acroForm != null) {
                 for (Map.Entry<String, String> entry : datos.entrySet()) {
                     PDField field = acroForm.getField(entry.getKey());
@@ -54,7 +59,6 @@ public class GeneradorReportes {
                 }
             }
 
-            // Crear el JFileChooser
             JFileChooser fileChooser = CustomFileChooser.createFileChooser(
                     "Seleccionar ubicación para guardar el boletín", "Guardar"
             );
@@ -80,7 +84,6 @@ public class GeneradorReportes {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // Restaurar el LookAndFeel original
             try {
                 UIManager.setLookAndFeel(lookAndFeelActual);
             } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -89,8 +92,12 @@ public class GeneradorReportes {
         }
     }
 
+    /**
+     * Genera boletines de notas para todos los estudiantes de un curso
+     * @param curso el curso del cual se generarán los boletines
+     */
+
     public static void generarBoletinesPorCurso(Cursos curso) {
-        // Guardar el LookAndFeel actual
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         if (curso == null || curso.getMatriculas() == null || curso.getMatriculas().isEmpty()) {
@@ -98,10 +105,8 @@ public class GeneradorReportes {
             return;
         }
 
-        // Cambiar el LookAndFeel a Nimbus solo para el JFileChooser
         CustomFileChooser.applyNimbusLookAndFeel();
 
-        // Solicitar la ruta de guardado
         JFileChooser fileChooser = CustomFileChooser.createFileChooser(
                 "Seleccionar ubicación para guardar los boletines", "Seleccionar"
         );
@@ -130,11 +135,9 @@ public class GeneradorReportes {
 
                 File archivoFinal = new File(directorioCurso, nombreArchivo);
 
-                // Cargar el archivo PDF con campos
                 PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
                 PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
-                // Configurar campos del formulario
                 if (acroForm != null) {
                     for (Map.Entry<String, String> entry : datos.entrySet()) {
                         PDField field = acroForm.getField(entry.getKey());
@@ -156,13 +159,17 @@ public class GeneradorReportes {
 
         new CustomDialog(null, "Éxito", "Boletines generados correctamente en: " + directorioCurso.getAbsolutePath(), "ONLY_OK").setVisible(true);
 
-        // Restaurar el LookAndFeel original
         try {
             UIManager.setLookAndFeel(lookAndFeelActual);
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Genera un certificado de beca en formato PDF
+     * @param datos mapa con los datos a incluir en el certificado
+     */
 
     public static void generarCertificadoBeca(Map<String, String> datos) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
@@ -207,6 +214,11 @@ public class GeneradorReportes {
             }
         }
     }
+
+    /**
+     * Genera un certificado de convalidación en formato PDF
+     * @param datos mapa con los datos a incluir en el certificado
+     */
 
     public static void generarCertificadoConvalidacion(Map<String, String> datos) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();

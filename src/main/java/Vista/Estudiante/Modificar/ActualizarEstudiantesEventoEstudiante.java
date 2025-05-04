@@ -129,7 +129,51 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> {
+        btnAceptar.addActionListener(e -> modificarEstudianteValido());
+
+
+        cmbEvento.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                Eventos seleccionado = (Eventos) cmbEvento.getSelectedItem();
+                if (seleccionado != null) {
+                    evento = seleccionado;
+                    mostrarInformacionEvento(seleccionado);
+                }
+            }
+        });
+    }
+
+    private void cargarEvento() {
+        cmbEvento.removeAllItems();
+        List<Eventos> todosEventos = Controlador.getListaEventos();
+        for (Eventos eventoAnadir : todosEventos) {
+            cmbEvento.addItem(eventoAnadir);
+        }
+
+        cmbEvento.setSelectedItem(evento);
+        mostrarInformacionEvento(evento);
+    }
+
+    private void mostrarInformacionEvento(Eventos evento) {
+        valDescripcion.setText(evento.getDescripcion());
+        valFechaInicio.setText(evento.getFechaInicio().toString());
+        valFechaFin.setText(evento.getFechaFin().toString());
+        valTipo.setText(evento.getTipoEvento().toString());
+        valUbicacion.setText(evento.getUbicacion());
+
+        List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
+
+        for (EstudiantesEventos ee : listaEstudiantesEventos) {
+            if (ee.getEstudiante().equals(estudiante) && ee.getEvento().equals(evento)) {
+                txtComentario.setText(ee.getComentario() != null ? ee.getComentario() : "");
+                chkConfirmado.setSelected(Boolean.TRUE.equals(ee.getConfirmado()));
+                break;
+            }
+        }
+    }
+
+    private void modificarEstudianteValido(){
+        {
             String comentario = txtComentario.getText().trim();
             boolean confirmado = chkConfirmado.isSelected();
 
@@ -174,46 +218,6 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
 
             } catch (Exception ex) {
                 new CustomDialog(null, "Error", "Ocurrió un error: " + ex.getMessage(), "ONLY_OK").setVisible(true);
-            }
-        });
-
-
-        cmbEvento.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                Eventos seleccionado = (Eventos) cmbEvento.getSelectedItem();
-                if (seleccionado != null) {
-                    evento = seleccionado;
-                    mostrarInformacionEvento(seleccionado);
-                }
-            }
-        });
-    }
-
-    private void cargarEvento() {
-        cmbEvento.removeAllItems();
-        List<Eventos> todosEventos = Controlador.getListaEventos();
-        for (Eventos eventoAnadir : todosEventos) {
-            cmbEvento.addItem(eventoAnadir);
-        }
-
-        cmbEvento.setSelectedItem(evento);
-        mostrarInformacionEvento(evento);
-    }
-
-    private void mostrarInformacionEvento(Eventos evento) {
-        valDescripcion.setText(evento.getDescripcion());
-        valFechaInicio.setText(evento.getFechaInicio().toString());
-        valFechaFin.setText(evento.getFechaFin().toString());
-        valTipo.setText(evento.getTipoEvento().toString());
-        valUbicacion.setText(evento.getUbicacion());
-
-        List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
-
-        for (EstudiantesEventos ee : listaEstudiantesEventos) {
-            if (ee.getEstudiante().equals(estudiante) && ee.getEvento().equals(evento)) {
-                txtComentario.setText(ee.getComentario() != null ? ee.getComentario() : "");
-                chkConfirmado.setSelected(Boolean.TRUE.equals(ee.getConfirmado()));
-                break;
             }
         }
     }
