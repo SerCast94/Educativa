@@ -5,10 +5,8 @@ import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 
@@ -16,10 +14,8 @@ public class ActualizarTutoresAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -28,7 +24,6 @@ public class ActualizarTutoresAdmin extends JFrame {
     private JLabel lblEmail = new JLabel("Email: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblEstado = new JLabel("Estado: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -37,7 +32,6 @@ public class ActualizarTutoresAdmin extends JFrame {
     private JTextField txtEmail = crearTextField();
     private JTextField txtTelefono = crearTextField();
     private JComboBox<Tutores.EstadoTutor> cmbEstado = new JComboBox<>(Tutores.EstadoTutor.values());
-
     private Tutores tutor;
 
     public ActualizarTutoresAdmin(Tutores tutor) {

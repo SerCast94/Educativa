@@ -2,16 +2,11 @@ package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
 import Mapeo.Administradores;
-import Mapeo.Profesores;
-import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
-import static Controlador.Controlador.getListaAdministradores;
 import static Controlador.ControladorLogin.adminLogeado;
 import static Vista.Util.EstiloComponentes.*;
 
@@ -21,7 +16,6 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblApellido = new JLabel("Apellido:");
     private JLabel lblDni = new JLabel("DNI:");
@@ -30,7 +24,6 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private JLabel lblUsuario = new JLabel("Usuario:");
     private JLabel lblPassword = new JLabel("Contraseña:");
     private JLabel lblEstado = new JLabel("Estado:");
-
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
     private JTextField txtDni = crearTextField();
@@ -54,7 +47,7 @@ public class ActualizarAdministradoresAdmin extends JFrame {
         txtEmail.setText(adminLogeado.getEmail());
         txtTelefono.setText(adminLogeado.getTelefono());
         txtUsuario.setText(adminLogeado.getUsuario());
-        txtPassword.setText("");  // No mostrar la contraseña actual
+        txtPassword.setText("");
         cmbEstado.setSelectedItem(adminLogeado.getEstado().name());
     }
 

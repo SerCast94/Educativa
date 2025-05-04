@@ -5,10 +5,8 @@ import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 

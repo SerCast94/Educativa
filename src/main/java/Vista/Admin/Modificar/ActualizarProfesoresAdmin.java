@@ -1,15 +1,12 @@
 package Vista.Admin.Modificar;
 
 import Controlador.Controlador;
-import Mapeo.Estudiantes;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 
@@ -17,10 +14,8 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -30,7 +25,6 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private JLabel lblDireccion = new JLabel("Dirección: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -39,9 +33,7 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
-
     private Profesores profesor;
 
     public ActualizarProfesoresAdmin(Profesores profesor) {

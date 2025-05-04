@@ -3,17 +3,14 @@ package Vista.Estudiante.Modificar;
 import Controlador.Controlador;
 import Mapeo.Estudiantes;
 import Mapeo.Tutores;
-import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
@@ -30,14 +27,12 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
     private JLabel lblPassword = new JLabel("Contraseña: ");
     private JLabel lblFechaNacimiento = new JLabel("Fecha de Nacimiento: ");
     private JLabel lblEmail = new JLabel("Email: ");
-    private JLabel lblIDCurso = new JLabel("ID Curso: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblDireccion = new JLabel("Dirección: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblFechaMatricula = new JLabel("Fecha de Matrícula: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JLabel lblTutor = new JLabel("Tutor: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -46,13 +41,10 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
     private JComboBox<Tutores> cmbTutor = new JComboBox<>();
-
     private CustomDatePicker datePickerNacimiento = new CustomDatePicker();
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
-
     private Estudiantes estudiante;
 
     public ActualizarEstudiantesEstudiante(Estudiantes estudiante) {
