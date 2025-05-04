@@ -1,7 +1,6 @@
 package Controlador;
 
 import Mapeo.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -10,12 +9,23 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Controlador para la generación de reportes y certificados.
+ * Este controlador se encarga de recopilar la información necesaria
+ * para generar boletines, certificados de beca y certificados de convalidación.
+ */
 public class ControladorReportes {
 
     static Map<String, String> datosBoletin = new HashMap<>();
     static Map<String, String> datosBeca = new HashMap<>();
     static Map<String, String> datosConvalidacion = new HashMap<>();
 
+    /**
+     * Envía la información necesaria para generar un boletín.
+     *
+     * @param estudiante El estudiante del cual se generará el boletín.
+     * @return Un mapa con los datos necesarios para el boletín.
+     */
     public static Map<String, String> enviarInfoParaBoletin(Estudiantes estudiante) {
 
 
@@ -41,6 +51,11 @@ public class ControladorReportes {
     }
 
 
+    /**
+     * Calcula el número de faltas justificadas de un estudiante.
+     * @param estudiante El estudiante del cual se calcularán las faltas justificadas.
+     * @return El número de faltas justificadas del estudiante.
+     */
     private static long obtenerFaltasJustificadas(Estudiantes estudiante) {
         int faltasJustificadas = 0;
         for (Asistencia asistencia : estudiante.getAsistencias()) {
@@ -51,6 +66,11 @@ public class ControladorReportes {
         return faltasJustificadas;
     }
 
+    /**
+     * Calcula el número de faltas injustificadas de un estudiante.
+     * @param estudiante El estudiante del cual se calcularán las faltas injustificadas.
+     * @return El número de faltas injustificadas del estudiante.
+     */
     private static long obtenerFaltasInjustificadas(Estudiantes estudiante) {
         int faltasInjustificadas = 0;
         for (Asistencia asistencia : estudiante.getAsistencias()) {
@@ -61,6 +81,11 @@ public class ControladorReportes {
         return faltasInjustificadas;
     }
 
+    /**
+     * Calcula la media de las notas de un estudiante.
+     * @param estudiante El estudiante del cual se calculará la media.
+     * @return La media de las notas del estudiante.
+     */
     private static String calcularMedia(Estudiantes estudiante) {
         BigDecimal sumaNotas = BigDecimal.ZERO;
         int cantidadNotas = 0;
@@ -80,6 +105,12 @@ public class ControladorReportes {
         return media.toString();
     }
 
+    /**
+     * Envía la información necesaria para generar un certificado de beca.
+     *
+     * @param estudiante El estudiante del cual se generará el certificado.
+     * @return Un mapa con los datos necesarios para el certificado de beca.
+     */
     public static Map<String, String> enviarInfoParaCertificadoBeca(Estudiantes estudiante) {
 
         datosBeca.put("nombreAdmin", Controlador.getListaAdministradores().get(0).toString());
@@ -97,8 +128,13 @@ public class ControladorReportes {
         return datosBeca;
     }
 
+    /**
+     * Envía la información necesaria para generar un certificado de convalidación.
+     *
+     * @param estudiante El estudiante del cual se generará el certificado.
+     * @return Un mapa con los datos necesarios para el certificado de convalidación.
+     */
     public static Map<String, String> enviarInfoParaCertificadoConvalidacion(Estudiantes estudiante) {
-        Map<String, String> datosConvalidacion = new HashMap<>();
 
         datosConvalidacion.put("NombreAdmin", Controlador.getListaAdministradores().get(0).toString());
         datosConvalidacion.put("nombreEstudiante", estudiante.toString());
@@ -118,7 +154,4 @@ public class ControladorReportes {
 
         return datosConvalidacion;
     }
-
-
-
 }

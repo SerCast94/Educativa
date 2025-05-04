@@ -4,9 +4,13 @@ import Mapeo.Estudiantes;
 import Mapeo.Profesores;
 import Mapeo.Administradores;
 import Mapeo.Tutores;
-
 import java.util.List;
 
+/**
+ * Controlador para el login y la gestión de usuarios en la aplicación.
+ * Este controlador se encarga de verificar las credenciales de los usuarios
+ * y de almacenar la información del usuario logueado.
+ */
 public class ControladorLogin {
 
     public static Estudiantes estudianteLogeado;
@@ -72,34 +76,66 @@ public class ControladorLogin {
     }
 
 
+    /**
+     * Obtener el estudiante logueado
+     * @return el estudiante logueado
+     */
     public Estudiantes getEstudianteLogeado() {
         return estudianteLogeado;
     }
 
+    /**
+     * Establecer el estudiante logueado
+     * @param estudiante el estudiante logueado
+     */
     public static void setEstudianteLogeado(Estudiantes estudiante) {
         estudianteLogeado = estudiante;
     }
 
+    /**
+     * Obtener el profesor logueado
+     * @return el profesor logueado
+     */
     public Profesores getProfesorLogeado() {
         return profesorLogeado;
     }
 
+    /**
+     * Establecer el profesor logueado
+     * @param profesorLogeado el profesor logueado
+     */
     public void setProfesorLogeado(Profesores profesorLogeado) {
         this.profesorLogeado = profesorLogeado;
     }
 
+    /**
+     * Obtener el administrador logueado
+     * @return el administrador logueado
+     */
     public Administradores getAdminLogeado() {
         return adminLogeado;
     }
 
+    /**
+     * Establecer el administrador logueado
+     * @param adminLogeado el administrador logueado
+     */
     public void setAdminLogeado(Administradores adminLogeado) {
         this.adminLogeado = adminLogeado;
     }
 
+    /**
+     * Obtener el tutor logueado
+     * @return el tutor logueado
+     */
     public Tutores getTutorLogeado() {
         return tutorLogeado;
     }
 
+    /**
+     * Establecer el tutor logueado
+     * @param tutorLogeado el tutor logueado
+     */
     public void setTutorLogeado(Tutores tutorLogeado) {
         this.tutorLogeado = tutorLogeado;
     }
