@@ -7,63 +7,69 @@ import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import static Controlador.ControladorReportes.*;
 import static Vista.Util.EstiloComponentes.customizeComboBox;
 import static Vista.Util.EstiloComponentes.setBordeNaranja;
 
+/**
+ * Clase que representa el panel de reportes en la interfaz gráfica.
+ * Permite generar reportes de boletines y certificados para estudiantes y cursos.
+ */
 public class Reportes extends JPanel {
 
+
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private JPanel panelConMargen;
+    private JPanel gridPanel;
     private JComboBox<Estudiantes> cbEstudiante;
     private JComboBox<Cursos> cbCurso;
     private JComboBox<Estudiantes> cbEstudianteBeca;
     private JComboBox<Estudiantes> cbEstudianteConvalidacion;
 
+    /**
+     * Constructor de la clase Reportes.
+     * Inicializa el panel y carga los datos necesarios.
+     */
     public Reportes() {
         initGUI();
         cargarEstudiantes();
         cargarCursos();
     }
 
+    /**
+     * Inicializa la interfaz gráfica del panel de reportes.
+     */
     private void initGUI() {
 
         setLayout(new BorderLayout());
         setBackground(new Color(251, 234, 230));
 
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Reportes", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Reportes", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.CENTER);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
-
-        // por si quiero boton
-//        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-//        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-//        JButton btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
-//        btnAgregar.setIcon(icono);
-//        btnAgregar.setPreferredSize(new Dimension(180, 30));
-//        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-//        panelBoton.add(btnAgregar);
 
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
         add(panelSuperior, BorderLayout.NORTH);
 
-        JPanel panelConMargen = new JPanel(new BorderLayout());
+        panelConMargen = new JPanel(new BorderLayout());
         panelConMargen.setBackground(new Color(251, 234, 230));
         panelConMargen.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 10));
 
-        JPanel gridPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        gridPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         gridPanel.setBackground(Color.WHITE);
         gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -77,16 +83,16 @@ public class Reportes extends JPanel {
         customizeComboBox(cbEstudianteBeca);
         customizeComboBox(cbEstudianteConvalidacion);
 
-        gridPanel.add(createOptionPanel("Boletín de notas de Estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
-        gridPanel.add(createOptionPanel("Boletín de notas de Clase", cbCurso, "Descargar", e -> descargarNotasClase()));
-        gridPanel.add(createOptionPanel("Certificado de Beca para Estudiante", cbEstudianteBeca, "Descargar", e -> descargarBecaEstudiante()));
-        gridPanel.add(createOptionPanel("Certificado de Convalidación para Estudiante", cbEstudianteConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
+        gridPanel.add(crearCajaReportes("Boletín de notas de Estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
+        gridPanel.add(crearCajaReportes("Boletín de notas de Clase", cbCurso, "Descargar", e -> descargarNotasClase()));
+        gridPanel.add(crearCajaReportes("Certificado de Beca para Estudiante", cbEstudianteBeca, "Descargar", e -> descargarBecaEstudiante()));
+        gridPanel.add(crearCajaReportes("Certificado de Convalidación para Estudiante", cbEstudianteConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
 
         panelConMargen.add(gridPanel, BorderLayout.CENTER);
         add(panelConMargen, BorderLayout.CENTER);
     }
 
-    private JPanel createOptionPanel(String tituloTexto, JComponent inputComponent, String btnTexto, ActionListener listener) {
+    private JPanel crearCajaReportes(String tituloTexto, JComponent inputComponent, String btnTexto, ActionListener listener) {
         JPanel caja = new JPanel(new GridBagLayout());
         caja.setBackground(new Color(247, 232, 227));
         caja.setBorder(BorderFactory.createCompoundBorder(
@@ -100,7 +106,10 @@ public class Reportes extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        JLabel tituloLabel = new JLabel(String.format("<html><div style='text-align:center;width:300px;'>%s</div></html>", tituloTexto));
+        JLabel tituloLabel = new JLabel("<html><div style='text-align:center;width:300px;'>" +
+                tituloTexto +
+                "</div></html>");
+
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 16));
         caja.add(tituloLabel, gbc);
 
@@ -120,6 +129,9 @@ public class Reportes extends JPanel {
         return caja;
     }
 
+    /**
+     * Carga la lista de estudiantes en los JComboBox correspondientes.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
 
@@ -142,6 +154,7 @@ public class Reportes extends JPanel {
                         break;
                     }
                 }
+
                 if (tieneConvalidacionAprobada) {
                     cbEstudianteConvalidacion.addItem(e);
                 }
@@ -150,6 +163,9 @@ public class Reportes extends JPanel {
 
     }
 
+    /**
+     * Carga la lista de cursos en el JComboBox correspondiente.
+     */
     private void cargarCursos() {
         List<Cursos> cursos = Controlador.getListaCursos();
 
@@ -160,7 +176,9 @@ public class Reportes extends JPanel {
         }
     }
 
-    // Acciones
+    /**
+     * Envía la información necesaria para generar el boletín de un estudiante.
+     */
     private void descargarNotasEstudiante() {
 
         if (cbEstudiante.getSelectedIndex() == -1) {
@@ -172,6 +190,9 @@ public class Reportes extends JPanel {
         }
     }
 
+    /**
+     * Envía la información necesaria para generar el certificado de beca de un estudiante.
+     */
     private void descargarNotasClase() {
         Cursos curso = (Cursos) cbCurso.getSelectedItem();
 
@@ -183,6 +204,9 @@ public class Reportes extends JPanel {
 
     }
 
+    /**
+     * Envía la información necesaria para generar el certificado de beca de un estudiante.
+     */
     private void descargarBecaEstudiante() {
 
         Estudiantes Estudiante = (Estudiantes) cbEstudianteBeca.getSelectedItem();
@@ -194,6 +218,9 @@ public class Reportes extends JPanel {
         }
     }
 
+    /**
+     * Envía la información necesaria para generar el certificado de convalidación de un estudiante.
+     */
     private void descargarConvalidacionEstudiante() {
         Estudiantes alumno = (Estudiantes) cbEstudianteConvalidacion.getSelectedItem();
 

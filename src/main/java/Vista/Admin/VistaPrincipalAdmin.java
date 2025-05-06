@@ -3,159 +3,218 @@ package Vista.Admin;
 import Vista.Admin.Modificar.ActualizarAdministradoresAdmin;
 import Vista.Admin.Tablas.*;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * VistaPrincipalAdmin es la clase principal de la interfaz gráfica para el administrador.
+ * desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
+ */
 public class VistaPrincipalAdmin extends JFrame {
     private MenuLateralAdmin menu;
-    private JPanel contentPanel;
+    private JPanel principalPanel;
     private static VistaPrincipalAdmin instancia;
 
-
+    /**
+     * Constructor de la clase VistaPrincipalAdmin.
+     * Inicializa la ventana principal y configura el menú lateral.
+     */
     public VistaPrincipalAdmin() {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        contentPanel = new JPanel(new BorderLayout());
+        principalPanel = new JPanel(new BorderLayout());
 
         menu = new MenuLateralAdmin(new MenuListener());
         add(menu, BorderLayout.WEST);
-        add(contentPanel, BorderLayout.CENTER);
+        add(principalPanel, BorderLayout.CENTER);
         menu.setVisible(true);
         mostrarVistaDashboardAdmin();
         instancia = this;
         setVisible(true);
     }
 
+    /**
+     * Método que devuelve la instancia de la ventana principal.
+     * @return instancia de VistaPrincipalAdmin.
+     */
     public static JFrame getVistaPrincipal() {
         return instancia;
     }
 
+    /**
+     * Método que muestra la vista del dashboard del administrador.
+     */
     public  void mostrarVistaDashboardAdmin() {
-        contentPanel.removeAll();
-        contentPanel.add(new DashboardAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new DashboardAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de estudiantes.
+     */
     public void mostrarVistaEstudiantes() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionEstudiantesAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionEstudiantesAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de profesores.
+     */
     public void mostrarVistaProfesores() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionProfesoresAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionProfesoresAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
+    /**
+     * Método que muestra la vista de gestión de matrículas.
+     */
     public void mostrarVistaMatriculas() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionMatriculasAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionMatriculasAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de cursos.
+     */
     public void mostrarVistaCursos() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionCursosAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionCursosAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de asignaturas.
+     */
     public void mostrarVistaAsignaturas(){
-        contentPanel.removeAll();
-        contentPanel.add(new GestionAsignaturasAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionAsignaturasAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de historial académico.
+     */
     public void mostrarVistaHistorialAcademico() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionHistorialAcademicoAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionHistorialAcademicoAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de asistencia.
+     */
     public void mostrarVistaAsistencia() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionAsistenciaAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionAsistenciaAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de eventos.
+     */
     public void mostrarVistaEventos() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionEventosAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionEventosAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de horarios.
+     */
     public void mostrarVistaHorarios() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionHorarioAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionHorarioAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de actividades extraescolares.
+     */
     public void mostrarVistaActividadesExtraescolares() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionExtraescolaresAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionExtraescolaresAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de tutores.
+     */
     public void mostrarVistaTutores() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionTutoresAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionTutoresAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de becas.
+     */
     public void mostrarVistaBecas() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionBecasAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionBecasAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de convalidaciones.
+     */
     public void mostrarVistaConvalidaciones() {
-        contentPanel.removeAll();
-        contentPanel.add(new GestionConvalidacionesAdmin());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new GestionConvalidacionesAdmin());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de reportes.
+     */
     public void mostrarVistaReportes() {
-        contentPanel.removeAll();
-        contentPanel.add(new Reportes());
-        contentPanel.revalidate();
-        contentPanel.repaint();
+        principalPanel.removeAll();
+        principalPanel.add(new Reportes());
+        principalPanel.revalidate();
+        principalPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de modificación de perfil del administrador.
+     */
     public void mostrarVistaModificarPerfilAdmin() {
         new ActualizarAdministradoresAdmin();
     }
 
-
-
+    /**
+     * Clase interna que maneja los eventos de los botones del menú lateral.
+     */
     private class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Object source = e.getSource();
+            Object objetoFuente = e.getSource();
 
-            if (source instanceof JButton) {
-                JButton button = (JButton) source;
-                String actionCommand = button.getText().trim();
+            if (objetoFuente instanceof JButton) {
+                JButton botonMenu = (JButton) objetoFuente;
+                String accionMenu = botonMenu.getText().trim();
 
-                switch (actionCommand) {
+                switch (accionMenu) {
                     case "Dashboard":
                         mostrarVistaDashboardAdmin();
                         break;

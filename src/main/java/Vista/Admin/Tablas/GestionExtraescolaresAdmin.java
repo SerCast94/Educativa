@@ -11,10 +11,16 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
 import java.util.*;
-
 import static Controlador.Controlador.listaExtraescolares;
 
+/**
+ * Clase que representa la gestión de reservas de extraescolares.
+ * Permite agregar, modificar y eliminar reservas de extraescolares.
+ */
 public class GestionExtraescolaresAdmin extends JPanel {
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
     private JTable tablaReservas;
     private DefaultTableModel modelo;
     private JTableHeader header;
@@ -25,6 +31,10 @@ public class GestionExtraescolaresAdmin extends JPanel {
     private final String[] horas = {"16:00", "17:00", "18:00", "19:00", "20:00", "21:00"};
     private JPopupMenu popupMenu;
 
+    /**
+     * Constructor de la clase GestionExtraescolaresAdmin.
+     * Inicializa la interfaz gráfica y carga las reservas de extraescolares.
+     */
     public GestionExtraescolaresAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -32,23 +42,29 @@ public class GestionExtraescolaresAdmin extends JPanel {
         cargarTablaConFecha(LocalDate.now());
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
+    /**
+     * Método para incializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Gestión de Reservas de Instalaciones", SwingConstants.CENTER);
+        titulo = new JLabel("Gestión de Reservas de Instalaciones", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
         btnReservar = new Boton("Reservar Hora", Boton.ButtonType.PRIMARY);
@@ -66,6 +82,9 @@ public class GestionExtraescolaresAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de las reservas de extraescolares.
+     */
     private void initTabla() {
         modelo = new DefaultTableModel() {
             @Override
@@ -107,7 +126,6 @@ public class GestionExtraescolaresAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
@@ -147,6 +165,36 @@ public class GestionExtraescolaresAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnReservar.addActionListener(e -> reservar());
+
+        datePicker.addDateChangeListener(e -> {
+            LocalDate fecha = datePicker.getDate();
+
+            if (fecha != null) {
+                cargarTablaConFecha(fecha);
+            }
+        });
+
+        tablaReservas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int fila = tablaReservas.rowAtPoint(e.getPoint());
+                if (fila >= 0) {
+                    tablaReservas.setRowSelectionInterval(fila, fila);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        popupMenu.show(tablaReservas, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -176,6 +224,10 @@ public class GestionExtraescolaresAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -184,7 +236,10 @@ public class GestionExtraescolaresAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
-
+    /**
+     * Método para eliminar una reserva de extraescolares en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarReserva() {
         int fila = tablaReservas.getSelectedRow();
         int columna = tablaReservas.getSelectedColumn();
@@ -216,43 +271,21 @@ public class GestionExtraescolaresAdmin extends JPanel {
         }
     }
 
-
-    private void initEventos() {
-        btnReservar.addActionListener(e -> reservar());
-
-        datePicker.addDateChangeListener(e -> {
-            LocalDate fecha = datePicker.getDate();
-
-            if (fecha != null) {
-                cargarTablaConFecha(fecha);
-            }
-        });
-
-        tablaReservas.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int fila = tablaReservas.rowAtPoint(e.getPoint());
-                if (fila >= 0) {
-                    tablaReservas.setRowSelectionInterval(fila, fila);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        popupMenu.show(tablaReservas, e.getX(), e.getY());
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para cargar los datos de las reservas de extraescolares en la tabla.
+     * Se obtienen los datos de las reservas de extraescolares en la tabla.
+     * @param fecha
+     */
     private void cargarTablaConFecha(LocalDate fecha) {
         modelo.setRowCount(0);
         String fechaStr = fecha.toString();
 
         reservas.clear();
 
-        // Cargar las reservas en el mapa
         for (Extraescolares extraescolar : listaExtraescolares) {
-            // Convierte la fecha de la base de datos a LocalDate
             LocalDate fechaReserva = extraescolar.getFechaReserva().toLocalDate();
 
-            // Compara las fechas
+            // Comparo las fechas
             if (fechaReserva.equals(fecha)) {
                 String horaFormateada = extraescolar.getHora().toString().substring(0, 5);
                 String clave = horaFormateada + "-" + extraescolar.getPista() + "-" + extraescolar.getFechaReserva();
@@ -260,7 +293,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
             }
         }
 
-        // Llenar la tabla con los datos
+        // Lleno la tabla con los datos
         for (String hora : horas) {
             Object[] fila = new Object[pistas.length + 1];
             fila[0] = hora;
@@ -276,6 +309,9 @@ public class GestionExtraescolaresAdmin extends JPanel {
         tablaReservas.repaint();
     }
 
+    /**
+     * Crea una reserva para el dia hora y pista seleccionada.
+     */
     private void reservar() {
         int fila = tablaReservas.getSelectedRow();
         int columna = tablaReservas.getSelectedColumn();

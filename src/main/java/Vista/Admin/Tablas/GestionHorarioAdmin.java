@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarHorariosAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,16 +15,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaHorarios;
 
+/**
+ * Constructor de la clase GestionHorarioAdmin.
+ * Inicializa la interfaz gráfica y carga los estudiantes.
+ */
 public class GestionHorarioAdmin extends JPanel {
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
     private JTable tablaHorarios;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionEstudiantesAdmin.
+     * Inicializa la interfaz gráfica y carga los horarios.
+     */
     public GestionHorarioAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -33,57 +43,18 @@ public class GestionHorarioAdmin extends JPanel {
         cargarHorariosAdmin();
     }
 
+    /**
+     * Método para incializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioHorariosAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaHorarios.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHorarios.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
@@ -111,6 +82,9 @@ public class GestionHorarioAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de horarios.
+     */
     private void initTabla() {
         String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
@@ -169,7 +143,6 @@ public class GestionHorarioAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -209,6 +182,57 @@ public class GestionHorarioAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioHorariosAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaHorarios.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHorarios.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaHorarios.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -243,6 +267,10 @@ public class GestionHorarioAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -251,6 +279,10 @@ public class GestionHorarioAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar un horario seleccionado en la tabla.
+     * Abre un formulario para editar el horario.
+     */
     private void modificarHorario() {
         int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
@@ -260,6 +292,10 @@ public class GestionHorarioAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar un estudiante en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarHorario() {
         int fila = tablaHorarios.getSelectedRow();
         if (fila != -1) {
@@ -281,6 +317,10 @@ public class GestionHorarioAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los horarios en la tabla
+     * Se obtienen los datos de los horarios y se añaden a la tabla.
+     */
     private void cargarHorariosAdmin() {
         modelo.setRowCount(0);
         for (Horarios horario : listaHorarios) {

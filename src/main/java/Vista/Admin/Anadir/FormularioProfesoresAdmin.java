@@ -5,23 +5,23 @@ import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
-import static Controlador.Controlador.actualizarListaProfesores;
-import static Controlador.Controlador.insertarControladorProfesor;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para agregar nuevos profesores.
+ * Permite al administrador ingresar los datos de un profesor.
+ */
 public class FormularioProfesoresAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -31,7 +31,6 @@ public class FormularioProfesoresAdmin extends JFrame {
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JLabel lblContrasena = new JLabel("Contraseña: ");
     private JLabel lblEstado = new JLabel("Estado: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -42,11 +41,18 @@ public class FormularioProfesoresAdmin extends JFrame {
     private JPasswordField txtContrasena = crearPasswordField();
     private JComboBox<Profesores.EstadoProfesor> cmbEstado = new JComboBox<>(Profesores.EstadoProfesor.values());
 
+    /**
+     * Constructor de la clase FormularioProfesoresAdmin.
+     * Inicializa la interfaz gráfica y los eventos.
+     */
     public FormularioProfesoresAdmin() {
         initGUI();
         initEventos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Profesor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,7 +67,7 @@ public class FormularioProfesoresAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Agregar Profesor", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Profesor", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -107,7 +113,7 @@ public class FormularioProfesoresAdmin extends JFrame {
         setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 9, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -123,12 +129,21 @@ public class FormularioProfesoresAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -136,6 +151,9 @@ public class FormularioProfesoresAdmin extends JFrame {
 
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo profesor.
+     */
     private void insertarProfesorValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -147,13 +165,11 @@ public class FormularioProfesoresAdmin extends JFrame {
         String password = new String(txtContrasena.getPassword());
         Profesores.EstadoProfesor estado = Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        // Validaciones de campos obligatorios
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty() || password.isEmpty() || estado == null) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
 
-        // Validaciones específicas
         if (!Profesores.validarDNI(dni)) {
             new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
             return;
@@ -169,7 +185,6 @@ public class FormularioProfesoresAdmin extends JFrame {
             return;
         }
 
-        // Si todo es válido, crear el profesor
         Profesores nuevoProfesor = new Profesores(nombre, apellido, dni, correo, telefono, direccion, usuario, encryptMD5(password), estado);
 
         try {

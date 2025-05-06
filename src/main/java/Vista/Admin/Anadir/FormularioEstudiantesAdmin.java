@@ -8,20 +8,24 @@ import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 import org.hibernate.NonUniqueObjectException;
-
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.List;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.insertarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Formulario para agregar estudiantes en la vista de administración.
+ * Permite ingresar los datos de un nuevo estudiante.
+ */
 public class FormularioEstudiantesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
@@ -30,14 +34,12 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private JLabel lblPassword = new JLabel("Contraseña: ");
     private JLabel lblFechaNacimiento = new JLabel("Fecha de Nacimiento: ");
     private JLabel lblEmail = new JLabel("Email: ");
-    private JLabel lblIDCurso = new JLabel("ID Curso: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblDireccion = new JLabel("Dirección: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblFechaMatricula = new JLabel("Fecha de Matrícula: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JLabel lblTutor = new JLabel("Tutor: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -46,19 +48,24 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
     private JComboBox<Tutores> cmbTutor = new JComboBox<>();
-
     private CustomDatePicker datePickerNacimiento = new CustomDatePicker();
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
 
+    /**
+     * Constructor de la clase FormularioEstudiantesAdmin.
+     * Inicializa la interfaz gráfica, los eventos y carga la lista de tutores.
+     */
     public FormularioEstudiantesAdmin() {
         initGUI();
         initEventos();
         cargarTutores();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,7 +80,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Agregar Estudiante", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -132,7 +139,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
         setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 13, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -148,18 +155,31 @@ public class FormularioEstudiantesAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con la posición especificada.
+
+     * @param componente Componente a agregar.
+     * @param fila       Fila en la que se agregará.
+     * @param columna    Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e ->insertarEstudianteValido());
     }
 
+    /**
+     * Método para cargar la lista de tutores en el combo box.
+     */
     private void cargarTutores() {
         List<Tutores> tutores = Controlador.getListaTutores();
         cmbTutor.removeAllItems();
@@ -168,6 +188,9 @@ public class FormularioEstudiantesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo estudiante.
+     */
     private void insertarEstudianteValido() {
 
         String nombre = txtNombre.getText().trim();

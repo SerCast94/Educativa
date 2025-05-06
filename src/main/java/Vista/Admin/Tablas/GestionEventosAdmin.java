@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarEventosAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,16 +15,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaEventos;
 
+/**
+ * Panel para la gestión de eventos en la vista del administrador.
+ * Permite visualizar, añadir, modificar y eliminar eventos.
+ */
 public class GestionEventosAdmin extends JPanel {
-    private JTable tablaEventos;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;    private JTable tablaEventos;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionEventosAdmin.
+     * Inicializa la interfaz gráfica y carga los eventos o excursiones.
+     */
     public GestionEventosAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -33,73 +42,32 @@ public class GestionEventosAdmin extends JPanel {
         cargarEventosAdmin();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioEventosAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEventos.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaEventos.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaEventos.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaEventos.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaEventos.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaEventos.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaEventos.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        // Verificar si el clic está en la parte baja de la tabla
-                        int visibleHeight = tablaEventos.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
-                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaEventos, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Eventos", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Eventos", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         btnAgregar = new Boton("Agregar Evento", Boton.ButtonType.PRIMARY);
@@ -113,9 +81,12 @@ public class GestionEventosAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+    * Método para incializar la tabla de eventos o excursiones.
+    */
     private void initTabla() {
         String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo","Objeto"};
-       modelo = new DefaultTableModel(null, columnas) {
+        modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -171,7 +142,6 @@ public class GestionEventosAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -211,6 +181,59 @@ public class GestionEventosAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioEventosAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEventos.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaEventos.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaEventos.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaEventos.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaEventos.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaEventos.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaEventos.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaEventos.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaEventos, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -245,6 +268,10 @@ public class GestionEventosAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -253,6 +280,10 @@ public class GestionEventosAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar un evento o excursión seleccionado en la tabla.
+     * Abre un formulario para editar el evento o excursión.
+     */
     private void modificarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
@@ -262,6 +293,10 @@ public class GestionEventosAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar un evento o excursión en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
@@ -283,6 +318,10 @@ public class GestionEventosAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los eventos o excursiones en la tabla.
+     * Se obtienen los datos de los eventos o excursiones y se añaden a la tabla.
+     */
     private void cargarEventosAdmin() {
         modelo.setRowCount(0);
         for (Eventos evento : listaEventos) {

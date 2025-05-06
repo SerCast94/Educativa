@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarAsistenciaAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,18 +15,29 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaAsistencia;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
-import static Vista.Util.EstiloComponentes.checkPersonalizadoNaranja;
 
+/**
+ * Clase que representa la vista de gestión de asistencias para el administrador.
+ * Permite agregar, modificar y eliminar asistencias.
+ */
 public class GestionAsistenciaAdmin extends JPanel {
+
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
     private JTable tablaAsistencias;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionAsistenciaAdmin.
+     * Inicializa la interfaz gráfica y carga las asistencias.
+     */
     public GestionAsistenciaAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -35,71 +45,32 @@ public class GestionAsistenciaAdmin extends JPanel {
         cargarAsistenciasAdmin();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioAsistenciaAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaAsistencias.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaAsistencias.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaAsistencias.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaAsistencias, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaAsistencias, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz gráfica.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         btnAgregar = new Boton("Agregar Asistencia", Boton.ButtonType.PRIMARY);
@@ -113,9 +84,12 @@ public class GestionAsistenciaAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de asistencias.
+     */
     private void initTabla() {
         String[] columnas = {"Estudiante", "Curso", "Fecha", "Justificado", "Motivo de ausencia", "Objeto"};
-       modelo = new DefaultTableModel(null, columnas) {
+        modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -134,7 +108,7 @@ public class GestionAsistenciaAdmin extends JPanel {
             }
         };
 
-        //  columna "Justificado"
+
         tablaAsistencias.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -143,10 +117,10 @@ public class GestionAsistenciaAdmin extends JPanel {
                 checkBox.setSelected(value != null && value.equals("Sí"));
                 checkPersonalizadoGris(checkBox);
 
-                checkBox.setEnabled(true); // Necesario para que se vea bien
-                checkBox.setFocusable(false); // No toma foco
-                checkBox.setRequestFocusEnabled(false); // No responde a focus
-                checkBox.setRolloverEnabled(false); // No responde a hover
+                checkBox.setEnabled(true);
+                checkBox.setFocusable(false);
+                checkBox.setRequestFocusEnabled(false);
+                checkBox.setRolloverEnabled(false);
                 checkBox.setOpaque(true);
                 checkBox.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
                 return checkBox;
@@ -229,6 +203,57 @@ public class GestionAsistenciaAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz gráfica.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioAsistenciaAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaAsistencias.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaAsistencias.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaAsistencias.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaAsistencias.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaAsistencias.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -263,6 +288,10 @@ public class GestionAsistenciaAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -271,6 +300,10 @@ public class GestionAsistenciaAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar la asistencia seleccionada en la tabla.
+     * Abre un formulario para actualizar la asistencia.
+     */
     private void modificarAsistencia() {
         int fila = tablaAsistencias.getSelectedRow();
         if (fila != -1) {
@@ -280,6 +313,10 @@ public class GestionAsistenciaAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar la asistencia seleccionada en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarAsistencia() {
         int fila = tablaAsistencias.getSelectedRow();
         if (fila != -1) {
@@ -301,6 +338,10 @@ public class GestionAsistenciaAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar las asistencias en la tabla.
+     * Se obtienen los datos de las asignaturas y se añaden a la tabla.
+     */
     private void cargarAsistenciasAdmin() {
         modelo.setRowCount(0);
         for (Asistencia asistencia : listaAsistencia) {

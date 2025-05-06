@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarHistorialAcademicoAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,16 +15,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaHistorialAcademico;
 
+/**
+ * Clase que representa la gestion del historial académico en la vista de administración
+ * Permite agregar, modificar y eliminar registros del historial académico.
+ */
 public class GestionHistorialAcademicoAdmin extends JPanel {
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
     private JTable tablaHistorial;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionHistorialAcadmicoAdmin.
+     * Inicializa la interfaz gráfica y carga los registros del historial académico.
+     */
     public GestionHistorialAcademicoAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -33,71 +43,32 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         cargarHistorial();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHistorial.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaHistorial.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaHistorial.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHistorial.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaHistorial.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaHistorial.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHistorial.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHistorial.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaHistorial, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Historial Académico", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         btnAgregar = new Boton("Agregar Historial", Boton.ButtonType.PRIMARY);
@@ -111,6 +82,9 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de historial académico.
+     */
     private void initTabla() {
         String[] columnas = {"Estudiante", "Asignatura", "Nota Final", "Fecha", "Comentarios","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
@@ -169,7 +143,6 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -209,6 +182,57 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioHistorialAcademicoAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHistorial.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaHistorial.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaHistorial.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHistorial.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaHistorial.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaHistorial.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHistorial.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaHistorial.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaHistorial, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaHistorial, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -243,6 +267,10 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -251,6 +279,10 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar un registro de historial académico seleccionado en la tabla.
+     * Abre un formulario para editar el historial académico.
+     */
     private void modificarHistorial() {
         int fila = tablaHistorial.getSelectedRow();
         if (fila != -1) {
@@ -260,6 +292,10 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar un registro del historial académico.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarHistorialAcademico() {
         int fila = tablaHistorial.getSelectedRow();
         if (fila != -1) {
@@ -281,6 +317,10 @@ public class GestionHistorialAcademicoAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los registros del historial académico en la tabla.
+     * Se obtienen los datos del historial académico y se añaden a la tabla.
+     */
     private void cargarHistorial() {
         modelo.setRowCount(0);
         for (HistorialAcademico historial : listaHistorialAcademico) {

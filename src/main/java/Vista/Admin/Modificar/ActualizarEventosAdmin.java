@@ -6,37 +6,41 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar eventos en la vista de administrador.
+ */
 public class ActualizarEventosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblDescripcion = new JLabel("Descripción:");
     private JLabel lblFechaInicio = new JLabel("Fecha de Inicio:");
     private JLabel lblFechaFin = new JLabel("Fecha de Fin:");
     private JLabel lblUbicacion = new JLabel("Ubicación:");
     private JLabel lblTipoEvento = new JLabel("Tipo de Evento:");
-
     private JTextField txtNombre = crearTextField();
     private JTextField txtDescripcion = crearTextField();
     private JTextField txtUbicacion = crearTextField();
     private JComboBox<Eventos.TipoEvento> cmbTipoEvento = new JComboBox<>(Eventos.TipoEvento.values());
-
     private CustomDatePicker datePickerInicio = new CustomDatePicker();
     private CustomDatePicker datePickerFin = new CustomDatePicker();
-
     private Eventos evento;
 
+    /**
+     * Constructor de la clase ActualizarEventosAdmin.
+     * Inicializa la interfaz gráfica y carga los datos del evento.
+     * @param evento Evento a actualizar.
+     */
     public ActualizarEventosAdmin(Eventos evento) {
         this.evento = evento;
         initGUI();
@@ -44,6 +48,9 @@ public class ActualizarEventosAdmin extends JFrame {
         cargarDatosEvento();
     }
 
+    /**
+     * Método para cargar los datos del evento en los campos de texto.
+     */
     private void cargarDatosEvento() {
         txtNombre.setText(evento.getNombre());
         txtDescripcion.setText(evento.getDescripcion());
@@ -53,6 +60,9 @@ public class ActualizarEventosAdmin extends JFrame {
         cmbTipoEvento.setSelectedItem(evento.getTipoEvento());
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Evento");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,7 +77,7 @@ public class ActualizarEventosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -76,7 +86,6 @@ public class ActualizarEventosAdmin extends JFrame {
         gbc.gridwidth = 1;
 
         customizeComboBox(cmbTipoEvento);
-
 
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);
@@ -102,7 +111,7 @@ public class ActualizarEventosAdmin extends JFrame {
         setBordeNaranja(cmbTipoEvento);
         agregarComponente(cmbTipoEvento, 6, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -118,18 +127,30 @@ public class ActualizarEventosAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con restricciones de diseño.
+     * @param componente Componente a agregar.
+     * @param fila Fila en la que se agregará.
+     * @param columna Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarEventoValido());
     }
 
+    /**
+     * Método para validar y actualizar los datos del evento.
+     */
     private void actualizarEventoValido(){
 
         if (txtNombre.getText().trim().isEmpty() ||

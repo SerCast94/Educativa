@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarMatriculasAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,16 +15,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaMatriculas;
 
+/**
+ * Clase que representa la gestión de matrículas en la vista de administración
+ * Permite agregar, modificar y eliminar matrículas.
+ */
 public class GestionMatriculasAdmin extends JPanel {
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
     private JTable tablaMatriculas;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionMatriculasAdmin
+     * Inicializa la interfaz gráfica y carga las matrículas.
+     */
     public GestionMatriculasAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -33,71 +43,32 @@ public class GestionMatriculasAdmin extends JPanel {
         cargarMatriculasAdmin();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-       btnAgregar.addActionListener(e -> new FormularioMatriculasAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaMatriculas.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaMatriculas.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaMatriculas.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaMatriculas.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaMatriculas.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaMatriculas.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaMatriculas.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaMatriculas.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaMatriculas, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaMatriculas, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Matriculas", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Matriculas", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         btnAgregar = new Boton("Agregar Matrícula", Boton.ButtonType.PRIMARY);
@@ -111,6 +82,9 @@ public class GestionMatriculasAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de matriculas.
+     */
     private void initTabla() {
         String[] columnas = {"Estudiante", "Curso", "Fecha de Matrícula", "Estado", "Objeto"};
         modelo = new DefaultTableModel(null, columnas) {
@@ -169,7 +143,6 @@ public class GestionMatriculasAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -209,6 +182,57 @@ public class GestionMatriculasAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioMatriculasAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaMatriculas.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaMatriculas.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaMatriculas.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaMatriculas.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaMatriculas.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaMatriculas.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaMatriculas.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaMatriculas.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaMatriculas, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaMatriculas, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -241,6 +265,10 @@ public class GestionMatriculasAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -249,6 +277,10 @@ public class GestionMatriculasAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar un horario seleccionado en la tabla.
+     * Abre un formulario para editar el horario.
+     */
     private void modificarMatricula() {
         int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
@@ -258,6 +290,10 @@ public class GestionMatriculasAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar un horario en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarMatricula() {
         int fila = tablaMatriculas.getSelectedRow();
         if (fila != -1) {
@@ -279,12 +315,16 @@ public class GestionMatriculasAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los horarios en la tabla.
+     * Se obtienen los datos de los horarios y se añaden a la tabla.
+     */
     private void cargarMatriculasAdmin() {
         modelo.setRowCount(0);
         for (Matriculas matricula : listaMatriculas) {
             Object[] fila = {
                     matricula.getEstudiante().getNombre() + " " + matricula.getEstudiante().getApellido(),
-                    matricula.getCurso().getNombre(), // Asumiendo que el curso tiene un método getNombre()
+                    matricula.getCurso().getNombre(),
                     matricula.getFechaMatricula().toString(),
                     matricula.getEstado().name(),
                     matricula

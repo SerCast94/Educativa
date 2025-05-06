@@ -6,39 +6,48 @@ import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-
 import static Controlador.Controlador.actualizarListaAsignaturas;
 import static Controlador.Controlador.insertarControladorAsignatura;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para agregar nuevas asignaturas.
+ * Permite al administrador ingresar los datos de una asignatura.
+ */
 public class FormularioAsignaturasAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblDescripcion = new JLabel("Descripción:");
     private JLabel lblProfesor = new JLabel("Profesor:");
     private JLabel lblEstado = new JLabel("Estado:");
-
     private JTextField txtNombre = crearTextField();
     private JTextField txtDescripcion = crearTextField();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activa", "inactiva"});
-
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
 
+
+    /**
+     * Constructor de la clase FormularioAsignaturasAdmin.
+     * Inicializa la interfaz gráfica, los eventos y carga la lista de profesores.
+     */
     public FormularioAsignaturasAdmin() {
         initGUI();
         initEventos();
         cargarProfesores();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Asignatura");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -53,7 +62,7 @@ public class FormularioAsignaturasAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Agregar Asignatura", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Asignatura", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -81,7 +90,7 @@ public class FormularioAsignaturasAdmin extends JFrame {
         agregarComponente(lblEstado, 4, 0);
         agregarComponente(cmbEstado, 4, 1);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
@@ -96,18 +105,30 @@ public class FormularioAsignaturasAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> insertarAsignaturaValida());
     }
 
+    /**
+     * Método para cargar la lista de los profesores en el combo box.
+     */
     private void cargarProfesores() {
         List<Profesores> profesores = Controlador.getListaProfesores();
         cmbProfesor.removeAllItems();
@@ -116,6 +137,9 @@ public class FormularioAsignaturasAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta una nueva asignatura.
+     */
     private void insertarAsignaturaValida(){
         if (txtNombre.getText().trim().isEmpty() ||
                 txtDescripcion.getText().trim().isEmpty() ||

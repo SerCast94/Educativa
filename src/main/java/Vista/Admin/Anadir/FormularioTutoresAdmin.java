@@ -5,23 +5,23 @@ import Mapeo.Tutores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
-
 import static BackUtil.Encriptador.encryptMD5;
-import static Controlador.Controlador.actualizarListaTutores;
-import static Controlador.Controlador.insertarControladorTutor;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para agregar nuevos tutores.
+ * Permite al administrador ingresar los datos de un tutor.
+ */
 public class FormularioTutoresAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -30,7 +30,6 @@ public class FormularioTutoresAdmin extends JFrame {
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JLabel lblEstado = new JLabel("Estado: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -40,11 +39,18 @@ public class FormularioTutoresAdmin extends JFrame {
     private JTextField txtUsuario = crearTextField();
     private JComboBox<Tutores.EstadoTutor> cmbEstado = new JComboBox<>(Tutores.EstadoTutor.values());
 
+    /**
+     * Constructor de la clase FormularioTutoresAdmin.
+     * Inicializa la interfaz gráfica y los eventos.
+     */
     public FormularioTutoresAdmin() {
         initGUI();
         initEventos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Tutor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,7 +65,7 @@ public class FormularioTutoresAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Agregar Tutor", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Tutor", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -69,16 +75,31 @@ public class FormularioTutoresAdmin extends JFrame {
 
         customizeComboBox(cmbEstado);
 
-        agregarCampo(lblDNI, txtDNI, 1);
-        agregarCampo(lblNombre, txtNombre, 2);
-        agregarCampo(lblApellido, txtApellido, 3);
-        agregarCampo(lblUsuario, txtUsuario, 4);
-        agregarCampo(lblPassword, txtPassword, 5);
-        agregarCampo(lblEmail, txtEmail, 6);
-        agregarCampo(lblTelefono, txtTelefono, 7);
-        agregarCampo(lblEstado, cmbEstado, 8);
+        agregarComponente(lblDNI, 1, 0);
+        agregarComponente(txtDNI, 1, 1);
 
-        JPanel panelBotones = new JPanel();
+        agregarComponente(lblNombre, 2, 0);
+        agregarComponente(txtNombre, 2, 1);
+
+        agregarComponente(lblApellido, 3, 0);
+        agregarComponente(txtApellido, 3, 1);
+
+        agregarComponente(lblUsuario, 4, 0);
+        agregarComponente(txtUsuario, 4, 1);
+
+        agregarComponente(lblPassword, 5, 0);
+        agregarComponente(txtPassword, 5, 1);
+
+        agregarComponente(lblEmail, 6, 0);
+        agregarComponente(txtEmail, 6, 1);
+
+        agregarComponente(lblTelefono, 7, 0);
+        agregarComponente(txtTelefono, 7, 1);
+
+        agregarComponente(lblEstado, 8, 0);
+        agregarComponente(cmbEstado, 8, 1);
+
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -94,24 +115,30 @@ public class FormularioTutoresAdmin extends JFrame {
         setVisible(true);
     }
 
-    private void agregarCampo(JLabel label, Component campo, int fila) {
-        agregarComponente(label, fila, 0);
-        setBordeNaranja((JComponent) campo);
-        agregarComponente(campo, fila, 1);
-    }
-
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> insertarTutorValido());
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo tutor.
+     */
     private void insertarTutorValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -122,13 +149,11 @@ public class FormularioTutoresAdmin extends JFrame {
         String password = new String(txtPassword.getPassword());
         Tutores.EstadoTutor estado = Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        // Validaciones de campos obligatorios
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || password.isEmpty() || estado == null) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
 
-        // Validaciones específicas
         if (!Tutores.validarDNI(dni)) {
             new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
             return;
@@ -144,7 +169,6 @@ public class FormularioTutoresAdmin extends JFrame {
             return;
         }
 
-        // Si todo es válido, crear el tutor
         Tutores nuevoTutor = new Tutores(nombre, apellido, dni, telefono, correo, usuario, encryptMD5(password), estado);
 
         try {

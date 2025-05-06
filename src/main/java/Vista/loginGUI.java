@@ -13,23 +13,28 @@ import Vista.Tutor.SeleccionarEstudianteDialog;
 import Vista.Tutor.VistaPrincipalTutor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Objects;
-
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.ControladorLogin.tutorLogeado;
-import static Controlador.ControladorTutor.getListaEstudiantesDelTutor;
 
+/**
+ * Clase que representa la interfaz gráfica de inicio de sesión.
+ * Esta clase se encarga de crear la ventana de inicio de sesión y gestionar
+ * los eventos relacionados con el inicio de sesión.
+ */
 public class loginGUI extends JFrame {
-    private JFrame frame;
-    private JPanel mainPanel;
-    private JPanel leftPanel;
-    private JPanel rightPanel;
+    private JFrame ventana;
+    private JPanel panelPrincipal;
+    private JPanel panelIzquierda;
+    private JPanel panelDerecha;
+    private JPanel PanelSuperior;
+    private JPanel centroIzquierdaPanel;
     private JTextField campoUsuario;
     private JPasswordField campoPassword;
     private Boton botonIngresar;
@@ -37,12 +42,18 @@ public class loginGUI extends JFrame {
     private JLabel nombreCentroLabel;
     private JLabel descripcionLabel;
     private JLabel olvidoPasswordLabel;
-    private JLabel appNameLabel;
+    private JLabel nombreAppLabel;
+    private JLabel loginTitulo;
+    private JLabel usuarioLabel;
+    private JLabel passwordLabel;
     static Controlador controlador;
     static ControladorLogin controladorLogin;
 
+    /**
+     * Constructor de la clase loginGUI.
+     * Inicializa la ventana de inicio de sesión y carga las listas necesarias.
+     */
     public loginGUI() {
-
         controlador = new Controlador();
         controlador.cargarListas();
         controladorLogin = new ControladorLogin();
@@ -50,25 +61,36 @@ public class loginGUI extends JFrame {
         initEventos();
     }
 
+    /**
+     * Método que devuelve el controlador.
+     * @return
+     */
     public static Controlador getControlador() {
         return controlador;
     }
 
+    /**
+     * Método que devuelve el controlador de login.
+     * @return
+     */
     public static ControladorLogin getControladorLogin() {
         return controladorLogin;
     }
 
+    /**
+     * Método que inicializa la interfaz gráfica de inicio de sesión.
+     */
     public void initGUI() {
 
-        frame = new JFrame();
-        frame.setTitle("Login - Colegio Salesiano San Francisco de Sales");
-        frame.setSize(1920, 1080);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout());
+        ventana = new JFrame();
+        ventana.setTitle("Login - Colegio Salesiano San Francisco de Sales");
+        ventana.setSize(1920, 1080);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setLocationRelativeTo(null);
+        ventana.setLayout(new BorderLayout());
 
         // Panel superior para el nombre de la aplicación
-        JPanel topPanel = new JPanel() {
+        PanelSuperior = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -80,49 +102,61 @@ public class loginGUI extends JFrame {
                 g.fillRect(width / 2, 0, width / 2, height);
             }
         };
-        topPanel.setLayout(new BorderLayout());
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-        appNameLabel = new JLabel("Educativa");
-        appNameLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        appNameLabel.setForeground(new Color(100, 100, 100));
-        appNameLabel.setHorizontalAlignment(SwingConstants.RIGHT); // Alinear a la derecha
-        topPanel.add(appNameLabel, BorderLayout.EAST); // Agregar al lado derecho del panel
-        frame.add(topPanel, BorderLayout.NORTH);
+
+        PanelSuperior.setLayout(new BorderLayout());
+        PanelSuperior.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+        nombreAppLabel = new JLabel("Educativa");
+        nombreAppLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        nombreAppLabel.setForeground(new Color(100, 100, 100));
+        nombreAppLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        PanelSuperior.add(nombreAppLabel, BorderLayout.EAST);
+        ventana.add(PanelSuperior, BorderLayout.NORTH);
 
         // Panel principal dividido en dos columnas
-        mainPanel = new JPanel(new GridLayout(1, 2));
-        frame.add(mainPanel, BorderLayout.CENTER);
+        panelPrincipal = new JPanel(new GridLayout(1, 2));
+        ventana.add(panelPrincipal, BorderLayout.CENTER);
 
-        // Panel izquierdo (logo y descripción)
-        leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBackground(new Color(241, 198, 177));
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(60, 60, 60, 60));
-        mainPanel.add(leftPanel);
+        // Panel izquierdo
+        panelIzquierda = new JPanel(new BorderLayout());
+        panelIzquierda.setBackground(new Color(241, 198, 177));
+        panelIzquierda.setBorder(BorderFactory.createEmptyBorder(60, 60, 60, 60));
+        panelPrincipal.add(panelIzquierda);
 
         logoLabel = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logo.png"))), SwingConstants.CENTER);
         logoLabel.setFont(new Font("Arial", Font.BOLD, 48));
         logoLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
 
-        nombreCentroLabel = new JLabel("<html><div style='text-align: center;'>Colegio Salesiano San Francisco de Sales</div></html>", SwingConstants.CENTER);
+        nombreCentroLabel = new JLabel("<html><div style='text-align: center;'>" +
+                "Colegio Salesiano San Francisco de Sales" +
+                "</div></html>", SwingConstants.CENTER);
+
         nombreCentroLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
-        descripcionLabel = new JLabel("<html><div style='text-align: justify; text-justify: inter-word;'>Un colegio Salesiano es una institución educativa inspirada en el método educativo salesiano. Los colegios salesianos tienen al centro de su identidad la figura de Don Bosco, sacerdote, educador y escritor italiano del siglo XIX, quien desarrolló un método educativo que pone al alumno al centro de toda actividad educativa y formativa. Este método tiene como objetivo promover y comprometer a todas las personas del docente y de la comunidad de la que forma parte, con una visión propia de pensamiento, de vida, actividad y compromiso práctico.</div></html>", SwingConstants.CENTER);
+        descripcionLabel = new JLabel("<html><div style='text-align: justify; text-justify: inter-word;'>" +
+                "Un colegio Salesiano es una institución educativa inspirada en el método educativo salesiano." +
+                " Los colegios salesianos tienen al centro de su identidad la figura de Don Bosco, sacerdote," +
+                " educador y escritor italiano del siglo XIX, quien desarrolló un método educativo que pone" +
+                " al alumno al centro de toda actividad educativa y formativa. Este método tiene como objetivo" +
+                " promover y comprometer a todas las personas del docente y de la comunidad de la que forma parte," +
+                " con una visión propia de pensamiento, de vida, actividad y compromiso práctico." +
+                "</div></html>", SwingConstants.CENTER);
+
         descripcionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         descripcionLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
 
-        JPanel centerLeftPanel = new JPanel(new BorderLayout());
-        centerLeftPanel.add(nombreCentroLabel, BorderLayout.CENTER);
-        centerLeftPanel.add(descripcionLabel, BorderLayout.SOUTH);
-        centerLeftPanel.setOpaque(false);
+        centroIzquierdaPanel = new JPanel(new BorderLayout());
+        centroIzquierdaPanel.add(nombreCentroLabel, BorderLayout.CENTER);
+        centroIzquierdaPanel.add(descripcionLabel, BorderLayout.SOUTH);
+        centroIzquierdaPanel.setOpaque(false);
 
-        leftPanel.add(logoLabel, BorderLayout.NORTH);
-        leftPanel.add(centerLeftPanel, BorderLayout.CENTER);
+        panelIzquierda.add(logoLabel, BorderLayout.NORTH);
+        panelIzquierda.add(centroIzquierdaPanel, BorderLayout.CENTER);
 
-        // Panel derecho (formulario de login)
-        rightPanel = new JPanel(new GridBagLayout());
-        rightPanel.setBackground(Color.WHITE);
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 80, 0, 80));
-        mainPanel.add(rightPanel);
+        // Panel derecho
+        panelDerecha = new JPanel(new GridBagLayout());
+        panelDerecha.setBackground(Color.WHITE);
+        panelDerecha.setBorder(BorderFactory.createEmptyBorder(20, 80, 0, 80));
+        panelPrincipal.add(panelDerecha);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -132,91 +166,90 @@ public class loginGUI extends JFrame {
         gbc.insets = new Insets(10, 0, 10, 0);
 
         // Título LOGIN
-        JLabel loginTitle = new JLabel("LOGIN", SwingConstants.CENTER);
-        loginTitle.setFont(new Font("Arial", Font.BOLD, 28));
-        loginTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
-        rightPanel.add(loginTitle, gbc);
+        loginTitulo = new JLabel("LOGIN", SwingConstants.CENTER);
+        loginTitulo.setFont(new Font("Arial", Font.BOLD, 28));
+        loginTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
+        panelDerecha.add(loginTitulo, gbc);
 
-        // Etiqueta Usuario
-        JLabel usuarioLabel = new JLabel("Usuario");
+        // Usuario
+        usuarioLabel = new JLabel("Usuario");
         usuarioLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rightPanel.add(usuarioLabel, gbc);
-
-        // Campo Usuario
+        panelDerecha.add(usuarioLabel, gbc);
         campoUsuario = new JTextField();
         campoUsuario.setFont(new Font("Arial", Font.PLAIN, 14));
         campoUsuario.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
         ));
-        rightPanel.add(campoUsuario, gbc);
+        panelDerecha.add(campoUsuario, gbc);
+        panelDerecha.add(Box.createVerticalStrut(20), gbc);
 
-        // Espacio
-        rightPanel.add(Box.createVerticalStrut(20), gbc);
-
-        // Etiqueta Contraseña
-        JLabel passwordLabel = new JLabel("Contraseña");
+        // Contraseña
+        passwordLabel = new JLabel("Contraseña");
         passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        rightPanel.add(passwordLabel, gbc);
-
-        // Campo Contraseña - más ancho
+        panelDerecha.add(passwordLabel, gbc);
         campoPassword = new JPasswordField();
         campoPassword.setFont(new Font("Arial", Font.PLAIN, 14));
         campoPassword.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.GRAY),
                 BorderFactory.createEmptyBorder(5, 5, 5, 5)
         ));
-        rightPanel.add(campoPassword, gbc);
+        panelDerecha.add(campoPassword, gbc);
 
         // ¿Olvidaste tu contraseña?
         olvidoPasswordLabel = new JLabel("¿Olvidaste tu contraseña?", SwingConstants.CENTER);
         olvidoPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         olvidoPasswordLabel.setForeground(new Color(100, 100, 100));
-        rightPanel.add(olvidoPasswordLabel, gbc);
+        panelDerecha.add(olvidoPasswordLabel, gbc);
+        panelDerecha.add(Box.createVerticalStrut(30), gbc);
 
-        // Espacio
-        rightPanel.add(Box.createVerticalStrut(30), gbc);
-
-        // Botón Ingresar
+        // Botón
         botonIngresar = new Boton("Ingresar",Boton.ButtonType.PRIMARY);
         botonIngresar.setFont(new Font("Arial", Font.BOLD, 16));
         botonIngresar.setBackground(new Color(230, 108, 81));
         botonIngresar.setForeground(Color.BLACK);
         botonIngresar.setFocusPainted(false);
         botonIngresar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        rightPanel.add(botonIngresar, gbc);
+        panelDerecha.add(botonIngresar, gbc);
 
-        frame.setVisible(true);
+        ventana.setVisible(true);
     }
 
+    /**
+     * Método que inicializa los eventos de la interfaz gráfica.
+     */
     public void initEventos() {
         botonIngresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (funcionLogin()) frame.dispose();
+                if (funcionLogin()) ventana.dispose();
             }
         });
 
-        olvidoPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-            new CustomDialog(frame, "Información", "Acuda a la Secretaría del centro para restaurar su contraseña", "ONLY_OK").setVisible(true);            }
+        olvidoPasswordLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+            new CustomDialog(ventana, "Información", "Acuda a la Secretaría del centro para restaurar su contraseña", "ONLY_OK").setVisible(true);            }
         });
 
         campoUsuario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (funcionLogin()) frame.dispose();
+                if (funcionLogin()) ventana.dispose();
             }
         });
 
         campoPassword.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (funcionLogin()) frame.dispose();
+                if (funcionLogin()) ventana.dispose();
             }
         });
     }
 
+    /**
+     * Método que comprueba el login del usuario.
+     * @return true si el login es correcto, false en caso contrario.
+     */
     private boolean funcionLogin() {
         String usuario = campoUsuario.getText();
         String password = new String(campoPassword.getPassword());
@@ -226,8 +259,8 @@ public class loginGUI extends JFrame {
             for (Estudiantes estudiante : Controlador.getListaEstudiantes()) {
                 if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);
-                    frame.dispose();
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);
+                    ventana.dispose();
                     abrirVentanaPrincipalEstudiante();
                     return true;
                 }
@@ -237,8 +270,8 @@ public class loginGUI extends JFrame {
             for (Profesores profesor : Controlador.getListaProfesores()) {
                 if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);
-                    frame.dispose();
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);
+                    ventana.dispose();
                     abrirVentanaPrincipalProfesor();
                     return true;
                 }
@@ -248,7 +281,7 @@ public class loginGUI extends JFrame {
                 if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(passwordHash)) {
 
                     new CustomDialog(null,"Bienvenido","Bienvenido, " + admin.toString(),"ONLY_OK").setVisible(true);
-                    frame.dispose();
+                    ventana.dispose();
                     abrirVentanaPrincipalAdmin();
                     return true;
                 }
@@ -257,44 +290,56 @@ public class loginGUI extends JFrame {
             for (Tutores tutor : Controlador.getListaTutores()) {
                 if (tutor.getUsuario().equals(usuario) && tutor.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(frame, "Bienvenido", "Bienvenido, " + tutor.getNombre(), "ONLY_OK").setVisible(true);
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + tutor.getNombre(), "ONLY_OK").setVisible(true);
                     abrirVentanaPrincipalTutor();
                     return true;
                 }
             }
         }
-        new CustomDialog(frame, "Error", "Usuario o contraseña incorrectos", "ONLY_OK").setVisible(true);
+        new CustomDialog(ventana, "Error", "Usuario o contraseña incorrectos", "ONLY_OK").setVisible(true);
         return false;
     }
 
+    /**
+     * Método para abrir la ventana principal del rol de estudiante.
+     */
     private void abrirVentanaPrincipalEstudiante() {
         new VistaPrincipalEstudiante();
         dispose();
     }
 
+    /**
+     * Método para abrir la ventana principal del rol de administrador.
+     */
     private void abrirVentanaPrincipalAdmin() {
         new VistaPrincipalAdmin();
         dispose();
     }
 
+    /**
+     * Método para abrir la ventana principal del rol de profesor.
+     */
     private void abrirVentanaPrincipalProfesor() {
         new VistaPrincipalProfesor();
         dispose();
     }
 
+    /**
+     * Método para abrir la ventana principal del rol de tutor.
+     * Este método muestra un diálogo para seleccionar un perfil de estudiante a gestionar.
+     */
     private void abrirVentanaPrincipalTutor() {
         SeleccionarEstudianteDialog dialog = new SeleccionarEstudianteDialog(tutorLogeado);
-        dialog.setModal(true); // bloquea otra interacción hasta que se cierre el diálogo
-        dialog.setVisible(true); // Muestra el diálogo y espera a que se cierre
+        dialog.setModal(true);
+        dialog.setVisible(true);
 
         Estudiantes estudiante = dialog.getEstudianteSeleccionado();
 
-        // Verificar si se seleccionó un estudiante
         if (estudiante != null) {
             new VistaPrincipalTutor();
             dispose();
         } else {
-            new CustomDialog(frame, "Advertencia", "Debe seleccionar un estudiante para continuar.", "ONLY_OK").setVisible(true);
+            new CustomDialog(ventana, "Advertencia", "Debe seleccionar un estudiante para continuar.", "ONLY_OK").setVisible(true);
         }
     }
 }

@@ -6,42 +6,51 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
-
 import static Controlador.Controlador.actualizarListaEventos;
 import static Controlador.Controlador.insertarControladorEvento;
 import static Vista.Util.EstiloComponentes.*;
 
+
+/**
+ * Clase que representa el formulario para agregar nuevos eventos o excursiones.
+ * Permite ingresar los daots de un evento o excursión.
+ */
 public class FormularioEventosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblDescripcion = new JLabel("Descripción: ");
     private JLabel lblFechaInicio = new JLabel("Fecha de Inicio: ");
     private JLabel lblFechaFin = new JLabel("Fecha de Fin: ");
     private JLabel lblUbicacion = new JLabel("Ubicación: ");
     private JLabel lblTipoEvento = new JLabel("Tipo de Evento: ");
-
     private JTextField txtNombre = crearTextField();
     private JTextField txtDescripcion = crearTextField();
     private JTextField txtUbicacion = crearTextField();
     private JComboBox<Eventos.TipoEvento> cmbTipoEvento = new JComboBox<>(Eventos.TipoEvento.values());
-
     private CustomDatePicker datePickerInicio = new CustomDatePicker();
     private CustomDatePicker datePickerFin = new CustomDatePicker();
 
+    /**
+     * Constructor de la clase FormularioEventosAdmin.
+     * Inicializa la interfaz gráfica y los eventos.
+     */
     public FormularioEventosAdmin() {
         initGUI();
         initEventos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Registrar Evento");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,7 +65,7 @@ public class FormularioEventosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Registrar Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Registrar Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -90,7 +99,7 @@ public class FormularioEventosAdmin extends JFrame {
         setBordeNaranja(cmbTipoEvento);
         agregarComponente(cmbTipoEvento, 6, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -106,12 +115,21 @@ public class FormularioEventosAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con GridBagLayout.
+     * @param componente Componente a agregar.
+     * @param fila       Fila en la que se agregará.
+     * @param columna    Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -119,6 +137,9 @@ public class FormularioEventosAdmin extends JFrame {
 
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo evento o excursión en la base de datos.
+     */
     private void insertarEventoValido(){
 
         if (txtNombre.getText().trim().isEmpty() ||

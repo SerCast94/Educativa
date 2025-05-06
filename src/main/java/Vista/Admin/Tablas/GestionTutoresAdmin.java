@@ -7,7 +7,6 @@ import Vista.Admin.Modificar.ActualizarTutoresAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -15,16 +14,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaTutores;
 
+/**
+ * Clase que representa la gestión de tutores en la vista de administración.
+ * Permite agregar, modificar y eliminar tutores.
+ */
 public class GestionTutoresAdmin extends JPanel {
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
     private JTable tablaTutores;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
 
+    /**
+     * Constructor de la clase GestionTutoresAdmin
+     */
     public GestionTutoresAdmin() {
         setLayout(new BorderLayout());
         initGUI();
@@ -32,57 +41,18 @@ public class GestionTutoresAdmin extends JPanel {
         cargarTutoresAdmin();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioTutoresAdmin());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaTutores.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaTutores.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaTutores.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaTutores.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaTutores.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaTutores.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaTutores.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaTutores.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaTutores, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaTutores, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
         JPanel panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
@@ -110,6 +80,9 @@ public class GestionTutoresAdmin extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de tutores
+     */
     private void initTabla() {
         String[] columnas = {"Nombre", "Apellido", "DNI", "Email", "Teléfono", "Usuario", "Estado", "Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
@@ -157,7 +130,6 @@ public class GestionTutoresAdmin extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
@@ -197,6 +169,57 @@ public class GestionTutoresAdmin extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioTutoresAdmin());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaTutores.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaTutores.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaTutores.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaTutores.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaTutores.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaTutores.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaTutores.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaTutores.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaTutores, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaTutores, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -231,6 +254,10 @@ public class GestionTutoresAdmin extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -239,6 +266,10 @@ public class GestionTutoresAdmin extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para moficiar un tutor seleccionado en la tabla.
+     * Abre un formulario para editar el tutor.
+     */
     private void modificarTutor() {
         int fila = tablaTutores.getSelectedRow();
         if (fila != -1) {
@@ -248,6 +279,10 @@ public class GestionTutoresAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar un tutor en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarTutor() {
         int fila = tablaTutores.getSelectedRow();
         if (fila != -1) {
@@ -269,6 +304,10 @@ public class GestionTutoresAdmin extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los tutores en la tabla.
+     * Se obtienen los datos de los tutores y se añaden a la tabla.
+     */
     private void cargarTutoresAdmin() {
         modelo.setRowCount(0);
         for (Tutores tutor : listaTutores) {

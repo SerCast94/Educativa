@@ -6,33 +6,37 @@ import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar cursos desde la vista de administrador.
+ */
 public class ActualizarCursosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblDescripcion = new JLabel("Descripción:");
     private JLabel lblProfesor = new JLabel("Profesor:");
     private JLabel lblEstado = new JLabel("Estado:");
-
     private JTextField txtNombre = crearTextField();
     private JTextField txtDescripcion = crearTextField();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
-
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private Cursos curso;
 
+    /**
+     * Constructor de la clase ActualizarCursosAdmin.
+     * Inicializa la interfaz gráfica y carga los datos del curso.
+     * @param curso Curso a actualizar.
+     */
     public ActualizarCursosAdmin(Cursos curso) {
         this.curso = curso;
         initGUI();
@@ -41,6 +45,9 @@ public class ActualizarCursosAdmin extends JFrame {
         cargarDatosCurso();
     }
 
+    /**
+     * Carga los datos del curso en los campos de texto.
+     */
     private void cargarDatosCurso() {
         txtNombre.setText(curso.getNombre());
         txtDescripcion.setText(curso.getDescripcion());
@@ -48,6 +55,9 @@ public class ActualizarCursosAdmin extends JFrame {
         cmbProfesor.setSelectedItem(curso.getProfesor());
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Curso");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,7 +72,7 @@ public class ActualizarCursosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10); // Coincide con FormularioCursoAdmin
 
-        JLabel titulo = new JLabel("Actualizar Curso", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Curso", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -90,7 +100,7 @@ public class ActualizarCursosAdmin extends JFrame {
         agregarComponente(lblEstado, 4, 0);
         agregarComponente(cmbEstado, 4, 1);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
@@ -105,18 +115,30 @@ public class ActualizarCursosAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con GridBagLayout.
+     * @param componente Componente a agregar.
+     * @param fila Fila en la que se agregará.
+     * @param columna Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarCursoValido());
     }
 
+    /**
+     * Método para cargar la lista de profesores en el combo box.
+     */
     private void cargarProfesores() {
         List<Profesores> profesores = Controlador.getListaProfesores();
         cmbProfesor.removeAllItems();
@@ -125,6 +147,9 @@ public class ActualizarCursosAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos del curso.
+     */
     private void actualizarCursoValido(){
 
         if (txtNombre.getText().trim().isEmpty() ||

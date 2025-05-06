@@ -20,6 +20,8 @@ public class ActualizarEstudiantesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
@@ -48,6 +50,11 @@ public class ActualizarEstudiantesAdmin extends JFrame {
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
     private Estudiantes estudiante;
 
+    /**
+     * Constructor de la clase ActualizarEstudiantesAdmin.
+     * Inicializa la interfaz gráfica y carga los datos del estudiante.
+     * @param estudiante Estudiante a actualizar.
+     */
     public ActualizarEstudiantesAdmin(Estudiantes estudiante) {
         this.estudiante = estudiante;
         initGUI();
@@ -56,6 +63,9 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         cargarDatosEstudiante();
     }
 
+    /**
+     * Carga los datos del estudiante en los campos de texto.
+     */
     private void cargarDatosEstudiante() {
         txtDNI.setText(estudiante.getDni());
         txtNombre.setText(estudiante.getNombre());
@@ -71,6 +81,9 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         cmbTutor.setSelectedItem(estudiante.getTutor());
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -85,7 +98,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
+        titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -144,7 +157,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 13, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -160,12 +173,21 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -174,6 +196,9 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         btnAceptar.addActionListener(e -> actualizarEstudianteValido());
     }
 
+    /**
+     * Método para cargar los tutores en el combo box.
+     */
     private void cargarTutores() {
         List<Tutores> tutores = Controlador.getListaTutores();
         cmbTutor.removeAllItems();
@@ -182,6 +207,9 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos del estudiante.
+     */
     private void actualizarEstudianteValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();

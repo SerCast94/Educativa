@@ -4,40 +4,43 @@ import Controlador.Controlador;
 import Mapeo.Asignaturas;
 import Mapeo.Convalidaciones;
 import Mapeo.Convalidaciones.EstadoConvalidacion;
-import Mapeo.Cursos;
 import Mapeo.Estudiantes;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para agregar nuevas convalidaciónes.
+ * Permite seleccionar ingresar los datos de una nueva convalidación.
+ */
 public class FormularioConvalidacionesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblCursoOriginal = new JLabel("Asignatura Original: ");
     private JLabel lblFecha = new JLabel("Fecha de Convalidación: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblComentarios = new JLabel("Comentarios: ");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturaOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
-
     private JTextField txtComentarios = crearTextField();
     private CustomDatePicker datePickerConvalidacion = new CustomDatePicker();
 
+    /**
+     * Constructor de la clase FormularioConvalidacionesAdmin.
+     * Inicializa la interfaz gráfica, los eventos y carga la lista de estudiantes y asignaturas.
+     */
     public FormularioConvalidacionesAdmin() {
         initGUI();
         cargarEstudiantes();
@@ -45,6 +48,9 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         initEventos();
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,7 +65,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Agregar Convalidación", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Convalidación", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -87,7 +93,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         agregarComponente(lblComentarios, 5, 0);
         agregarComponente(txtComentarios, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.add(btnAceptar);
@@ -101,18 +107,31 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> insertarConvalidacionValida());
     }
 
+    /**
+     * Método para agregar un componente al panel con GridBagLayout.
+     *
+     * @param componente Componente a agregar.
+     * @param fila       Fila en la que se agregará.
+     * @param columna    Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para cargar la lista de estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -121,6 +140,9 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar la lista de asignaturas en el combo box.
+     */
     private void cargarAsignaturas(){
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturaOriginal.removeAllItems();
@@ -129,6 +151,9 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta una nueva convalidación.
+     */
     private void insertarConvalidacionValida(){
 
         if (cmbEstudiante.getSelectedItem() == null ||
@@ -173,4 +198,3 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         }
     }
 }
-

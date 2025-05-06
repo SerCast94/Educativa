@@ -5,36 +5,42 @@ import Mapeo.*;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
-
 import static Controlador.Controlador.insertarControladorHorario;
 import static Vista.Util.CustomSpinnerDate.crearHoraSpinner;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para agregar nuevos horarios.
+ * Permite al administrador ingresar los datos de un horario.
+ */
 public class FormularioHorariosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
     private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblAsignatura = new JLabel("Asignatura: ");
     private JLabel lblDiaSemana = new JLabel("Día de la Semana: ");
     private JLabel lblHoraInicio = new JLabel("Hora de Inicio: ");
     private JLabel lblHoraFin = new JLabel("Hora de Fin: ");
     private JLabel lblProfesor = new JLabel("Profesor: ");
-
     private JComboBox<Asignaturas> cmbAsignatura = new JComboBox<>();
     private JComboBox<Horarios.DiaSemana> cmbDiaSemana = new JComboBox<>(Horarios.DiaSemana.values());
     private JSpinner spnHoraInicio = crearHoraSpinner();
     private JSpinner spnHoraFin = crearHoraSpinner();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
 
+    /**
+     * Constructor de la clase FormularioHorariosAdmin.
+     * Inicializa la interfaz gráfica, los eventos y carga la lista de asignaturas y profesores.
+     */
     public FormularioHorariosAdmin() {
         initGUI();
         initEventos();
@@ -42,6 +48,9 @@ public class FormularioHorariosAdmin extends JFrame {
         cargarProfesores();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Registrar Horario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,7 +65,7 @@ public class FormularioHorariosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Registrar Horario", SwingConstants.CENTER);
+        titulo = new JLabel("Registrar Horario", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -88,7 +97,7 @@ public class FormularioHorariosAdmin extends JFrame {
         setBordeNaranja(spnHoraFin);
         agregarComponente(spnHoraFin, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -104,19 +113,30 @@ public class FormularioHorariosAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con las restricciones de diseño
+     * @param componente Componente a agregar.
+     * @param fila Fila en la que se agregará.
+     * @param columna Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> insertarHorarioValido());
     }
 
-
+    /**
+     * Método para cargar las asignaturas en el combo box.
+     */
     private void cargarAsignaturas() {
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignatura.removeAllItems();
@@ -125,6 +145,9 @@ public class FormularioHorariosAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar los profesores en el combo box.
+     */
     private void cargarProfesores() {
         List<Profesores> profesores = Controlador.getListaProfesores();
         cmbProfesor.removeAllItems();
@@ -133,6 +156,9 @@ public class FormularioHorariosAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo horario.
+     */
     private void insertarHorarioValido() {
 
         if (cmbAsignatura.getSelectedItem() == null ||

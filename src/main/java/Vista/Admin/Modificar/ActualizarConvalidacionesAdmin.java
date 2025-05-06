@@ -4,42 +4,44 @@ import Controlador.Controlador;
 import Mapeo.Asignaturas;
 import Mapeo.Convalidaciones;
 import Mapeo.Estudiantes;
-import Mapeo.Cursos;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar una convalidación en la vista de administrador.
+ */
 public class ActualizarConvalidacionesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCursoOriginal = new JLabel("Asignatura Original:");
     private JLabel lblFecha = new JLabel("Fecha de Convalidación:");
     private JLabel lblEstado = new JLabel("Estado:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturaOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
-
     private JTextField txtComentarios = crearTextField();
     private CustomDatePicker datePickerConvalidacion = new CustomDatePicker();
-
     private Convalidaciones convalidacion;
 
+    /**
+     * Constructor de la clase ActualizarConvalidacionesAdmin.
+     * Inicializa la interfaz gráfica y carga los datos de la convalidación.
+     * @param convalidacion Convalidación a actualizar.
+     */
     public ActualizarConvalidacionesAdmin(Convalidaciones convalidacion) {
         this.convalidacion = convalidacion;
         initGUI();
@@ -49,6 +51,9 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         cargarDatosConvalidacion();
     }
 
+    /**
+     * Carga los datos de la convalidación en los campos de texto.
+     */
     private void cargarDatosConvalidacion() {
         cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
         cmbAsignaturaOriginal.setSelectedItem(convalidacion.getAsignaturaOriginal());
@@ -57,6 +62,9 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         txtComentarios.setText(convalidacion.getComentarios());
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,7 +79,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Convalidación", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Convalidación", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -99,7 +107,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         agregarComponente(lblComentarios, 5, 0);
         agregarComponente(txtComentarios, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -115,18 +123,30 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarConvalidacionValida());
     }
 
+    /**
+     * Método para cargar los estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -135,6 +155,9 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar las asignaturas en el combo box.
+     */
     private void cargarAsignaturas(){
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturaOriginal.removeAllItems();
@@ -143,6 +166,9 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos de la convalidación.
+     */
     private void actualizarConvalidacionValida(){
 
             if (cmbEstudiante.getSelectedItem() == null ||

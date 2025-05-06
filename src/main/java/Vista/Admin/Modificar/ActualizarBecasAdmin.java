@@ -7,38 +7,41 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar los datos de una beca en la interfaz de administración.
+ */
 public class ActualizarBecasAdmin extends JFrame {
-
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblTipoBeca = new JLabel("Tipo de Beca: ");
     private JLabel lblMonto = new JLabel("Monto: ");
     private JLabel lblFechaAsignacion = new JLabel("Fecha de Asignación: ");
     private JLabel lblEstadoBeca = new JLabel("Estado de Beca: ");
     private JLabel lblComentarios = new JLabel("Comentarios: ");
-
     private JComboBox<Estudiantes> cmbEstudiantes = new JComboBox<>();
     private JComboBox<Becas.TipoBeca> cmbTipoBeca = new JComboBox<>(Becas.TipoBeca.values());
     private JComboBox<Becas.EstadoBeca> cmbEstadoBeca = new JComboBox<>(Becas.EstadoBeca.values());
     private JTextField txtMonto = crearTextField();
     private JTextField txtComentarios = crearTextField();
     private CustomDatePicker datePickerAsignacion = new CustomDatePicker();
-
     private Becas beca;
 
+    /**
+     * Constructor de la clase ActualizarBecasAdmin.
+     * Inicializa la interfaz gráfica y carga los datos de la beca.
+     * @param beca Beca a actualizar.
+     */
     public ActualizarBecasAdmin(Becas beca) {
         this.beca = beca;
         initGUI();
@@ -47,6 +50,9 @@ public class ActualizarBecasAdmin extends JFrame {
         cargarDatosBeca();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Beca");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,7 +67,7 @@ public class ActualizarBecasAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Beca", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Beca", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -86,7 +92,7 @@ public class ActualizarBecasAdmin extends JFrame {
         agregarComponente(lblComentarios, 6, 0);
         agregarComponente(txtComentarios, 6, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -102,18 +108,29 @@ public class ActualizarBecasAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila       La fila donde se agregará.
+     * @param columna    La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
-
         btnAceptar.addActionListener(e -> actualizarBecaValida());
     }
 
+    /**
+     * Método para cargar los estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiantes.removeAllItems();
@@ -122,6 +139,9 @@ public class ActualizarBecasAdmin extends JFrame {
         }
     }
 
+    /**
+     * Carga los datos de la beca en los campos de la interfaz.
+     */
     private void cargarDatosBeca() {
         cmbEstudiantes.setSelectedItem(beca.getEstudiante());
         cmbTipoBeca.setSelectedItem(beca.getTipoBeca());
@@ -133,15 +153,17 @@ public class ActualizarBecasAdmin extends JFrame {
         txtComentarios.setText(beca.getComentarios());
     }
 
-    private void actualizarBecaValida(){
-
+    /**
+     * Método para validar y actualizar los datos de la beca.
+     */
+    private void actualizarBecaValida() {
         if (cmbEstudiantes.getSelectedItem() == null ||
                 cmbTipoBeca.getSelectedItem() == null ||
                 txtMonto.getText().trim().isEmpty() ||
                 datePickerAsignacion.getDate() == null ||
                 cmbEstadoBeca.getSelectedItem() == null) {
 
-            new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
         if (txtComentarios.getText().length() > 255) {
@@ -167,14 +189,13 @@ public class ActualizarBecasAdmin extends JFrame {
             VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
             vistaPrincipal.mostrarVistaBecas();
 
-            new CustomDialog(null,"Éxito", "Beca actualizada correctamente.","ONLY_OK").setVisible(true);
+            new CustomDialog(null, "Éxito", "Beca actualizada correctamente.", "ONLY_OK").setVisible(true);
             dispose();
         } catch (NumberFormatException ex) {
-            new CustomDialog(null,"Error", "El monto debe ser un número válido.","ONLY_OK").setVisible(true);
+            new CustomDialog(null, "Error", "El monto debe ser un número válido.", "ONLY_OK").setVisible(true);
         } catch (Exception ex) {
-            new CustomDialog(null,"Error", "Error al actualizar la beca.","ONLY_OK").setVisible(true);
+            new CustomDialog(null, "Error", "Error al actualizar la beca.", "ONLY_OK").setVisible(true);
             Controlador.rollback();
         }
-
     }
 }

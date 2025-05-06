@@ -3,42 +3,46 @@ package Vista.Admin.Modificar;
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
 import Mapeo.Horarios;
-import Mapeo.Cursos;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.List;
-
 import static Vista.Util.CustomSpinnerDate.crearHoraSpinner;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar horarios de asignaturas en la vista de administración.
+ */
 public class ActualizarHorariosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblCurso = new JLabel("Asignatura:");
     private JLabel lblProfesor = new JLabel("Profesor:");
     private JLabel lblDiaSemana = new JLabel("Día de la Semana:");
     private JLabel lblHoraInicio = new JLabel("Hora de Inicio:");
     private JLabel lblHoraFin = new JLabel("Hora de Fin:");
-
     private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<Horarios.DiaSemana> cmbDiaSemana = new JComboBox<>(Horarios.DiaSemana.values());
     private JSpinner spnHoraInicio = crearHoraSpinner();
     private JSpinner spnHoraFin = crearHoraSpinner();
-
     private Horarios horario;
 
+    /**
+     * Constructor de la clase ActualizarHorariosAdmin.
+     * Inicializa la interfaz gráfica y carga los datos del horario.
+     * @param horario Horario a actualizar.
+     */
     public ActualizarHorariosAdmin(Horarios horario) {
         this.horario = horario;
         initGUI();
@@ -48,6 +52,9 @@ public class ActualizarHorariosAdmin extends JFrame {
         cargarDatosHorario();
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Horario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,7 +69,7 @@ public class ActualizarHorariosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Horario", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Horario", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -94,7 +101,7 @@ public class ActualizarHorariosAdmin extends JFrame {
         setBordeNaranja(spnHoraFin);
         agregarComponente(spnHoraFin, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -110,18 +117,30 @@ public class ActualizarHorariosAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarHorarioValido());
     }
 
+    /**
+     * Método para cargar los datos del horario en los campos correspondientes.
+     */
     private void cargarDatosHorario() {
         cmbAsignaturas.setSelectedItem(horario.getAsignatura());
         cmbProfesor.setSelectedItem(horario.getProfesor());
@@ -130,6 +149,9 @@ public class ActualizarHorariosAdmin extends JFrame {
         spnHoraFin.setValue(horario.getHoraFin());
     }
 
+    /**
+     * Método para cargar las asignaturas en el combo box.
+     */
     private void cargarAsignaturas(){
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
@@ -138,6 +160,9 @@ public class ActualizarHorariosAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar los profesores en el combo box.
+     */
     private void cargarProfesores() {
         List<Profesores> profesores = Controlador.getListaProfesores();
         cmbProfesor.removeAllItems();
@@ -146,6 +171,9 @@ public class ActualizarHorariosAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos del horario.
+     */
     private void actualizarHorarioValido() {
 
         if (cmbAsignaturas.getSelectedItem() == null ||

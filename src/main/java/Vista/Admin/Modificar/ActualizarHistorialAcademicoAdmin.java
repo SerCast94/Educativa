@@ -8,37 +8,41 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar el historial académico desde la vista de administrador.
+ */
 public class ActualizarHistorialAcademicoAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblAsignatura = new JLabel("Asignatura:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JTextField txtNotaFinal = crearTextField();
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
-
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private HistorialAcademico historial;
 
+    /**
+     * Constructor de la clase ActualizarHistorialAcademicoAdmin.
+     * Inicializa la interfaz gráfica y carga los datos del historial académico.
+     * @param historial Historial académico a actualizar.
+     */
     public ActualizarHistorialAcademicoAdmin(HistorialAcademico historial) {
         this.historial = historial;
         initGUI();
@@ -48,6 +52,9 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         cargarDatosHistorial();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -62,7 +69,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Actualizar Historial Académico", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -91,7 +98,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         agregarComponente(lblComentarios, 5, 0);
         agregarComponente(txtComentarios, 5, 1);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
@@ -106,6 +113,9 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para cargar los datos del historial académico en los campos correspondientes.
+     */
     private void cargarDatosHistorial() {
         cmbEstudiante.setSelectedItem(historial.getEstudiante());
         cmbAsignaturas.setSelectedItem(historial.getAsignatura());
@@ -114,18 +124,30 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         txtComentarios.setText(historial.getComentarios());
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarHistorialAcademicoValido());
     }
 
+    /**
+     * Método para cargar los estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -134,6 +156,9 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar las asignaturas en el combo box.
+     */
     private void cargarAsignaturas(){
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
@@ -142,6 +167,9 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos del historial académico.
+     */
     private void actualizarHistorialAcademicoValido() {
 
         if (cmbEstudiante.getSelectedItem() == null ||

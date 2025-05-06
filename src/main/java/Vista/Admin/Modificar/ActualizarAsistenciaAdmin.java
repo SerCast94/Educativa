@@ -8,35 +8,40 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar la asistencia de un estudiante.
+ */
 public class ActualizarAsistenciaAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblCurso = new JLabel("Curso: ");
     private JLabel lblFecha = new JLabel("Fecha: ");
     private JLabel lblJustificado = new JLabel("Justificado: ");
     private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia: ");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
     private JCheckBox chkJustificado = new JCheckBox("  Justificado");
     private JTextField txtMotivoAusencia = crearTextField();
-
     private Asistencia asistencia;
 
+    /**
+     * Constructor de la clase ActualizarAsistenciaAdmin.
+     * Inicializa la interfaz gráfica y carga los datos de la asistencia.
+     * @param asistencia Objeto Asistencia a actualizar.
+     */
     public ActualizarAsistenciaAdmin(Asistencia asistencia) {
         this.asistencia = asistencia;
         initGUI();
@@ -46,6 +51,9 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         cargarDatosAsistencia();
     }
 
+    /**
+     * Carga los datos de la asistencia en los campos de texto.
+     */
     private void cargarDatosAsistencia() {
         cmbEstudiante.setSelectedItem(asistencia.getEstudiante());
         cmbCurso.setSelectedItem(asistencia.getCurso());
@@ -54,6 +62,9 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         txtMotivoAusencia.setText(asistencia.getMotivoAusencia());
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,7 +79,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Asistencia", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Asistencia", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -98,7 +109,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         agregarComponente(lblMotivoAusencia, 5, 0);
         agregarComponente(txtMotivoAusencia, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -114,18 +125,30 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarAsistenciaValida());
     }
 
+    /**
+     * Método para cargar la lista de estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -134,6 +157,9 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar la lista de cursos en el combo box.
+     */
     private void cargarCursos() {
         List<Cursos> cursos = Controlador.getListaCursos();
         cmbCurso.removeAllItems();
@@ -142,6 +168,9 @@ public class ActualizarAsistenciaAdmin extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos de la asistencia.
+     */
     private void actualizarAsistenciaValida(){
 
         if (cmbEstudiante.getSelectedItem() == null ||
