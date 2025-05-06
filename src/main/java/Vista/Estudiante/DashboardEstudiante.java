@@ -6,50 +6,58 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
-
 import static Controlador.ControladorLogin.estudianteLogeado;
 
+/**
+ * Clase que representa el panel del dashboard para el estudiante.
+ */
 public class DashboardEstudiante extends JPanel {
 
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private JPanel panelConMargen;
+    private JPanel gridPanel;
+
+    /**
+     * Constructor de la clase DashboardEstudiante.
+     * Inicializa el panel y sus componentes.
+     */
     public DashboardEstudiante() {
         setLayout(new BorderLayout());
         initPanelSuperior();
         initGridPanel();
     }
 
+    /**
+     * Inicializa el panel superior del dashboard.
+     */
     private void initPanelSuperior() {
 
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - EDUCATIVA", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
-
-        // por si quiero boton
-//        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-//        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-//        JButton btnAgregar = new Boton("Agregar Estudiante", Boton.ButtonType.PRIMARY);
-//        btnAgregar.setIcon(icono);
-//        btnAgregar.setPreferredSize(new Dimension(180, 30));
-//        btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-//        panelBoton.add(btnAgregar);
-
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Inicializa el panel de la cuadrícula que contiene las estadísticas.
+     */
     private void initGridPanel() {
-        JPanel panelConMargen = new JPanel(new BorderLayout());
+        panelConMargen = new JPanel(new BorderLayout());
         panelConMargen.setBackground(new Color(251, 234, 230));
         panelConMargen.setBorder(BorderFactory.createEmptyBorder(30, 0, 10, 10));
 
-        JPanel gridPanel = new JPanel(new GridLayout(3, 5, 10, 10));
+        gridPanel = new JPanel(new GridLayout(3, 5, 10, 10));
         gridPanel.setBackground(Color.WHITE);
         gridPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -73,11 +81,18 @@ public class DashboardEstudiante extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Crea una caja con un título, un contador y un icono.
+     * @param titulo  El título de la caja.
+     * @param contador El contador a mostrar en la caja.
+     * @param foto    El nombre del archivo del icono.
+     * @return Un JPanel que representa la caja creada.
+     */
     private JPanel crearCaja(String titulo, String contador, String foto) {
         JPanel caja = new JPanel(new GridBagLayout());
-        caja.setBackground(new Color(247, 232, 227)); // Fondo principal
+        caja.setBackground(new Color(247, 232, 227));
         caja.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 198, 177), 3), // Borde
+                BorderFactory.createLineBorder(new Color(241, 198, 177), 3),
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
 
@@ -85,7 +100,7 @@ public class DashboardEstudiante extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(10, 0, 10, 0); // Espaciado entre componentes
+        gbc.insets = new Insets(10, 0, 10, 0);
 
         // Ícono
         ImageIcon originalIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + foto + ".png")));
@@ -99,12 +114,12 @@ public class DashboardEstudiante extends JPanel {
         JLabel tituloLabel = new JLabel(
                 "<html><div style='"
                         + "text-align: center;"
-                        + "width: 120px;"                   // Ancho fijo (ajústalo según tu diseño)
+                        + "width: 120px;"
                         + "display: -webkit-box;"
-                        + "-webkit-line-clamp: 2;"          // Limita a 2 líneas
+                        + "-webkit-line-clamp: 2;"
                         + "-webkit-box-orient: vertical;"
-                        + "overflow: hidden;"               // Oculta el texto que exceda
-                        + "line-height: 1.3;"               // Espaciado entre líneas
+                        + "overflow: hidden;"
+                        + "line-height: 1.3;"
                         + "'>"
                         + titulo
                         + "</div></html>"
@@ -114,10 +129,10 @@ public class DashboardEstudiante extends JPanel {
 
         gbc.gridy++;
         JSeparator separador = new JSeparator(SwingConstants.HORIZONTAL);
-        separador.setForeground(new Color(239, 154, 108)); // Color del separador
-        separador.setBackground(new Color(239, 154, 108)); // Fondo del separador
-        separador.setPreferredSize(new Dimension(150, 2)); // Ancho fijo y grosor
-        separador.setMinimumSize(new Dimension(150, 2));   // Tamaño mínimo
+        separador.setForeground(new Color(239, 154, 108));
+        separador.setBackground(new Color(239, 154, 108));
+        separador.setPreferredSize(new Dimension(150, 2));
+        separador.setMinimumSize(new Dimension(150, 2));
         caja.add(separador, gbc);
 
         // Contador
@@ -130,11 +145,11 @@ public class DashboardEstudiante extends JPanel {
         caja.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                caja.setBackground(new Color(241, 198, 177)); // #F1C6B1 al pasar el mouse
+                caja.setBackground(new Color(241, 198, 177));
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                caja.setBackground(new Color(247, 232, 227)); // Vuelve al color original
+                caja.setBackground(new Color(247, 232, 227));
             }
         });
 

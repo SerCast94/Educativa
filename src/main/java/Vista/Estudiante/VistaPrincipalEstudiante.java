@@ -1,22 +1,27 @@
 package Vista.Estudiante;
 
-import Mapeo.Estudiantes;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEstudiante;
 import Vista.Estudiante.Tablas.*;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import static Controlador.ControladorLogin.estudianteLogeado;
 
+/**
+ * VistaPrincipalEstudiante es la clase principal de la interfaz gráfica para el estudiante.
+ * desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
+ */
 public class VistaPrincipalEstudiante extends JFrame {
     private MenuLateralEstudiante menu;
     private JPanel contentPanel;
     private static VistaPrincipalEstudiante instancia;
 
+    /**
+     * Constructor de la clase VistaPrincipalEstudiante.
+     * Inicializa la ventana principal y configura el menú lateral.
+     */
     public VistaPrincipalEstudiante() {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
@@ -34,10 +39,17 @@ public class VistaPrincipalEstudiante extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método que devuelve la instancia de la ventana principal
+     * @return instancia de VistaPrincipalEstudiante.
+     */
     public static JFrame getVistaPrincipal() {
         return instancia;
     }
 
+    /**
+     * Método que muestra la vista del dashboard del estudiante.
+     */
     public  void mostrarVistaDashboardEstudiante() {
         contentPanel.removeAll();
         contentPanel.add(new DashboardEstudiante());
@@ -45,6 +57,9 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista del historial académico.
+     */
     public void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHistorialAcademicoEstudiante());
@@ -52,6 +67,9 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de la asistencia.
+     */
     public void mostrarVistaAsistencia() {
         contentPanel.removeAll();
         contentPanel.add(new GestionAsistenciaEstudiante());
@@ -59,6 +77,9 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de los horarios
+     */
     public void mostrarVistaHorarios() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHorarioEstudiante());
@@ -66,6 +87,9 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de los eventos o excursiones.
+     */
     public void mostrarVistaEventos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEventosEstudiante());
@@ -73,6 +97,9 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de los profesores.
+     */
     public void mostrarVistaProfesores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionProfesoresEstudiante());
@@ -80,11 +107,16 @@ public class VistaPrincipalEstudiante extends JFrame {
         contentPanel.repaint();
     }
 
-
+    /**
+     * Método que muestra la vista de modificación de perfil del estudiante.
+     */
     public void mostrarVistaModificarPerfilEstudiante() {
         new ActualizarEstudiantesEstudiante(estudianteLogeado);
     }
 
+    /**
+     * Clase interna que maneja los eventos de los botones del menú lateral.
+     */
     private class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

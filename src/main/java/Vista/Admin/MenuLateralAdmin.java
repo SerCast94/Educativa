@@ -16,13 +16,13 @@ import java.util.Objects;
 public class MenuLateralAdmin extends JPanel {
     private Map<String, JButton> botonesMenu;
     private JPanel panelBotones;
-    JPanel panelLogo;
-    JLabel logoLabel;
-    ImageIcon iconoSuperior;
-    Boton boton;
-    JPanel panelInferior;
-    Boton botonModificarPerfil;
-    ImageIcon iconoInferior;
+    private JPanel panelLogo;
+    private JLabel logoLabel;
+    private ImageIcon iconoSuperior;
+    private Boton boton;
+    private JPanel panelInferior;
+    private Boton botonModificarPerfil;
+    private ImageIcon iconoInferior;
 
     /**
      * Constructor de la clase MenuLateralAdmin.
@@ -53,7 +53,6 @@ public class MenuLateralAdmin extends JPanel {
         panelLogo.setLayout(new BorderLayout());
         panelLogo.add(logoLabel, BorderLayout.CENTER);
 
-        // Panel de botones
         panelBotones = new JPanel();
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -80,11 +79,9 @@ public class MenuLateralAdmin extends JPanel {
 
         for (String[] opcion : opciones) {
 
-            // Cargar y redimensionar icono
             iconoSuperior = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
             iconoSuperior.setImage(iconoSuperior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-            // Crear botón
             boton = new Boton(opcion[0], Boton.ButtonType.PRIMARY);
             boton.setIcon(iconoSuperior);
             boton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -100,7 +97,6 @@ public class MenuLateralAdmin extends JPanel {
         }
 
 
-        // Panel inferior para el botón de modificar perfil
         panelInferior = new JPanel();
         panelInferior.setLayout(new BoxLayout(panelInferior, BoxLayout.Y_AXIS));
         panelInferior.setBackground(new Color(251, 234, 230));

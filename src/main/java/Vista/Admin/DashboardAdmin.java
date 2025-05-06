@@ -12,11 +12,11 @@ import java.util.Objects;
  */
 public class DashboardAdmin extends JPanel {
 
-    JPanel panelSuperior;
-    JLabel titulo;
-    JPanel panelBoton;
-    JPanel panelConMargen;
-    JPanel gridPanel;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private JPanel panelConMargen;
+    private JPanel gridPanel;
 
     /**
      * Constructor de la clase DashboardAdmin.
