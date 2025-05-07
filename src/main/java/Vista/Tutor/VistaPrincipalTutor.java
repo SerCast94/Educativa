@@ -1,30 +1,30 @@
 package Vista.Tutor;
 
-import Mapeo.Estudiantes;
-import Mapeo.Tutores;
 import Vista.Estudiante.DashboardEstudiante;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEstudiante;
 import Vista.Estudiante.Tablas.*;
-import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Tutor.Modificar.ActualizarTutoresTutor;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-
 import static Controlador.ControladorLogin.estudianteLogeado;
 import static Controlador.ControladorLogin.tutorLogeado;
 
+/**
+ * VistaPrincipalTutor es la clase principal de la interfaz gráfica para el tutor.
+ * Desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
+ */
 public class VistaPrincipalTutor extends JFrame {
     private MenuLateralTutor menu;
     private JPanel contentPanel;
     private static VistaPrincipalTutor instancia;
 
-
-
+    /**
+     * Constructor de la clase VistaPrincipalTutor.
+     * Inicializa la ventana principal y configura el menú lateral.
+     */
     public VistaPrincipalTutor() {
 
 
@@ -44,10 +44,17 @@ public class VistaPrincipalTutor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método que devuelve la instancia de la ventana principal.
+     * @return instancia de VistaPrincipalTutor.
+     */
     public static JFrame getVistaPrincipal() {
         return instancia;
     }
 
+    /**
+     * Método que muestra la vista del dashboard del estudiante.
+     */
     public  void mostrarVistaDashboardEstudiante() {
         contentPanel.removeAll();
         contentPanel.add(new DashboardEstudiante());
@@ -55,6 +62,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión del historial académico del estudiante seleccionado.
+     */
     public void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHistorialAcademicoEstudiante());
@@ -62,6 +72,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de asistencia del estudiante seleccionado.
+     */
     public void mostrarVistaAsistencia() {
         contentPanel.removeAll();
         contentPanel.add(new GestionAsistenciaEstudiante());
@@ -69,6 +82,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de horarios del estudiante seleccionado.
+     */
     public void mostrarVistaHorarios() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHorarioEstudiante());
@@ -76,6 +92,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de eventos del estudiante seleccionado.
+     */
     public void mostrarVistaEventos() {
         contentPanel.removeAll();
         contentPanel.add(new GestionEventosEstudiante());
@@ -83,6 +102,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de profesores del estudiante seleccionado.
+     */
     public void mostrarVistaProfesores() {
         contentPanel.removeAll();
         contentPanel.add(new GestionProfesoresEstudiante());
@@ -90,6 +112,9 @@ public class VistaPrincipalTutor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que abre un dialogo con un combo box para cambiar el estudiante seleccionado.
+     */
     public void cambiarPerfilEstudiante(){
         SeleccionarEstudianteDialog dialog = new SeleccionarEstudianteDialog(tutorLogeado);
         dialog.setModal(true);
@@ -98,25 +123,33 @@ public class VistaPrincipalTutor extends JFrame {
         new CustomDialog(null, "Perfil Modificado", "El perfil del estudiante ha sido modificado correctamente", "OK_CANCEL");
     }
 
+    /**
+     * Método que muestra la vista de modificación de perfil del estudiante.
+     */
     public void mostrarVistaModificarPerfilEstudiante() {
         new ActualizarEstudiantesEstudiante(estudianteLogeado);
     }
 
-
+    /**
+     * Método que muestra la vista de modificación de perfil del tutor.
+     */
     public void mostrarVistaModificarPerfilTutor() {
         new ActualizarTutoresTutor(tutorLogeado);
     }
 
+    /**
+     * Clase interna que maneja los eventos de los botones del menú lateral.
+     */
     private class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
 
             if (source instanceof JButton) {
-                JButton button = (JButton) source;
-                String actionCommand = button.getText().trim();
+                JButton botonMenu = (JButton) source;
+                String accionMenu = botonMenu.getText().trim();
 
-                switch (actionCommand) {
+                switch (accionMenu) {
                     case "Historial Académico":
                         mostrarVistaHistorialAcademico();
                         break;

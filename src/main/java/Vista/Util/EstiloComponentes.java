@@ -8,34 +8,47 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * Clase que contiene métodos para personalizar componentes Swing.
+ */
 public class EstiloComponentes {
 
+    /**
+     * Método para establecer el borde naranja en un componente.
+     * @param componente El componente al que se le aplicará el borde.
+     */
     public static void setBordeNaranja(JComponent componente) {
         componente.setBorder(BorderFactory.createLineBorder(new Color(245, 156, 107)));
     }
 
-
+    /**
+     * Método para crear un JTextField con un borde naranja y un margen izquierdo.
+     * Para que los textos no se vean tan pegados al borde.
+     * @return
+     */
     public static JTextFieldConMargen crearTextField() {
-        JTextFieldConMargen tf = new JTextFieldConMargen(30);
-        EstiloComponentes.setBordeNaranja(tf);
-        return tf;
+        JTextFieldConMargen campoTexto = new JTextFieldConMargen(30);
+        EstiloComponentes.setBordeNaranja(campoTexto);
+        return campoTexto;
     }
 
     public static JPasswordFieldConMargen crearPasswordField() {
-        JPasswordFieldConMargen pf = new JPasswordFieldConMargen(30);
-        EstiloComponentes.setBordeNaranja(pf);
-        return pf;
+        JPasswordFieldConMargen campoContrasenia = new JPasswordFieldConMargen(30);
+        EstiloComponentes.setBordeNaranja(campoContrasenia);
+        return campoContrasenia;
     }
 
-
-    public static void customizeComboBox(JComboBox<?> comboBox) {
-        comboBox.setBackground(new Color(245, 156, 107));  // Fondo color similar al de los botones
-        comboBox.setForeground(Color.BLACK); // Texto negro
+    /**
+     * Método para crear un comboBox personalizado.
+     * @param comboBox
+     */
+    public static void personalizarComboBox(JComboBox<?> comboBox) {
+        comboBox.setBackground(new Color(245, 156, 107));
+        comboBox.setForeground(Color.BLACK);
         comboBox.setFont(new Font("Arial", Font.PLAIN, 14));
-        comboBox.setOpaque(true); // Hacer el fondo opaco
+        comboBox.setOpaque(true);
 
 
-        // Usar un renderer para personalizar el estilo del JComboBox
         comboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
@@ -45,65 +58,63 @@ public class EstiloComponentes {
                 label.setOpaque(true);
 
                 if (isSelected) {
-                    label.setBackground(new Color(245, 156, 107));  // Color del hover
+                    label.setBackground(new Color(245, 156, 107));
                     label.setForeground(Color.BLACK);
                 } else {
                     label.setBackground(Color.WHITE);
                     label.setForeground(Color.BLACK);
                 }
 
-                // Agregar margen izquierdo en la celda del JComboBox
-                label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0)); // 10 píxeles de margen a la izquierda
+                label.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
                 return label;
             }
         });
 
-        // Obtener el BasicComboPopup (el popup del JComboBox)
         BasicComboPopup popup = (BasicComboPopup) comboBox.getAccessibleContext().getAccessibleChild(0);
 
-        // Acceder a la lista interna (JList) del popup
         JList<?> list = popup.getList();
 
-        // Obtener el JViewport que contiene la lista
         JViewport viewport = (JViewport) list.getParent();
 
-        // Acceder al JScrollPane que contiene el JViewport
         JScrollPane scrollPane = (JScrollPane) viewport.getParent();
 
-        // Ahora personalizamos la barra de desplazamiento
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
         verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
             protected JButton createDecreaseButton(int orientation) {
                 JButton button = super.createDecreaseButton(orientation);
-                button.setBackground(new Color(251, 234, 230));  // Fondo de los botones de desplazamiento
+                button.setBackground(new Color(251, 234, 230));
                 return button;
             }
 
             @Override
             protected JButton createIncreaseButton(int orientation) {
                 JButton button = super.createIncreaseButton(orientation);
-                button.setBackground(new Color(251, 234, 230));  // Fondo de los botones de desplazamiento
+                button.setBackground(new Color(251, 234, 230));
                 return button;
             }
 
             @Override
             protected void paintTrack(Graphics g, JComponent c, Rectangle r) {
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(new Color(251, 234, 230));  // Color de la pista
-                g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);  // Esquinas redondeadas
+                g2.setColor(new Color(251, 234, 230));
+                g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);
             }
 
             @Override
             protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(new Color(245, 156, 107));  // Color del pulgar
-                g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);  // Esquinas redondeadas
+                g2.setColor(new Color(245, 156, 107));
+                g2.fillRoundRect(r.x, r.y, r.width, r.height, 10, 10);
             }
         });
     }
 
-        public static void EspaciadoEnDatePicker(CustomDatePicker datePicker) {
+    /**
+     * Método para que la fecha del datePicker tenga un espaciado.
+     * @param datePicker El datePicker al que se le aplicará el espaciado.
+     */
+    public static void EspaciadoEnDatePicker(CustomDatePicker datePicker) {
         JTextField dateTextField = datePicker.getComponentDateTextField();
         dateTextField.setFont(new Font("Arial", Font.PLAIN, 14));
         dateTextField.setEditable(false);
@@ -120,15 +131,23 @@ public class EstiloComponentes {
         dateTextField.setDocument(doc);
     }
 
+    /**
+     * Método para personalizar un JCheckBox con iconos personalizados de color naranja.
+     * @param checkBox El JCheckBox a personalizar.
+     */
     public static void checkPersonalizadoNaranja(JCheckBox checkBox){
         checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoff.png"))));
         checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkon.png"))));
         checkBox.setOpaque(true);
     }
+
+    /**
+     * Método para personalizar un JCheckBox con iconos personalizados de color gris.
+     * @param checkBox El JCheckBox a personalizar.
+     */
     public static void checkPersonalizadoGris(JCheckBox checkBox){
         checkBox.setIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkoffGris.png"))));
         checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkonGris.png"))));
         checkBox.setOpaque(true);
     }
-
 }

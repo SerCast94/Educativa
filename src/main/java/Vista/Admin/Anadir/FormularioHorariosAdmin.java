@@ -22,8 +22,8 @@ public class FormularioHorariosAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel titulo;
     private JPanel panelBotones;
     private JLabel lblAsignatura = new JLabel("Asignatura: ");
@@ -73,9 +73,9 @@ public class FormularioHorariosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbAsignatura);
-        customizeComboBox(cmbDiaSemana);
-        customizeComboBox(cmbProfesor);
+        personalizarComboBox(cmbAsignatura);
+        personalizarComboBox(cmbDiaSemana);
+        personalizarComboBox(cmbProfesor);
 
         agregarComponente(lblAsignatura, 1, 0);
         setBordeNaranja(cmbAsignatura);

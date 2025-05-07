@@ -72,7 +72,7 @@ public class GestionConvalidacionesAdmin extends JPanel {
         icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Convalidación", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Convalidación", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(200, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -252,11 +252,11 @@ public class GestionConvalidacionesAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificar = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificar = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificar);
         modificar.addActionListener(e -> modificarConvalidacion());
 
-        Boton eliminar = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminar = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminar);
         eliminar.addActionListener(e -> eliminarConvalidacion());
 

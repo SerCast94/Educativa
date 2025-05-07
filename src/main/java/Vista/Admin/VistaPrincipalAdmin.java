@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 /**
  * VistaPrincipalAdmin es la clase principal de la interfaz gráfica para el administrador.
- * desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
+ * Desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
  */
 public class VistaPrincipalAdmin extends JFrame {
     private MenuLateralAdmin menu;

@@ -34,8 +34,8 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
     private JTextField txtNotaFinal = crearTextField();
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
 
     /**
      * Constructor de la clase FormularioHistorialAcademicoAdmin.
@@ -73,8 +73,8 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbAsignaturas);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbAsignaturas);
         setBordeNaranja(txtNotaFinal);
         setBordeNaranja(txtComentarios);
 

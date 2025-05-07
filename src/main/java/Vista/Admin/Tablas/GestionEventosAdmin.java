@@ -70,7 +70,7 @@ public class GestionEventosAdmin extends JPanel {
         icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Evento", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Evento", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(160, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -252,11 +252,11 @@ public class GestionEventosAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarEvento());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarEvento());
 

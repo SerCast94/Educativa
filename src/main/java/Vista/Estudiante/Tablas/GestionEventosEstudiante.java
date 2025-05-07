@@ -8,7 +8,6 @@ import Vista.Estudiante.Modificar.ActualizarEstudiantesEventoEstudiante;
 import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -18,18 +17,29 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaEventos;
 import static Controlador.ControladorLogin.estudianteLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
+/**
+ * Clase que representa la gestión de eventos del estudiante.
+ * Permite inscribirse en eventos, modificar y eliminar inscripciones.
+ */
 public class GestionEventosEstudiante extends JPanel {
     private JTable tablaEventos;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
 
+    /**
+     * Constructor de la clase GestionEventosEstudiante.
+     * Inicializa la interfaz gráfica y carga los eventos del estudiante.
+     */
     public GestionEventosEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
@@ -37,76 +47,35 @@ public class GestionEventosEstudiante extends JPanel {
         cargarEventosEstudiante();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> inscribirseEvento());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEventos.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaEventos.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaEventos.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaEventos.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaEventos.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaEventos.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaEventos.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        // Verificar si el clic está en la parte baja de la tabla
-                        int visibleHeight = tablaEventos.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) { // Ajustar si está cerca del borde inferior
-                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaEventos, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Eventos", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Eventos", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Inscribirse", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Inscribirse", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(160, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -117,6 +86,9 @@ public class GestionEventosEstudiante extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de eventos.
+     */
     private void initTabla() {
         String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo", "Inscrito", "Objeto"};
         modelo = new DefaultTableModel(null, columnas) {
@@ -193,7 +165,6 @@ public class GestionEventosEstudiante extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -233,6 +204,58 @@ public class GestionEventosEstudiante extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la tabla y los botones.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> inscribirseEvento());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaEventos.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaEventos.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaEventos.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaEventos.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaEventos.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaEventos.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaEventos.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaEventos.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaEventos, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaEventos, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -251,11 +274,11 @@ public class GestionEventosEstudiante extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarEvento());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarEvento());
 
@@ -267,6 +290,10 @@ public class GestionEventosEstudiante extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -275,7 +302,10 @@ public class GestionEventosEstudiante extends JPanel {
         boton.setOpaque(false);
     }
 
-
+    /**
+     * Método para inscribirse en un evento seleccionado en la tabla.
+     * Abre un formulario para insertar una inscripción en un evento o excursión.
+     */
     private void inscribirseEvento(){
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
@@ -286,6 +316,10 @@ public class GestionEventosEstudiante extends JPanel {
     }
 
 
+    /**
+     * Método para modificar una inscripción en evento seleccionado en la tabla.
+     * Abre un formulario para editar la inscripción.
+     */
     private void modificarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
@@ -295,7 +329,10 @@ public class GestionEventosEstudiante extends JPanel {
         }
     }
 
-
+    /**
+     * Método para eliminar una inscripción en evento en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarEvento() {
         int fila = tablaEventos.getSelectedRow();
         if (fila != -1) {
@@ -322,16 +359,18 @@ public class GestionEventosEstudiante extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar los estudiantes en la tabla
+     * Se obtienen los datos de los estudiantes y se añaden a la tabla.
+     */
     private void cargarEventosEstudiante() {
         modelo.setRowCount(0);
         if (estudianteLogeado != null) {
             for (Eventos evento : listaEventos) {
                 boolean inscrito = false;
 
-                // Obtener la lista de EstudiantesEventos para el evento actual
                 List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
 
-                // Verificar si el usuario logeado está inscrito en el evento y tiene "confirmado" en true
                 for (EstudiantesEventos estudianteEvento : listaEstudiantesEventos) {
                     if (estudianteEvento.getEstudiante().equals(estudianteLogeado)
                             && estudianteEvento.getEvento().equals(evento)

@@ -31,8 +31,8 @@ public class FormularioAsignaturasAdmin extends JFrame {
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activa", "inactiva"});
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
 
 
     /**
@@ -70,8 +70,8 @@ public class FormularioAsignaturasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbProfesor);
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbProfesor);
+        personalizarComboBox(cmbEstado);
 
         setBordeNaranja(txtNombre);
         setBordeNaranja(txtDescripcion);

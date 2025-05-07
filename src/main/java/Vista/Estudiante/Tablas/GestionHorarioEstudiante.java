@@ -3,7 +3,6 @@ package Vista.Estudiante.Tablas;
 import BackUtil.GeneradorHorario;
 import Mapeo.CursosAsignaturas;
 import Mapeo.Horarios;
-import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -14,19 +13,26 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-
 import static Controlador.Controlador.listaHorarios;
 import static Controlador.ControladorLogin.estudianteLogeado;
 
-
+/**
+ * Clase que representa la gestión de horarios.
+ * Permite al estudiante ver y descargar su horario.
+ */
 public class GestionHorarioEstudiante extends JPanel {
     private JTable tablaHorarios;
     private JButton btnDescargar;
     private DefaultTableModel modelo;
-    private JPopupMenu popupMenu;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
 
+    /**
+     * Constructor de la clase GestionHorarioEstudiante.
+     * Inicializa la interfaz gráfica y carga los horarios del estudiante.
+     */
     public GestionHorarioEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
@@ -34,68 +40,31 @@ public class GestionHorarioEstudiante extends JPanel {
         cargarHorariosEstudiante();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
     }
 
-    private void initEventos() {
-        btnDescargar.addActionListener(e -> {
-            List<Horarios> horariosEstudiante = new ArrayList<>();
-            for (Horarios horario : listaHorarios) {
-                for (CursosAsignaturas cursoAsignatura : horario.getAsignatura().getCursosAsignaturas()) {
-                    if (cursoAsignatura.getCurso().equals(estudianteLogeado.getMatriculas().get(0).getCurso())) {
-                        horariosEstudiante.add(horario);
-                        break;
-                    }
-                }
-            }
-            GeneradorHorario.exportarHorarioAXML(horariosEstudiante);
-        });
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Horario", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Horario", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-
-        btnDescargar = new Boton("Descargar Horario", Boton.ButtonType.PRIMARY);
-        btnDescargar.setIcon(icono);
+        btnDescargar = new Boton("Descargar Horario", Boton.tipoBoton.PRIMARY);
         btnDescargar.setPreferredSize(new Dimension(180, 30));
         btnDescargar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panelBoton.add(btnDescargar);
@@ -105,6 +74,9 @@ public class GestionHorarioEstudiante extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de horarios.
+     */
     private void initTabla() {
         String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor", "Objeto"};
         modelo = new DefaultTableModel(null, columnas) {
@@ -163,7 +135,6 @@ public class GestionHorarioEstudiante extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -203,6 +174,51 @@ public class GestionHorarioEstudiante extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnDescargar.addActionListener(e -> {
+            List<Horarios> horariosEstudiante = new ArrayList<>();
+            for (Horarios horario : listaHorarios) {
+                for (CursosAsignaturas cursoAsignatura : horario.getAsignatura().getCursosAsignaturas()) {
+                    if (cursoAsignatura.getCurso().equals(estudianteLogeado.getMatriculas().get(0).getCurso())) {
+                        horariosEstudiante.add(horario);
+                        break;
+                    }
+                }
+            }
+            GeneradorHorario.exportarHorarioAXML(horariosEstudiante);
+        });
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para cargar los horarios del estudiante en la tabla.
+     * Se obtienen los datos del horario y se añaden a la tabla.
+     */
     private void cargarHorariosEstudiante() {
         modelo.setRowCount(0);
         for (Horarios horario : listaHorarios) {

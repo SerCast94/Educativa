@@ -1,10 +1,6 @@
 package Vista.Estudiante.Tablas;
 
-import Controlador.Controlador;
 import Mapeo.Asistencia;
-import Vista.Estudiante.VistaPrincipalEstudiante;
-import Vista.Util.Boton;
-import Vista.Util.CustomDialog;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -12,18 +8,26 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
-import java.util.Objects;
-
 import static Controlador.Controlador.listaAsistencia;
 import static Controlador.ControladorLogin.estudianteLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
+/**
+ * Clase que representa la gestión de asistencias del estudiante.
+ * Permite visualizar las asistencias del estudiante en una tabla.
+ */
 public class GestionAsistenciaEstudiante extends JPanel {
     private JTable tablaAsistencias;
     private DefaultTableModel modelo;
-    private JPopupMenu popupMenu;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
 
+    /**
+     * Constructor de la clase GestionAsistenciaEstudiante.
+     * Inicializa la interfaz gráfica y carga las asistencias del estudiante.
+     */
     public GestionAsistenciaEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
@@ -31,47 +35,28 @@ public class GestionAsistenciaEstudiante extends JPanel {
         cargarAsistenciasEstudiante();
     }
 
+    /**
+     * Inicializa la interfaz gráfica de usuario.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
     }
 
-    private void initEventos() {
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-    }
-
+    /**
+     * Inicializa el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
@@ -79,6 +64,9 @@ public class GestionAsistenciaEstudiante extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de asistencias.
+     */
     private void initTabla() {
         String[] columnas = {"Fecha", "Justificado", "Motivo de ausencia", "Objeto"};
             modelo = new DefaultTableModel(null, columnas) {
@@ -100,7 +88,6 @@ public class GestionAsistenciaEstudiante extends JPanel {
             }
         };
 
-        //  columna "Justificado"
         tablaAsistencias.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -195,6 +182,37 @@ public class GestionAsistenciaEstudiante extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Inicializa los eventos de la tabla.
+     */
+    private void initEventos() {
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaAsistencias.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+    }
+
+    /**
+     * Carga las asistencias del estudiante logueado en la tabla.
+     */
     private void cargarAsistenciasEstudiante() {
         modelo.setRowCount(0);
         for (Asistencia asistencia : listaAsistencia) {

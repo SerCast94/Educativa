@@ -8,14 +8,16 @@ import Vista.Admin.VistaPrincipalAdmin;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
 import java.util.List;
+
 import static Vista.Util.EstiloComponentes.*;
 
 /**
- * Clase que representa la ventana para actualizar una convalidación en la vista de administrador.
+ * Clase para actualizar los datos de una convalidación en la interfaz de administración.
  */
 public class ActualizarConvalidacionesAdmin extends JFrame {
     private Container panel;
@@ -23,13 +25,13 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-    private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblCursoOriginal = new JLabel("Asignatura Original:");
-    private JLabel lblFecha = new JLabel("Fecha de Convalidación:");
-    private JLabel lblEstado = new JLabel("Estado:");
-    private JLabel lblComentarios = new JLabel("Comentarios:");
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
+    private JLabel lblEstudiante = new JLabel("Estudiante: ");
+    private JLabel lblAsignaturaOriginal = new JLabel("Asignatura Original: ");
+    private JLabel lblFecha = new JLabel("Fecha de Convalidación: ");
+    private JLabel lblEstado = new JLabel("Estado: ");
+    private JLabel lblComentarios = new JLabel("Comentarios: ");
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturaOriginal = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"Aprobada", "Pendiente", "Rechazada"});
@@ -52,23 +54,12 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     }
 
     /**
-     * Carga los datos de la convalidación en los campos de texto.
-     */
-    private void cargarDatosConvalidacion() {
-        cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
-        cmbAsignaturaOriginal.setSelectedItem(convalidacion.getAsignaturaOriginal());
-        datePickerConvalidacion.setDate(convalidacion.getFechaConvalidacion().toLocalDate());
-        cmbEstado.setSelectedItem(convalidacion.getEstadoConvalidacion().name());
-        txtComentarios.setText(convalidacion.getComentarios());
-    }
-
-    /*
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
         setTitle("Actualizar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 550);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -87,18 +78,17 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbAsignaturaOriginal);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbAsignaturaOriginal);
+        personalizarComboBox(cmbEstado);
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblCursoOriginal, 2, 0);
+        agregarComponente(lblAsignaturaOriginal, 2, 0);
         agregarComponente(cmbAsignaturaOriginal, 2, 1);
 
         agregarComponente(lblFecha, 3, 0);
-        EspaciadoEnDatePicker(datePickerConvalidacion);
         agregarComponente(datePickerConvalidacion, 3, 1);
 
         agregarComponente(lblEstado, 4, 0);
@@ -126,8 +116,8 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     /**
      * Método para agregar un componente al panel principal con las restricciones de diseño.
      * @param componente El componente a agregar.
-     * @param fila La fila donde se agregará.
-     * @param columna La columna donde se agregará.
+     * @param fila       La fila donde se agregará.
+     * @param columna    La columna donde se agregará.
      */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
@@ -140,8 +130,20 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
      */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
-
         btnAceptar.addActionListener(e -> actualizarConvalidacionValida());
+    }
+
+    /**
+     * Carga los datos de la convalidación en los campos de la interfaz.
+     */
+    private void cargarDatosConvalidacion() {
+        cmbEstudiante.setSelectedItem(convalidacion.getEstudiante());
+        cmbAsignaturaOriginal.setSelectedItem(convalidacion.getAsignaturaOriginal());
+        if (convalidacion.getFechaConvalidacion() != null) {
+            datePickerConvalidacion.setDate(convalidacion.getFechaConvalidacion().toLocalDate());
+        }
+        cmbEstado.setSelectedItem(convalidacion.getEstadoConvalidacion().name());
+        txtComentarios.setText(convalidacion.getComentarios());
     }
 
     /**
@@ -158,7 +160,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     /**
      * Método para cargar las asignaturas en el combo box.
      */
-    private void cargarAsignaturas(){
+    private void cargarAsignaturas() {
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturaOriginal.removeAllItems();
         for (Asignaturas asignatura : asignaturas) {
@@ -169,46 +171,46 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     /**
      * Método para validar y actualizar los datos de la convalidación.
      */
-    private void actualizarConvalidacionValida(){
+    private void actualizarConvalidacionValida() {
+        if (cmbEstudiante.getSelectedItem() == null ||
+                cmbAsignaturaOriginal.getSelectedItem() == null ||
+                datePickerConvalidacion.getDate() == null ||
+                cmbEstado.getSelectedItem() == null) {
 
-            if (cmbEstudiante.getSelectedItem() == null ||
-                    cmbAsignaturaOriginal.getSelectedItem() == null ||
-                    datePickerConvalidacion.getDate() == null ||
-                    cmbEstado.getSelectedItem() == null) {
+            new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                new CustomDialog(null,"Error", "Todos los campos son obligatorios.","ONLY_OK").setVisible(true);
-                return;
-            }
-            if (txtComentarios.getText().length() > 255) {
-                new CustomDialog(null,"Error", "Los comentarios no pueden exceder los 255 caracteres.","ONLY_OK").setVisible(true);
-                return;
-            }
-            if (datePickerConvalidacion.getDate().isAfter(java.time.LocalDate.now())) {
-                new CustomDialog(null,"Error", "La fecha de convalidación no puede ser futura.","ONLY_OK").setVisible(true);
-                return;
-            }
+        if (txtComentarios.getText().length() > 255) {
+            new CustomDialog(null, "Error", "Los comentarios no pueden exceder los 255 caracteres.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-            try {
-                convalidacion.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
-                convalidacion.setAsignaturaOriginal((Asignaturas) cmbAsignaturaOriginal.getSelectedItem());
-                convalidacion.setFechaConvalidacion(Date.valueOf(datePickerConvalidacion.getDate()));
-                convalidacion.setEstadoConvalidacion(Convalidaciones.EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()));
-                convalidacion.setComentarios(txtComentarios.getText().trim());
+        if (datePickerConvalidacion.getDate().isAfter(java.time.LocalDate.now())) {
+            new CustomDialog(null, "Error", "La fecha de convalidación no puede ser futura.", "ONLY_OK").setVisible(true);
+            return;
+        }
 
-                Controlador.actualizarControladorConvalidacion(convalidacion);
-                Controlador.actualizarListaConvalidaciones();
+        try {
+            convalidacion.setEstudiante((Estudiantes) cmbEstudiante.getSelectedItem());
+            convalidacion.setAsignaturaOriginal((Asignaturas) cmbAsignaturaOriginal.getSelectedItem());
+            convalidacion.setFechaConvalidacion(Date.valueOf(datePickerConvalidacion.getDate()));
+            convalidacion.setEstadoConvalidacion(Convalidaciones.EstadoConvalidacion.valueOf(cmbEstado.getSelectedItem().toString()));
+            convalidacion.setComentarios(txtComentarios.getText().trim());
 
-                VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaConvalidaciones();
+            Controlador.actualizarControladorConvalidacion(convalidacion);
+            Controlador.actualizarListaConvalidaciones();
 
-                new CustomDialog(null,"Éxito", "Convalidación actualizada correctamente.","ONLY_OK").setVisible(true);
-                dispose();
-            } catch (IllegalArgumentException ex) {
-                new CustomDialog(null,"Error", "El estado seleccionado no es válido.","ONLY_OK").setVisible(true);
-            } catch (Exception ex) {
-                new CustomDialog(null,"Error", "Error al actualizar la convalidación: " + ex.getMessage(),"ONLY_OK").setVisible(true);
-                Controlador.rollback();
-            }
+            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
+            vistaPrincipal.mostrarVistaConvalidaciones();
 
+            new CustomDialog(null, "Éxito", "Convalidación actualizada correctamente.", "ONLY_OK").setVisible(true);
+            dispose();
+        } catch (IllegalArgumentException ex) {
+            new CustomDialog(null, "Error", "El estado seleccionado no es válido.", "ONLY_OK").setVisible(true);
+        } catch (Exception ex) {
+            new CustomDialog(null, "Error", "Error al actualizar la convalidación: " + ex.getMessage(), "ONLY_OK").setVisible(true);
+            Controlador.rollback();
+        }
     }
 }

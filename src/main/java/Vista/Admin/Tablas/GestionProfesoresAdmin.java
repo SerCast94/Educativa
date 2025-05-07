@@ -70,7 +70,7 @@ public class GestionProfesoresAdmin extends JPanel {
         icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Profesor", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Profesor", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -260,11 +260,11 @@ public class GestionProfesoresAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarProfesor());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarProfesor());
 

@@ -15,12 +15,17 @@ import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar los datos de un estudiante.
+ */
 public class ActualizarEstudiantesEstudiante extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JLabel titulo;
+    private JPanel panelBotones;
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -47,6 +52,12 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
     private Estudiantes estudiante;
 
+    /**
+     * Constructor de la clase ActualizarEstudiantesEstudiante.
+     * Inicializa la interfaz gráfica y carga los datos del estudiante.
+
+     * @param estudiante Estudiante que contiene los datos del estudiante logeado.
+     */
     public ActualizarEstudiantesEstudiante(Estudiantes estudiante) {
         this.estudiante = estudiante;
         initGUI();
@@ -54,6 +65,10 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         cargarTutores();
         cargarDatosEstudiante();
     }
+
+    /**
+     * Carga los datos del estudiante en los campos de texto.
+     */
     private void cargarDatosEstudiante() {
         txtDNI.setText(estudiante.getDni());
         txtNombre.setText(estudiante.getNombre());
@@ -69,6 +84,9 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         cmbTutor.setSelectedItem(estudiante.getTutor());
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -83,7 +101,7 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
+        titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -91,8 +109,8 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbTutor);
+        personalizarComboBox(cmbEstado);
+        personalizarComboBox(cmbTutor);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
@@ -142,10 +160,11 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 13, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
+        btnAceptar.setText("Actualizar");
         btnCancelar.setPreferredSize(new Dimension(100, 40));
         panelBotones.add(btnAceptar);
         panelBotones.add(btnCancelar);
@@ -158,20 +177,30 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
-
-        btnAceptar.setText("Actualizar");
 
         btnAceptar.addActionListener(e -> actualizarEstudianteValido());
     }
 
+    /**
+     * Método para cargar los tutores en el combo box.
+     */
     private void cargarTutores() {
         List<Tutores> tutores = Controlador.getListaTutores();
         cmbTutor.removeAllItems();
@@ -180,10 +209,15 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar los datos del estudiante.
+     */
     private void actualizarEstudianteValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
         String dni = txtDNI.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        Tutores tutor = (Tutores) cmbTutor.getSelectedItem();
         String usuario = txtUsuario.getText().trim();
         String correo = txtEmail.getText().trim();
         String telefono = txtTelefono.getText().trim();
@@ -193,7 +227,8 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         Estudiantes.EstadoEstudiante estado = Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString());
 
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || usuario.isEmpty() ||
-                correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null) {
+            correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null
+            || direccion.isEmpty() || tutor == null) {
             new CustomDialog(null, "Error", "Todos los campos deben estar completos.", "ONLY_OK").setVisible(true);
             return;
         }
@@ -245,6 +280,8 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
 
             actualizarControladorEstudiante(estudiante);
             Controlador.actualizarListaEstudiantes();
+
+            dispose();
 
             new CustomDialog(null, "Éxito", "Estudiante actualizado correctamente.", "ONLY_OK").setVisible(true);
             dispose();

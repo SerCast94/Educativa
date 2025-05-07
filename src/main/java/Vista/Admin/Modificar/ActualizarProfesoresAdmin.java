@@ -19,8 +19,8 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -93,7 +93,7 @@ public class ActualizarProfesoresAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbEstado);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);

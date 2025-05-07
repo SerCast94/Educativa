@@ -7,7 +7,6 @@ import Vista.Profesor.Modificar.ActualizarAsistenciaProfesor;
 import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -16,18 +15,30 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaAsistencia;
 import static Controlador.ControladorLogin.profesorLogeado;
 import static Vista.Util.EstiloComponentes.checkPersonalizadoGris;
 
+/**
+ * Clase que representa la gestión de asistencias del profesor.
+ * Permite visualizar, agregar, modificar y eliminar registros de asistencia.
+ */
 public class GestionAsistenciaProfesor extends JPanel {
     private JTable tablaAsistencias;
     private JButton btnAgregar;
     private DefaultTableModel modelo;
     private JPopupMenu popupMenu;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
 
+
+    /**
+     * Constructor de la clase GestionAsistenciaProfesor.
+     * Inicializa la interfaz gráfica y carga las asistencias.
+     */
     public GestionAsistenciaProfesor() {
         setLayout(new BorderLayout());
         initGUI();
@@ -35,74 +46,35 @@ public class GestionAsistenciaProfesor extends JPanel {
         cargarAsistenciasProfesor();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
         initPopupMenu();
     }
 
-    private void initEventos() {
-        btnAgregar.addActionListener(e -> new FormularioAsistenciaProfesor());
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaAsistencias.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaAsistencias.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaAsistencias.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaAsistencias.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaAsistencias, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaAsistencias, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Asistencias", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Asistencia", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Asistencia", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -113,9 +85,12 @@ public class GestionAsistenciaProfesor extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de asistencias.
+     */
     private void initTabla() {
         String[] columnas = {"Estudiante", "Curso", "Fecha", "Justificado", "Motivo de ausencia", "Objeto"};
-       modelo = new DefaultTableModel(null, columnas) {
+        modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -134,7 +109,6 @@ public class GestionAsistenciaProfesor extends JPanel {
             }
         };
 
-        //  columna "Justificado"
         tablaAsistencias.getColumnModel().getColumn(3).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -143,10 +117,10 @@ public class GestionAsistenciaProfesor extends JPanel {
                 checkBox.setSelected(value != null && value.equals("Sí"));
                 checkPersonalizadoGris(checkBox);
 
-                checkBox.setEnabled(true); // Necesario para que se vea bien
-                checkBox.setFocusable(false); // No toma foco
-                checkBox.setRequestFocusEnabled(false); // No responde a focus
-                checkBox.setRolloverEnabled(false); // No responde a hover
+                checkBox.setEnabled(true);
+                checkBox.setFocusable(false);
+                checkBox.setRequestFocusEnabled(false);
+                checkBox.setRolloverEnabled(false);
                 checkBox.setOpaque(true);
                 checkBox.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
                 return checkBox;
@@ -229,6 +203,57 @@ public class GestionAsistenciaProfesor extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnAgregar.addActionListener(e -> new FormularioAsistenciaProfesor());
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaAsistencias.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaAsistencias.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaAsistencias.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaAsistencias.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+
+        tablaAsistencias.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = tablaAsistencias.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaAsistencias.setRowSelectionInterval(row, row);
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        int visibleHeight = tablaAsistencias.getVisibleRect().height;
+                        int clickY = e.getY();
+                        if (clickY > visibleHeight - 100) {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY() - 80);
+                        } else {
+                            popupMenu.show(tablaAsistencias, e.getX(), e.getY());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para inicializar el menú emergente (Modificar y eliminar).
+     */
     private void initPopupMenu() {
         popupMenu = new JPopupMenu() {
             @Override
@@ -247,11 +272,11 @@ public class GestionAsistenciaProfesor extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarAsistencia());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarAsistencia());
 
@@ -263,6 +288,10 @@ public class GestionAsistenciaProfesor extends JPanel {
         UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
     }
 
+    /**
+     * Método para configurar el botón del menú emergente.
+     * @param boton El botón a configurar.
+     */
     private void configurarBotonPopup(Boton boton) {
         boton.setPreferredSize(new Dimension(150, 30));
         boton.setContentAreaFilled(false);
@@ -271,6 +300,10 @@ public class GestionAsistenciaProfesor extends JPanel {
         boton.setOpaque(false);
     }
 
+    /**
+     * Método para modificar la asistencia seleccionada en la tabla.
+     * Abre un formulario para actualizar la asistencia.
+     */
     private void modificarAsistencia() {
         int fila = tablaAsistencias.getSelectedRow();
         if (fila != -1) {
@@ -280,6 +313,10 @@ public class GestionAsistenciaProfesor extends JPanel {
         }
     }
 
+    /**
+     * Método para eliminar la asistencia seleccionada en la tabla.
+     * Pide confirmación al usuario antes de eliminar.
+     */
     private void eliminarAsistencia() {
         int fila = tablaAsistencias.getSelectedRow();
         if (fila != -1) {
@@ -301,6 +338,9 @@ public class GestionAsistenciaProfesor extends JPanel {
         }
     }
 
+    /**
+     * Método para cargar las asistencias del profesor en la tabla.
+     */
     private void cargarAsistenciasProfesor() {
         modelo.setRowCount(0);
         for (Asistencia asistencia : listaAsistencia) {

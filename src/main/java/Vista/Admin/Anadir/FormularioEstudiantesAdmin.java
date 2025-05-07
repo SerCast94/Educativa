@@ -26,8 +26,8 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -88,8 +88,8 @@ public class FormularioEstudiantesAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbTutor);
+        personalizarComboBox(cmbEstado);
+        personalizarComboBox(cmbTutor);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
@@ -157,7 +157,6 @@ public class FormularioEstudiantesAdmin extends JFrame {
 
     /**
      * Método para agregar un componente al panel con la posición especificada.
-
      * @param componente Componente a agregar.
      * @param fila       Fila en la que se agregará.
      * @param columna    Columna en la que se agregará.

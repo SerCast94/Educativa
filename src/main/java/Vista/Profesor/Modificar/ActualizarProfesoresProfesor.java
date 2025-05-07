@@ -3,6 +3,7 @@ package Vista.Profesor.Modificar;
 import Controlador.Controlador;
 import Mapeo.Profesores;
 import Vista.Admin.VistaPrincipalAdmin;
+import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 import javax.swing.*;
@@ -10,14 +11,17 @@ import java.awt.*;
 import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar los datos de un profesor en la interfaz de administrador.
+ */
 public class ActualizarProfesoresProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JLabel titulo;
+    private JPanel panelBotones;
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -27,7 +31,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
     private JLabel lblDireccion = new JLabel("Dirección: ");
     private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -36,11 +39,14 @@ public class ActualizarProfesoresProfesor extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
-
     private Profesores profesor;
 
+    /**
+     * Constructor de la clase ActualizarProfesoresProfesor.
+     * Inicializa la interfaz gráfica y carga los datos del profesor a actualizar.
+     * @param profesor El profesor a actualizar.
+     */
     public ActualizarProfesoresProfesor(Profesores profesor) {
         this.profesor = profesor;
         initGUI();
@@ -48,6 +54,9 @@ public class ActualizarProfesoresProfesor extends JFrame {
         cargarDatosProfesor();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void cargarDatosProfesor() {
         txtDNI.setText(profesor.getDni());
         txtNombre.setText(profesor.getNombre());
@@ -60,6 +69,9 @@ public class ActualizarProfesoresProfesor extends JFrame {
         cmbEstado.setSelectedItem(profesor.getEstado().name().toLowerCase());
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Profesor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -74,7 +86,7 @@ public class ActualizarProfesoresProfesor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Profesor", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Profesor", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -82,7 +94,7 @@ public class ActualizarProfesoresProfesor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbEstado);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
@@ -120,8 +132,7 @@ public class ActualizarProfesoresProfesor extends JFrame {
         setBordeNaranja(cmbEstado);
         agregarComponente(cmbEstado, 9, 1);
 
-
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -137,18 +148,30 @@ public class ActualizarProfesoresProfesor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarProfesorValido());
     }
 
+    /**
+     * Método para validar y actualizar los datos del profesor.
+     */
     private void actualizarProfesorValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -160,13 +183,11 @@ public class ActualizarProfesoresProfesor extends JFrame {
         String nuevaPassword = new String(txtPassword.getPassword());
         Profesores.EstadoProfesor estado = Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        // Validaciones de campos obligatorios
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty() || estado == null) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
 
-        // Validaciones específicas
         if (!Profesores.validarDNI(dni)) {
             new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
             return;
@@ -187,7 +208,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
             return;
         }
 
-        // Si todo es válido, actualizar el profesor
         profesor.setNombre(nombre);
         profesor.setApellido(apellido);
         profesor.setDni(dni);
@@ -205,8 +225,7 @@ public class ActualizarProfesoresProfesor extends JFrame {
             Controlador.actualizarControladorProfesor(profesor);
             Controlador.actualizarListaProfesores();
 
-            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-            vistaPrincipal.mostrarVistaProfesores();
+            dispose();
 
             new CustomDialog(null, "Éxito", "Profesor actualizado correctamente.", "ONLY_OK").setVisible(true);
             dispose();

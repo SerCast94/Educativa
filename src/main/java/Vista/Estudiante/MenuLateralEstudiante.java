@@ -77,7 +77,7 @@ public class MenuLateralEstudiante extends JPanel {
             iconoSuperior.setImage(iconoSuperior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
 
-            boton = new Boton(opcion[0], Boton.ButtonType.PRIMARY);
+            boton = new Boton(opcion[0], Boton.tipoBoton.PRIMARY);
             boton.setIcon(iconoSuperior);
             boton.setAlignmentX(Component.CENTER_ALIGNMENT);
             boton.setPreferredSize(new Dimension(230, 40));
@@ -96,7 +96,7 @@ public class MenuLateralEstudiante extends JPanel {
         panelInferior.setBackground(new Color(251, 234, 230));
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        botonModificarPerfil = new Boton("   Modificar Perfil", Boton.ButtonType.PRIMARY);
+        botonModificarPerfil = new Boton("   Modificar Perfil", Boton.tipoBoton.PRIMARY);
         iconoInferior = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/opciones.png")));
         iconoInferior.setImage(iconoInferior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
         botonModificarPerfil.setIcon(iconoInferior);

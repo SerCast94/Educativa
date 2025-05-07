@@ -3,15 +3,17 @@ package Vista.Util;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+/**
+ * CustomDialog es una clase que extiende JDialog para crear un cuadro de diálogo personalizado.
+ * Permite mostrar mensajes al usuario con diferentes tipos de botones (Aceptar, Aceptar/Cancelar).
+ */
 public class CustomDialog extends JDialog {
 
     private static boolean aceptar = false;
 
-    public CustomDialog(Frame parent, String title, String message, String tipoBoton) {
-        super(parent, title, true);
+    public CustomDialog(Frame padre, String titulo, String texto, String tipoBoton) {
+        super(padre, titulo, true);
 
         aceptar = false;
 
@@ -30,7 +32,7 @@ public class CustomDialog extends JDialog {
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
         panel.setBackground(fondoBase);
 
-        JTextArea mensaje = new JTextArea(message);
+        JTextArea mensaje = new JTextArea(texto);
         mensaje.setFont(new Font("Arial", Font.PLAIN, 14));
         mensaje.setForeground(textoMensaje);
         mensaje.setBackground(fondoBase);
@@ -43,11 +45,10 @@ public class CustomDialog extends JDialog {
         int anchoMax = 300;
         mensaje.setSize(new Dimension(anchoMax, Short.MAX_VALUE));
 
-// Medir el texto manualmente para estimar líneas
         FontMetrics metrics = mensaje.getFontMetrics(mensaje.getFont());
         int lineHeight = metrics.getHeight();
 
-        String[] words = message.split("\\s+");
+        String[] words = texto.split("\\s+");
         int lineWidth = 0;
         int lines = 1;
 
@@ -61,7 +62,6 @@ public class CustomDialog extends JDialog {
             }
         }
 
-// Calcular alto estimado y aplicar
         int altoEstimado = lineHeight * lines + 20;
         mensaje.setPreferredSize(new Dimension(anchoMax, altoEstimado));
 
@@ -71,8 +71,8 @@ public class CustomDialog extends JDialog {
         panelBoton.setBackground(fondoBase);
 
         if (tipoBoton.equalsIgnoreCase("OK_CANCEL")) {
-            Boton okBoton = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-            Boton cancelarBoton = new Boton("Cancelar", Boton.ButtonType.PRIMARY);
+            Boton okBoton = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+            Boton cancelarBoton = new Boton("Cancelar", Boton.tipoBoton.PRIMARY);
 
             okBoton.addActionListener(e -> {
                 aceptar = true;
@@ -98,7 +98,7 @@ public class CustomDialog extends JDialog {
             getRootPane().setDefaultButton(okBoton);
 
         } else {
-            Boton okBoton = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
+            Boton okBoton = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
             okBoton.addActionListener(e -> {
                 aceptar = true;
                 dispose();
@@ -122,7 +122,6 @@ public class CustomDialog extends JDialog {
         setContentPane(panel);
         pack();
 
-        // Limitar el tamaño máximo para que no se salga de la pantalla
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int maxWidth = screen.width - 100;
         int maxHeight = screen.height - 100;
@@ -130,16 +129,11 @@ public class CustomDialog extends JDialog {
         Dimension current = getSize();
         setSize(Math.min(current.width, maxWidth), Math.min(current.height, maxHeight));
 
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(padre);
     }
 
     public static boolean isAceptar() {
         return aceptar;
     }
 
-    public static void main(String[] args) {
-        new CustomDialog(null, "Título", "Este es un mensaje de prueba para el CustomDialog.Este es un mensaje de prueba para el CustomDialog.Este es un mensaje de prueba para el CustomDialog.Este es un mensaje de prueba para el CustomDialog.Este es un mensaje de prueba para el CustomDialog.", "OK_CANCEL").setVisible(true);
-    }
 }
-
-

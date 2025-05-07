@@ -72,7 +72,7 @@ public class GestionBecasAdmin extends JPanel {
         icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Beca", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Beca", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder());
@@ -250,11 +250,11 @@ public class GestionBecasAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarBeca());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarBeca());
 

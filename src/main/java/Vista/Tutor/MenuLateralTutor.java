@@ -1,7 +1,6 @@
 package Vista.Tutor;
 
 import Vista.Util.Boton;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,20 +9,35 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * MenuLateralTutor es la clase que representa el menú lateral de la interfaz gráfica para el tutor.
+ * Contiene botones para navegar entre diferentes secciones de la aplicación.
+ */
 public class MenuLateralTutor extends JPanel {
     private Map<String, JButton> botonesMenu;
     private JPanel panelBotones;
+    private JPanel panelLogo;
+    private JLabel logoLabel;
+    private ImageIcon icono;
+    private ImageIcon iconoInferior;
+    private Boton botonSuperior;
+    private Boton botonInferior;
+    private JPanel panelInferior;
 
+    /**
+     * Constructor de la clase MenuLateralTutor.
+     * Inicializa el menú lateral y sus componentes.
+     * @param listener ActionListener para manejar los eventos de los botones.
+     */
     public MenuLateralTutor(ActionListener listener) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(250, 0));
 
-        // Panel superior para el logo
-        JPanel panelLogo = new JPanel();
+        panelLogo = new JPanel();
         panelLogo.setPreferredSize(new Dimension(250, 150));
         panelLogo.setBackground(new Color(251, 234, 230));
 
-        JLabel logoLabel = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logomini.png"))));
+        logoLabel = new JLabel(new ImageIcon(Objects.requireNonNull(getClass().getResource("/img/logomini.png"))));
         logoLabel.setFont(new Font("Arial", Font.BOLD, 14));
         logoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -39,7 +53,6 @@ public class MenuLateralTutor extends JPanel {
         panelLogo.setLayout(new BorderLayout());
         panelLogo.add(logoLabel, BorderLayout.CENTER);
 
-        // Panel de botones principales
         panelBotones = new JPanel();
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -55,46 +68,28 @@ public class MenuLateralTutor extends JPanel {
         };
 
         for (String[] opcion : opciones) {
-            ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
+            icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
             icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-            Boton boton = new Boton(opcion[0], Boton.ButtonType.PRIMARY);
-            boton.setIcon(icono);
-            boton.setAlignmentX(Component.CENTER_ALIGNMENT);
-            boton.setPreferredSize(new Dimension(230, 40));
-            boton.setMinimumSize(new Dimension(230, 40));
-            boton.setMaximumSize(new Dimension(230, 40));
-            boton.setHorizontalAlignment(SwingConstants.LEFT);
-            boton.setActionCommand(opcion[0]);
-            boton.addActionListener(listener);
-            botonesMenu.put(opcion[0], boton);
+            botonSuperior = new Boton(opcion[0], Boton.tipoBoton.PRIMARY);
+            botonSuperior.setIcon(icono);
+            botonSuperior.setAlignmentX(Component.CENTER_ALIGNMENT);
+            botonSuperior.setPreferredSize(new Dimension(230, 40));
+            botonSuperior.setMinimumSize(new Dimension(230, 40));
+            botonSuperior.setMaximumSize(new Dimension(230, 40));
+            botonSuperior.setHorizontalAlignment(SwingConstants.LEFT);
+            botonSuperior.setActionCommand(opcion[0]);
+            botonSuperior.addActionListener(listener);
+            botonesMenu.put(opcion[0], botonSuperior);
             panelBotones.add(Box.createVerticalStrut(5));
-            panelBotones.add(boton);
+            panelBotones.add(botonSuperior);
         }
 
-        // Panel inferior con botones adicionales
-        JPanel panelInferior = new JPanel();
+        panelInferior = new JPanel();
         panelInferior.setLayout(new BoxLayout(panelInferior, BoxLayout.Y_AXIS));
         panelInferior.setBackground(new Color(251, 234, 230));
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-//        // Botón Modificar Perfil
-//        Boton botonModificarPerfil = new Boton("   Modificar Perfil", Boton.ButtonType.PRIMARY);
-//        ImageIcon iconoPerfil = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/opciones.png")));
-//        iconoPerfil.setImage(iconoPerfil.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-//        botonModificarPerfil.setIcon(iconoPerfil);
-//        botonModificarPerfil.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        botonModificarPerfil.setPreferredSize(new Dimension(230, 40));
-//        botonModificarPerfil.setMinimumSize(new Dimension(230, 40));
-//        botonModificarPerfil.setMaximumSize(new Dimension(230, 40));
-//        botonModificarPerfil.setHorizontalAlignment(SwingConstants.LEFT);
-//        botonModificarPerfil.setActionCommand("ModificarPerfil");
-//        botonModificarPerfil.addActionListener(listener);
-//        botonesMenu.put("ModificarPerfil", botonModificarPerfil);
-//        panelInferior.add(Box.createVerticalStrut(10));
-//        panelInferior.add(botonModificarPerfil);
-
-        // Botones adicionales abajo
         String[][] opcionesInferiores = {
                 {"   Cambiar Estudiante", "opciones"},
                 {"   Modificar Estudiante", "opciones"},
@@ -102,30 +97,25 @@ public class MenuLateralTutor extends JPanel {
         };
 
         for (String[] opcion : opcionesInferiores) {
-            ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
-            icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+            iconoInferior = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
+            iconoInferior.setImage(iconoInferior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-            Boton boton = new Boton(opcion[0], Boton.ButtonType.PRIMARY);
-            boton.setIcon(icono);
-            boton.setAlignmentX(Component.CENTER_ALIGNMENT);
-            boton.setPreferredSize(new Dimension(230, 40));
-            boton.setMinimumSize(new Dimension(230, 40));
-            boton.setMaximumSize(new Dimension(230, 40));
-            boton.setHorizontalAlignment(SwingConstants.LEFT);
-            boton.setActionCommand(opcion[0]);
-            boton.addActionListener(listener);
-            botonesMenu.put(opcion[0], boton);
+            botonInferior = new Boton(opcion[0], Boton.tipoBoton.PRIMARY);
+            botonInferior.setIcon(iconoInferior);
+            botonInferior.setAlignmentX(Component.CENTER_ALIGNMENT);
+            botonInferior.setPreferredSize(new Dimension(230, 40));
+            botonInferior.setMinimumSize(new Dimension(230, 40));
+            botonInferior.setMaximumSize(new Dimension(230, 40));
+            botonInferior.setHorizontalAlignment(SwingConstants.LEFT);
+            botonInferior.setActionCommand(opcion[0]);
+            botonInferior.addActionListener(listener);
+            botonesMenu.put(opcion[0], botonInferior);
             panelInferior.add(Box.createVerticalStrut(5));
-            panelInferior.add(boton);
+            panelInferior.add(botonInferior);
         }
 
-        // Agregar todo al panel principal
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);
         add(panelInferior, BorderLayout.SOUTH);
-    }
-
-    public JButton getBoton(String nombre) {
-        return botonesMenu.get(nombre);
     }
 }

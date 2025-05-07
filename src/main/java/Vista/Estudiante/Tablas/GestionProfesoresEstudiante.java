@@ -10,16 +10,25 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-
 import static Controlador.Controlador.listaProfesores;
 import static Controlador.ControladorLogin.estudianteLogeado;
 
+/**
+ * Clase que representa la gestión de profesores en la vista de estudiante.
+ * Ofrece información de contacto de los distintos profesores que imparten clase al estudiante.
+ */
 public class GestionProfesoresEstudiante extends JPanel {
     private JTable tablaProfesores;
     private DefaultTableModel modelo;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
 
+    /**
+     * Constructor de la clase GestionProfesoresEstudiante.
+     * Inicializa la interfaz gráfica y carga los profesores del estudiante.
+     */
     public GestionProfesoresEstudiante() {
         setLayout(new BorderLayout());
         initGUI();
@@ -27,58 +36,38 @@ public class GestionProfesoresEstudiante extends JPanel {
         cargarProfesoresEstudiante();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
     }
 
-    private void initEventos() {
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaProfesores.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaProfesores.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaProfesores.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaProfesores.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Profesores", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Profesores", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
-
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
-        icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
         panelSuperior.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de profesores.
+     */
     private void initTabla() {
         String[] columnas = {"Nombre", "Apellido", "Email", "Teléfono","Objeto"};
              modelo = new DefaultTableModel(null, columnas) {
@@ -136,7 +125,6 @@ public class GestionProfesoresEstudiante extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
             @Override
@@ -176,6 +164,39 @@ public class GestionProfesoresEstudiante extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaProfesores.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
+            }
+        });
+
+        tablaProfesores.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaProfesores.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaProfesores.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
+            }
+        });
+    }
+
+    /**
+     * Método para cargar los profesores que imparten clase al estudiante.
+     * Se obtienen los datos de los profesores y se añaden a la tabla.
+     */
     private void cargarProfesoresEstudiante() {
         modelo.setRowCount(0);
         if (estudianteLogeado.getMatriculas() != null && !estudianteLogeado.getMatriculas().isEmpty()) {

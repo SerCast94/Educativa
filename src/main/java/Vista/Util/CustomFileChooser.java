@@ -1,31 +1,36 @@
 package Vista.Util;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.util.Locale;
 
+/**
+ * Clase personalizada para JFileChooser con un Look and Feel específico y colores personalizados.
+ */
 public class CustomFileChooser {
 
-    // Método para configurar el Look and Feel y personalizar colores
+    /**
+     * Aplica el Look and Feel Nimbus y personaliza los colores del UIManager.
+     */
     public static void applyNimbusLookAndFeel() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 
-            // Personalizar los colores para tonos naranjas
             Locale.setDefault(new Locale("es", "ES"));
-            UIManager.put("control", new Color(251, 234, 230));  // Fondo de componentes
-            UIManager.put("nimbusBase", new Color(255, 122, 51));  // Naranja base
-            UIManager.put("nimbusFocus", new Color(255, 174, 91));  // Naranja claro
-            UIManager.put("nimbusLightBackground", new Color(255, 204, 153));  // Fondo claro
-            UIManager.put("nimbusBorder", new Color(190, 132, 80));  // Bordes
+            UIManager.put("control", new Color(251, 234, 230));
+            UIManager.put("nimbusBase", new Color(255, 122, 51));
+            UIManager.put("nimbusFocus", new Color(255, 174, 91));
+            UIManager.put("nimbusLightBackground", new Color(255, 204, 153));
+            UIManager.put("nimbusBorder", new Color(190, 132, 80));
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
                  IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
-    // Método para crear y personalizar un JFileChooser
+    /**
+     * Método principal para crear el JFileChooser personalizado.
+     */
     public static JFileChooser createFileChooser(String dialogTitle, String approveButtonText) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(dialogTitle);

@@ -7,21 +7,23 @@ import Mapeo.Eventos;
 import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.List;
-
 import static Controlador.Controlador.*;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase para actualizar los eventos o excursiones del estudiante.
+ */
 public class ActualizarEstudiantesEventoEstudiante extends JFrame {
 
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblEvento = new JLabel("Evento: ");
     private JLabel lblDescripcion = new JLabel("Descripción:");
     private JLabel lblFechaInicio = new JLabel("Fecha Inicio:");
@@ -30,7 +32,6 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
     private JLabel lblUbicacion = new JLabel("Ubicación:");
     private JLabel lblComentario = new JLabel("Comentario: ");
     private JLabel lblConfirmado = new JLabel("¿Asistirá?: ");
-
     private JComboBox<Eventos> cmbEvento = new JComboBox<>();
     private JLabel valDescripcion = new JLabel();
     private JLabel valFechaInicio = new JLabel();
@@ -39,13 +40,17 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
     private JLabel valUbicacion = new JLabel();
     private JTextField txtComentario = crearTextField();
     private JCheckBox chkConfirmado = new JCheckBox("Sí");
-
-    private JButton btnAceptar = new Boton("Guardar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JButton btnAceptar = new Boton("Guardar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private Estudiantes estudiante;
     private Eventos evento;
 
+    /**
+     * Constructor de la clase ActualizarEstudiantesEventoEstudiante.
+     * Inicializa la interfaz gráfica y carga los datos de la las inscripciones en eventos.
+     * @param estudiante Estudiante que actualiza su inscripción.
+     * @param evento Evento al que actualiza la inscripción
+     */
     public ActualizarEstudiantesEventoEstudiante(Estudiantes estudiante, Eventos evento) {
         this.estudiante = estudiante;
         this.evento = evento;
@@ -54,6 +59,9 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         initEventos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Confirmar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,7 +76,7 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Responder a Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Responder a Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -76,7 +84,7 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEvento);
+        personalizarComboBox(cmbEvento);
         agregarComponente(lblEvento, 1, 0);
         agregarComponente(cmbEvento, 1, 1);
 
@@ -104,7 +112,7 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         chkConfirmado.setBackground(new Color(251, 234, 230));
         agregarComponente(chkConfirmado, 8, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(120, 40));
@@ -120,16 +128,25 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones y combo box.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
-        btnAceptar.addActionListener(e -> modificarEstudianteValido());
+        btnAceptar.addActionListener(e -> modificarInscripcionValido());
 
 
         cmbEvento.addItemListener(e -> {
@@ -143,6 +160,9 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         });
     }
 
+    /**
+     * Método para cargar los datos de los eventos en el combo box.
+     */
     private void cargarEvento() {
         cmbEvento.removeAllItems();
         List<Eventos> todosEventos = Controlador.getListaEventos();
@@ -154,6 +174,10 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         mostrarInformacionEvento(evento);
     }
 
+    /**
+     * Método que carga la información del evento seleccionado en la vista
+     * @param evento Evento del cual se quiere ver la información
+     */
     private void mostrarInformacionEvento(Eventos evento) {
         valDescripcion.setText(evento.getDescripcion());
         valFechaInicio.setText(evento.getFechaInicio().toString());
@@ -172,7 +196,10 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         }
     }
 
-    private void modificarEstudianteValido(){
+    /**
+     * Método para validar y modificar los datos de la inscripción en el evento o excursión.
+      */
+    private void modificarInscripcionValido(){
         {
             String comentario = txtComentario.getText().trim();
             boolean confirmado = chkConfirmado.isSelected();
@@ -185,7 +212,6 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
             try {
                 List<EstudiantesEventos> listaEstudiantesEventos = Controlador.getListaEstudiantesEventos();
 
-                // Buscar si ya existe una inscripción para este estudiante y evento
                 EstudiantesEventos existente = null;
                 for (EstudiantesEventos ee : listaEstudiantesEventos) {
                     if (ee.getEstudiante().equals(estudiante) && ee.getEvento().equals(evento)) {

@@ -82,6 +82,16 @@ public class Consultas {
     }
 
     /**
+     * Método para obtener la relacion de cursos y asignaturas de la base de datos.
+     *
+     * @return Lista de objetos Grupos.
+     */
+    public static List<CursosAsignaturas> selectCursosAsignaturas() {
+        Query<CursosAsignaturas> query = session.createQuery("FROM CursosAsignaturas", CursosAsignaturas.class);
+        return query.getResultList();
+    }
+
+    /**
      * Método para obtener todos los estudiantes de la base de datos.
      *
      * @return Lista de objetos Estudiantes.

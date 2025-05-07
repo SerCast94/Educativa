@@ -24,8 +24,8 @@ public class FormularioEventosAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblDescripcion = new JLabel("Descripción: ");
     private JLabel lblFechaInicio = new JLabel("Fecha de Inicio: ");
@@ -73,7 +73,7 @@ public class FormularioEventosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbTipoEvento);
+        personalizarComboBox(cmbTipoEvento);
 
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);

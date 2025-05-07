@@ -9,7 +9,6 @@ import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.Date;
@@ -17,31 +16,38 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import static Controlador.Controlador.actualizarListaAsistencia;
 import static Controlador.Controlador.insertarControladorAsistencia;
 import static Controlador.ControladorLogin.profesorLogeado;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Formulario para registrar la asistencia de un estudiante en un curso.
+ * Permite seleccionar ingresar los datos de asistencia.
+ */
 public class FormularioAsistenciaProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblCurso = new JLabel("Curso: ");
     private JLabel lblFecha = new JLabel("Fecha: ");
     private JLabel lblJustificado = new JLabel("Justificado: ");
     private JLabel lblMotivoAusencia = new JLabel("Motivo de Ausencia: ");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Cursos> cmbCurso = new JComboBox<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
     private JCheckBox chkJustificado = new JCheckBox("  Justificado");
     private JTextField txtMotivoAusencia = crearTextField();
 
+    /**
+     * Constructor de la clase FormularioAsistenciaProfesor.
+     * Inicializa la interfaz gráfica y carga los datos necesarios.
+     */
     public FormularioAsistenciaProfesor() {
         initGUI();
         initEventos();
@@ -49,6 +55,9 @@ public class FormularioAsistenciaProfesor extends JFrame {
         cargarCursos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Registrar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -63,7 +72,7 @@ public class FormularioAsistenciaProfesor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Registrar Asistencia", SwingConstants.CENTER);
+        titulo = new JLabel("Registrar Asistencia", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -71,8 +80,8 @@ public class FormularioAsistenciaProfesor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbCurso);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbCurso);
         EspaciadoEnDatePicker(datePicker);
         setBordeNaranja(txtMotivoAusencia);
 
@@ -95,7 +104,7 @@ public class FormularioAsistenciaProfesor extends JFrame {
         agregarComponente(lblMotivoAusencia, 5, 0);
         agregarComponente(txtMotivoAusencia, 5, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -111,12 +120,21 @@ public class FormularioAsistenciaProfesor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con la posición especificada.
+     * @param componente Componente a agregar.
+     * @param fila       Fila en la que se agregará.
+     * @param columna    Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -125,12 +143,15 @@ public class FormularioAsistenciaProfesor extends JFrame {
         cmbCurso.addActionListener(e -> cargarEstudiantes());
     }
 
+    /**
+     * Método para cargar los estudiantes en el JComboBox según el curso seleccionado y ordenados
+     * alfabéticamente por apellido para facilitar pasar lista.
+     */
     private void cargarEstudiantes() {
         cmbEstudiante.removeAllItems();
 
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
 
-        // estudiantes por el curso del profesor
         List<Estudiantes> estudiantesFiltrados = new ArrayList<>();
         for (Estudiantes e : estudiantes) {
             if (e.getMatriculas() != null) {
@@ -143,12 +164,12 @@ public class FormularioAsistenciaProfesor extends JFrame {
             }
         }
 
-        //  lista filtrada por apellido usando Collator para ignorar mayúsculas, minúsculas y acentos
-        Collator collator = Collator.getInstance(new Locale("es", "ES"));
-        collator.setStrength(Collator.PRIMARY);
+        // uso collator para ignorar acentos y mayusculas en la comparación
+        Collator Comparador = Collator.getInstance(new Locale("es", "ES"));
+        Comparador.setStrength(Collator.PRIMARY);
         for (int i = 0; i < estudiantesFiltrados.size() - 1; i++) {
             for (int j = i + 1; j < estudiantesFiltrados.size(); j++) {
-                if (collator.compare(estudiantesFiltrados.get(i).getApellido(), estudiantesFiltrados.get(j).getApellido()) > 0) {
+                if (Comparador.compare(estudiantesFiltrados.get(i).getApellido(), estudiantesFiltrados.get(j).getApellido()) > 0) {
                     Estudiantes temp = estudiantesFiltrados.get(i);
                     estudiantesFiltrados.set(i, estudiantesFiltrados.get(j));
                     estudiantesFiltrados.set(j, temp);
@@ -161,6 +182,9 @@ public class FormularioAsistenciaProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar los cursos en el JComboBox según el profesor logueado.
+     */
     private void cargarCursos() {
         List<Cursos> cursos = Controlador.getListaCursos();
         cmbCurso.removeAllItems();
@@ -172,6 +196,9 @@ public class FormularioAsistenciaProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo registro de asistencia.
+     */
     private void insertarAsistenciaValida(){
         if (cmbEstudiante.getSelectedItem() == null ||
             cmbCurso.getSelectedItem() == null ||

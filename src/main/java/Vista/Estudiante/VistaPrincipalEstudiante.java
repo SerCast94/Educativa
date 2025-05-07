@@ -123,10 +123,10 @@ public class VistaPrincipalEstudiante extends JFrame {
             Object source = e.getSource();
 
             if (source instanceof JButton) {
-                JButton button = (JButton) source;
-                String actionCommand = button.getText().trim();
+                JButton botonMenu = (JButton) source;
+                String accionMenu = botonMenu.getText().trim();
 
-                switch (actionCommand) {
+                switch (accionMenu) {
                     case "Historial Académico":
                         mostrarVistaHistorialAcademico();
                         break;

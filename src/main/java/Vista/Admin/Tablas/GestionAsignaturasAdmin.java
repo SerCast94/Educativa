@@ -3,6 +3,7 @@ package Vista.Admin.Tablas;
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
 import Mapeo.Cursos;
+import Mapeo.CursosAsignaturas;
 import Vista.Admin.Anadir.FormularioAsignaturasAdmin;
 import Vista.Admin.Modificar.ActualizarAsignaturasAdmin;
 import Vista.Admin.VistaPrincipalAdmin;
@@ -16,8 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-import static Controlador.Controlador.listaAsignaturas;
-import static Controlador.Controlador.listaCursos;
+
+import static Controlador.Controlador.*;
 
 /**
  * Clase que representa la vista de gestión de todas las asignaturas mediante una tabla.
@@ -74,7 +75,7 @@ public class GestionAsignaturasAdmin extends JPanel {
         icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnAgregar = new Boton("Agregar Asignatura", Boton.ButtonType.PRIMARY);
+        btnAgregar = new Boton("Agregar Asignatura", Boton.tipoBoton.PRIMARY);
         btnAgregar.setIcon(icono);
         btnAgregar.setPreferredSize(new Dimension(180, 30));
         btnAgregar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -255,11 +256,11 @@ public class GestionAsignaturasAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
+        Boton modificarItembtn = new Boton("Modificar", Boton.tipoBoton.PRIMARY);
         configurarBotonPopup(modificarItembtn);
         modificarItembtn.addActionListener(e -> modificarAsignatura());
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarAsignatura());
 
@@ -328,10 +329,17 @@ public class GestionAsignaturasAdmin extends JPanel {
         modelo.setRowCount(0);
         for (Asignaturas asignatura : listaAsignaturas) {
 
-            String nombreAsignatura= "Sin Curso";
-            for (Cursos curso : listaCursos){
-                if (Objects.equals(asignatura.getIdAsignatura(), curso.getIdCurso())){
-                    nombreAsignatura = curso.getNombre();
+            String nombreCurso = "Sin Curso";
+
+            for (CursosAsignaturas cursoAsignaturas : listaCursosAsignaturas) {
+                if (Objects.equals(cursoAsignaturas.getAsignatura(), asignatura)) {
+
+                    for (Cursos curso : listaCursos) {
+                        if (Objects.equals(curso, cursoAsignaturas.getCurso())) {
+                            nombreCurso = curso.getNombre();
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -340,11 +348,12 @@ public class GestionAsignaturasAdmin extends JPanel {
                     asignatura.getNombre(),
                     asignatura.getDescripcion(),
                     asignatura.getProfesor().toString(),
-                    nombreAsignatura,
+                    nombreCurso,
                     asignatura.getEstado().toString(),
                     asignatura
             };
             modelo.addRow(fila);
         }
     }
+
 }

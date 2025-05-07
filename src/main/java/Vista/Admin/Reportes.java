@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import static Controlador.ControladorReportes.*;
-import static Vista.Util.EstiloComponentes.customizeComboBox;
+import static Vista.Util.EstiloComponentes.personalizarComboBox;
 import static Vista.Util.EstiloComponentes.setBordeNaranja;
 
 /**
@@ -78,10 +78,10 @@ public class Reportes extends JPanel {
         cbEstudianteBeca = new JComboBox<>();
         cbEstudianteConvalidacion = new JComboBox<>();
 
-        customizeComboBox(cbEstudiante);
-        customizeComboBox(cbCurso);
-        customizeComboBox(cbEstudianteBeca);
-        customizeComboBox(cbEstudianteConvalidacion);
+        personalizarComboBox(cbEstudiante);
+        personalizarComboBox(cbCurso);
+        personalizarComboBox(cbEstudianteBeca);
+        personalizarComboBox(cbEstudianteConvalidacion);
 
         gridPanel.add(crearCajaReportes("Boletín de notas de Estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
         gridPanel.add(crearCajaReportes("Boletín de notas de Clase", cbCurso, "Descargar", e -> descargarNotasClase()));
@@ -121,7 +121,7 @@ public class Reportes extends JPanel {
         }
 
         gbc.gridy++;
-        JButton boton = new Boton(btnTexto, Boton.ButtonType.PRIMARY);
+        JButton boton = new Boton(btnTexto, Boton.tipoBoton.PRIMARY);
         boton.setPreferredSize(new Dimension(160, 30));
         boton.addActionListener(listener);
         caja.add(boton, gbc);

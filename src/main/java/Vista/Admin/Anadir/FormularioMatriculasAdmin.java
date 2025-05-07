@@ -34,8 +34,8 @@ public class FormularioMatriculasAdmin extends JFrame {
     private JComboBox<Cursos> cmbCursos = new JComboBox<>();
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
 
     /**
      * Constructor de la clase FormularioMatriculasAdmin.
@@ -73,9 +73,9 @@ public class FormularioMatriculasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiantes);
-        customizeComboBox(cmbCursos);
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbEstudiantes);
+        personalizarComboBox(cmbCursos);
+        personalizarComboBox(cmbEstado);
         EspaciadoEnDatePicker(datePickerMatricula);
 
         agregarComponente(lblEstudiante, 1, 0);

@@ -1,12 +1,8 @@
 package Vista.Profesor.Tablas;
 
 import BackUtil.GeneradorHorario;
-import Controlador.Controlador;
 import Mapeo.Horarios;
-import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
-import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.*;
@@ -15,17 +11,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
 import static Controlador.Controlador.listaHorarios;
 import static Controlador.ControladorLogin.profesorLogeado;
 
+/**
+ * Clase que representa la gestión del horario del profesor.
+ * Permite visualizar y descargar el horario del profesor logueado.
+ */
 public class GestionHorarioProfesor extends JPanel {
     private JTable tablaHorarios;
     private JButton btnDescargar;
     private DefaultTableModel modelo;
-    private JPopupMenu popupMenu;
     private JTableHeader header;
+    private JPanel panelSuperior;
+    private JLabel titulo;
+    private JPanel panelBoton;
+    private ImageIcon icono;
 
+    /**
+     * Constructor de la clase GestionHorarioProfesor.
+     * Inicializa la interfaz gráfica y carga los horarios del profesor.
+     */
     public GestionHorarioProfesor() {
         setLayout(new BorderLayout());
         initGUI();
@@ -33,75 +39,34 @@ public class GestionHorarioProfesor extends JPanel {
         cargarHorariosProfesor();
     }
 
+    /**
+     * Método para inicializar la interfaz gráfica.
+     */
     private void initGUI() {
         initPanelSuperior();
         initTabla();
-        initPopupMenu();
     }
 
-    private void initEventos() {
-        btnDescargar.addActionListener(e -> GeneradorHorario.exportarHorarioProfesorAXML(profesorLogeado.getHorarios()));
-
-
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int column = header.columnAtPoint(e.getPoint());
-                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
-                if (column >= 0 && sorter != null) {
-                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
-                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
-                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
-                }
-            }
-        });
-
-        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
-                }
-            }
-        });
-
-        tablaHorarios.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int row = tablaHorarios.rowAtPoint(e.getPoint());
-                if (row >= 0) {
-                    tablaHorarios.setRowSelectionInterval(row, row);
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        int visibleHeight = tablaHorarios.getVisibleRect().height;
-                        int clickY = e.getY();
-                        if (clickY > visibleHeight - 100) {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY() - 80);
-                        } else {
-                            popupMenu.show(tablaHorarios, e.getX(), e.getY());
-                        }
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Método para inicializar el panel superior de la interfaz.
+     */
     private void initPanelSuperior() {
-        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior = new JPanel(new BorderLayout());
         panelSuperior.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         panelSuperior.setBackground(new Color(251, 234, 230));
 
-        JLabel titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Horario", SwingConstants.CENTER);
+        titulo = new JLabel("Colegio Salesiano San Francisco de Sales - Horario", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 30, 10));
         panelSuperior.add(titulo, BorderLayout.NORTH);
 
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
+        icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/anadir.png")));
         icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-        btnDescargar = new Boton("Descargar Horario", Boton.ButtonType.PRIMARY);
+        btnDescargar = new Boton("Descargar Horario", Boton.tipoBoton.PRIMARY);
         btnDescargar.setIcon(icono);
         btnDescargar.setPreferredSize(new Dimension(180, 30));
         btnDescargar.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -112,6 +77,9 @@ public class GestionHorarioProfesor extends JPanel {
         add(panelSuperior, BorderLayout.NORTH);
     }
 
+    /**
+     * Método para inicializar la tabla de los horarios del profesor.
+     */
     private void initTabla() {
         String[] columnas = {"Asignatura", "Día de la semana", "Hora Inicio", "Hora Fin", "Profesor","Objeto"};
                modelo = new DefaultTableModel(null, columnas) {
@@ -170,7 +138,6 @@ public class GestionHorarioProfesor extends JPanel {
         scroll.getViewport().setBackground(Color.WHITE);
         scroll.setOpaque(false);
 
-        // Personalización de la barra de desplazamiento
         JScrollBar verticalScrollBar = scroll.getVerticalScrollBar();
         verticalScrollBar.setUI(new BasicScrollBarUI() {
             @Override
@@ -210,79 +177,40 @@ public class GestionHorarioProfesor extends JPanel {
         add(panelConMargen, BorderLayout.CENTER);
     }
 
-    private void initPopupMenu() {
-        popupMenu = new JPopupMenu() {
+    /**
+     * Método para inicializar los eventos de la interfaz.
+     */
+    private void initEventos() {
+        btnDescargar.addActionListener(e -> GeneradorHorario.exportarHorarioProfesorAXML(profesorLogeado.getHorarios()));
+
+
+        header.addMouseListener(new MouseAdapter() {
             @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(new Color(240, 240, 240, 220));
-                g2.fillRoundRect(0, 0, getWidth() - 50, getHeight(), 12, 12);
-
-                g2.setColor(new Color(200, 200, 200, 150));
-                g2.drawRoundRect(0, 0, getWidth() - 50, getHeight() - 1, 12, 12);
-                g2.dispose();
+            public void mouseClicked(MouseEvent e) {
+                int column = header.columnAtPoint(e.getPoint());
+                TableRowSorter<?> sorter = (TableRowSorter<?>) tablaHorarios.getRowSorter();
+                if (column >= 0 && sorter != null) {
+                    SortOrder currentOrder = sorter.getSortKeys().isEmpty() ? null : sorter.getSortKeys().get(0).getSortOrder();
+                    SortOrder newOrder = currentOrder == SortOrder.DESCENDING ? SortOrder.ASCENDING : SortOrder.DESCENDING;
+                    sorter.setSortKeys(Arrays.asList(new RowSorter.SortKey(column, newOrder)));
+                }
             }
-        };
-        popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        popupMenu.setOpaque(false);
+        });
 
-        Boton modificarItembtn = new Boton("Modificar", Boton.ButtonType.PRIMARY);
-        configurarBotonPopup(modificarItembtn);
-        modificarItembtn.addActionListener(e -> modificarHorario());
-
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
-        configurarBotonPopup(eliminarItembtn);
-        eliminarItembtn.addActionListener(e -> eliminarHorario());
-
-        popupMenu.add(modificarItembtn);
-        popupMenu.add(Box.createVerticalStrut(5));
-        popupMenu.add(eliminarItembtn);
-
-        UIManager.put("PopupMenu.border", BorderFactory.createEmptyBorder());
-        UIManager.put("PopupMenu.background", new Color(0, 0, 0, 0));
-    }
-
-    private void configurarBotonPopup(Boton boton) {
-        boton.setPreferredSize(new Dimension(150, 30));
-        boton.setContentAreaFilled(false);
-        boton.setBorderPainted(false);
-        boton.setFocusPainted(false);
-        boton.setOpaque(false);
-    }
-
-    private void modificarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
-        if (fila != -1) {
-            int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-            Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-            //new ActualizarHorariosProfesor(horarioSeleccionado);
-        }
-    }
-
-    private void eliminarHorario() {
-        int fila = tablaHorarios.getSelectedRow();
-        if (fila != -1) {
-            new CustomDialog(null, "Eliminar Horario", "¿Está seguro de que desea eliminar este horario?", "OK_CANCEL").setVisible(true);
-
-            if (CustomDialog.isAceptar()) {
-                int filaModelo = tablaHorarios.convertRowIndexToModel(fila);
-                Horarios horarioSeleccionado = (Horarios) modelo.getValueAt(filaModelo, tablaHorarios.getColumnCount() - 1);
-                Controlador.eliminarControladorHorario(horarioSeleccionado);
-                Controlador.actualizarListaHorarios();
-
-                VistaPrincipalProfesor vistaPrincipalProfesor = (VistaPrincipalProfesor) VistaPrincipalProfesor.getVistaPrincipal();
-                vistaPrincipalProfesor.mostrarVistaHorarios();
-
-                new CustomDialog(null, "Horario Eliminado", "Horario eliminado correctamente.", "ONLY_OK").setVisible(true);
-
-            } else {
-                new CustomDialog(null, "Acción Cancelada", "Acción cancelada por el usuario.", "ONLY_OK").setVisible(true);
+        tablaHorarios.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = tablaHorarios.rowAtPoint(e.getPoint());
+                if (row >= 0) {
+                    tablaHorarios.setSelectionBackground(new Color(245, 156, 107, 204));
+                }
             }
-        }
+        });
     }
 
+    /**
+     * Método para cargar los horarios del profesor logueado en la tabla.
+     */
     private void cargarHorariosProfesor() {
         modelo.setRowCount(0);
 

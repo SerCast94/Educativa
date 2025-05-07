@@ -19,8 +19,8 @@ public class ActualizarAdministradoresAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblNombre = new JLabel("Nombre:");
     private JLabel lblApellido = new JLabel("Apellido:");
     private JLabel lblDni = new JLabel("DNI:");
@@ -87,7 +87,7 @@ public class ActualizarAdministradoresAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbEstado);
 
         agregarComponente(lblNombre, 1, 0);
         setBordeNaranja(txtNombre);

@@ -79,7 +79,6 @@ public class DashboardAdmin extends JPanel {
                 {"Profesor con Más Estudiantes", ControladorDashBoard.profesorConMasEstudiantes().getNombre()+" "+ ControladorDashBoard.profesorConMasEstudiantes().getApellido(), "teacher"}
         };
 
-        // Crear las cajas con los datos
         for (String[] dato : datos) {
             JPanel caja = crearCaja(dato[0], dato[1], dato[2]);
             gridPanel.add(caja);
@@ -110,14 +109,12 @@ public class DashboardAdmin extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Ícono
         ImageIcon iconoOriginal = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + foto + ".png")));
         Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
         ImageIcon iconoEscalado = new ImageIcon(imagenEscalada);
         JLabel icono = new JLabel(iconoEscalado);
         caja.add(icono, gbc);
 
-        // Título
         gbc.gridy++;
         JLabel tituloLabel = new JLabel(
                 "<html><div style='"
@@ -143,7 +140,6 @@ public class DashboardAdmin extends JPanel {
         separador.setMinimumSize(new Dimension(150, 2));
         caja.add(separador, gbc);
 
-        // Contador
         gbc.gridy++;
         JLabel contadorLabel = new JLabel(contador);
         contadorLabel.setFont(new Font("Arial", Font.BOLD, 18));

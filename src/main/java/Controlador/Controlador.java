@@ -12,25 +12,23 @@ import Mapeo.*;
  * datos de las diferentes entidades del sistema. Así como un conjunto de listas que
  * hacen las veces de caché para evitar consultas repetidas a la base de datos.
  */
-
-
 public class Controlador {
 
     /**
      * Atributo estático que representa la sesión de la base de datos
      */
-
     static Session session;
+
     /**
      * Listas estáticas que representan las diferentes entidades del sistema
      * que se cargan al iniciar la aplicación y actualizan con los cambios.
      */
-
     static public List<Tutores> listaTutores;
     static public List<Profesores> listaProfesores;
     static public List<Extraescolares> listaExtraescolares;
     static public List<Cursos> listaCursos;
     static public List<Asignaturas> listaAsignaturas;
+    static public List<CursosAsignaturas> listaCursosAsignaturas;
     static public List<Estudiantes> listaEstudiantes;
     static public List<Matriculas> listaMatriculas;
     static public List<HistorialAcademico> listaHistorialAcademico;
@@ -61,6 +59,7 @@ public class Controlador {
         listaExtraescolares = Consultas.selectExtraescolares();
         listaCursos = Consultas.selectCursos();
         listaAsignaturas = Consultas.selectAsignaturas();
+        listaCursosAsignaturas = Consultas.selectCursosAsignaturas();
         listaEstudiantes = Consultas.selectEstudiantes();
         listaMatriculas = Consultas.selectMatriculas();
         listaHistorialAcademico = Consultas.selectHistorialAcademico();
@@ -115,6 +114,13 @@ public class Controlador {
      */
     public static void actualizarListaAsignaturas() {
         listaAsignaturas = Consultas.selectAsignaturas();
+    }
+
+    /**
+     * Método para actualizar la lista que contiene la entidad CursosAsignaturas
+     */
+    public static void actualizarListaCursosAsignaturas() {
+        listaCursosAsignaturas = Consultas.selectCursosAsignaturas();
     }
 
     /**
@@ -260,6 +266,22 @@ public class Controlador {
      */
     public static void setListaCursos(List<Cursos> listaCursos) {
         Controlador.listaCursos = listaCursos;
+    }
+
+    /**
+     * Método para obtener la lista de la entidad CursosAsignaturas
+     * @return listaCursosAsignaturas
+     */
+    public static List<CursosAsignaturas> getListaCursosAsignaturas() {
+        return listaCursosAsignaturas;
+    }
+
+    /**
+     * Método para establecer la lista de la entidad CursosAsignaturas
+     * @param listaCursosAsignaturas
+     */
+    public static void setListaCursosAsignaturas(List<CursosAsignaturas> listaCursosAsignaturas) {
+        Controlador.listaCursosAsignaturas = listaCursosAsignaturas;
     }
 
     /**

@@ -16,14 +16,17 @@ import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.Controlador.actualizarControladorEstudiante;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar los datos de un estudiante en la interfaz de administración.
+ */
 public class ActualizarEstudiantesAdmin extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -64,7 +67,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
     }
 
     /**
-     * Carga los datos del estudiante en los campos de texto.
+     * Carga los datos del estudiante en los campos correspondientes.
      */
     private void cargarDatosEstudiante() {
         txtDNI.setText(estudiante.getDni());
@@ -106,8 +109,8 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbTutor);
+        personalizarComboBox(cmbEstado);
+        personalizarComboBox(cmbTutor);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
@@ -214,16 +217,20 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
         String dni = txtDNI.getText().trim();
+        String direccion = txtDireccion.getText().trim();
+        Tutores tutor = (Tutores) cmbTutor.getSelectedItem();
         String usuario = txtUsuario.getText().trim();
         String correo = txtEmail.getText().trim();
         String telefono = txtTelefono.getText().trim();
         String contrasena = new String(txtPassword.getPassword()).trim();
+
         LocalDate fechaNacimiento = datePickerNacimiento.getDate();
         LocalDate fechaMatricula = datePickerMatricula.getDate();
         Estudiantes.EstadoEstudiante estado = Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString());
 
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || usuario.isEmpty() ||
-                correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null) {
+            correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null
+            || direccion.isEmpty() || tutor == null) {
             new CustomDialog(null, "Error", "Todos los campos deben estar completos.", "ONLY_OK").setVisible(true);
             return;
         }
@@ -258,10 +265,13 @@ public class ActualizarEstudiantesAdmin extends JFrame {
             return;
         }
 
+
         try {
             estudiante.setNombre(nombre);
             estudiante.setApellido(apellido);
             estudiante.setDni(dni);
+            estudiante.setDireccion(direccion);
+            estudiante.setTutor(tutor);
             estudiante.setUsuario(usuario);
             estudiante.setEmail(correo);
             estudiante.setTelefono(telefono);

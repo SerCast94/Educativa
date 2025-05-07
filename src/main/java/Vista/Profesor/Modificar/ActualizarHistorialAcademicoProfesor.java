@@ -13,31 +13,36 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar los datos del historial académico en la interfaz de profesor.
+ */
 public class ActualizarHistorialAcademicoProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JTextField txtNotaFinal = crearTextField();
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
-
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private HistorialAcademico historial;
 
+    /**
+     * Constructor de la clase ActualizarHistorialAcademicoProfesor.
+     * Inicializa la interfa gráfica y carga los datos del historial académico.
+     * @param historial Historial a actualizar.
+     */
     public ActualizarHistorialAcademicoProfesor(HistorialAcademico historial) {
         this.historial = historial;
         initGUI();
@@ -47,6 +52,9 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         cargarDatosHistorial();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,7 +69,7 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Actualizar Historial Académico", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -69,8 +77,8 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbAsignaturas);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbAsignaturas);
         setBordeNaranja(txtNotaFinal);
         setBordeNaranja(txtComentarios);
         EspaciadoEnDatePicker(dateAprobacion);
@@ -90,7 +98,7 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         agregarComponente(lblComentarios, 5, 0);
         agregarComponente(txtComentarios, 5, 1);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
@@ -105,6 +113,9 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para cargar los datos del historial académico en los campos correspondientes.
+     */
     private void cargarDatosHistorial() {
         cmbEstudiante.setSelectedItem(historial.getEstudiante());
         cmbAsignaturas.setSelectedItem(historial.getAsignatura());
@@ -113,18 +124,30 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         txtComentarios.setText(historial.getComentarios());
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> actualizarHistorialAcademicoValido());
     }
 
+    /**
+     * Método para cargar los estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -133,6 +156,9 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar las asignaturas en el combo box.
+     */
     private void cargarAsignaturas(){
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
@@ -141,6 +167,9 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método para validar y actualizar el historial académico.
+     */
     private void actualizarHistorialAcademicoValido(){
 
         if (cmbEstudiante.getSelectedItem() == null ||

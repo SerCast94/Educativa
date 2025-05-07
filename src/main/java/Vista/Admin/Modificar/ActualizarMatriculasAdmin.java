@@ -23,8 +23,8 @@ public class ActualizarMatriculasAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblEstado = new JLabel("Estado:");
@@ -84,9 +84,9 @@ public class ActualizarMatriculasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbCurso);
+        personalizarComboBox(cmbEstado);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbCurso);
         EspaciadoEnDatePicker(datePickerMatricula);
 
         agregarComponente(lblEstudiante, 1, 0);

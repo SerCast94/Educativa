@@ -2,41 +2,45 @@ package Vista.Profesor.Anadir;
 
 import Controlador.Controlador;
 import Mapeo.Asignaturas;
-import Mapeo.Asignaturas;
 import Mapeo.Estudiantes;
 import Mapeo.HistorialAcademico;
 import Vista.Profesor.VistaPrincipalProfesor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDatePicker;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
-
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Formulario para registrar el historial académico de un estudiante.
+ * Permite ingresar los datos de un nuevo historial académico.
+ */
 public class FormularioHistorialAcademicoProfesor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
+    private JPanel panelBotones;
     private JLabel lblEstudiante = new JLabel("Estudiante:");
     private JLabel lblCurso = new JLabel("Curso:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
-
     private JComboBox<Estudiantes> cmbEstudiante = new JComboBox<>();
     private JComboBox<Asignaturas> cmbAsignaturas = new JComboBox<>();
     private JTextField txtNotaFinal = crearTextField();
     private CustomDatePicker dateAprobacion = new CustomDatePicker();
     private JTextField txtComentarios = crearTextField();
+    private JButton btnAceptar = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
 
-    private JButton btnAceptar = new Boton("Aceptar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    /**
+     * Constructor de la clase FormularioHistorialAcademicoProfesor.
+     * Inicializa la interfaz gráfica y carga los datos de estudiantes y asignaturas.
+     */
     public FormularioHistorialAcademicoProfesor() {
         initGUI();
         initEventos();
@@ -44,6 +48,9 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         cargarAsignaturas();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Agregar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -58,7 +65,7 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Agregar Historial Académico", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Historial Académico", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
@@ -66,8 +73,8 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiante);
-        customizeComboBox(cmbAsignaturas);
+        personalizarComboBox(cmbEstudiante);
+        personalizarComboBox(cmbAsignaturas);
         setBordeNaranja(txtNotaFinal);
         setBordeNaranja(txtComentarios);
 
@@ -88,7 +95,7 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         agregarComponente(lblComentarios, 5, 0);
         agregarComponente(txtComentarios, 5, 1);
 
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelBotones.setBackground(new Color(251, 234, 230));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
         btnCancelar.setPreferredSize(new Dimension(100, 40));
@@ -103,18 +110,30 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel con la posición especificada.
+     * @param componente Componente a agregar.
+     * @param fila       Fila en la que se agregará.
+     * @param columna    Columna en la que se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
         btnAceptar.addActionListener(e -> insertarHistorialAcademicoValido());
     }
 
+    /**
+     * Método para cargar la lista de estudiantes en el combo box.
+     */
     private void cargarEstudiantes() {
         List<Estudiantes> estudiantes = Controlador.getListaEstudiantes();
         cmbEstudiante.removeAllItems();
@@ -123,6 +142,9 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método para cargar la lista de asignaturas en el combo box.
+     */
     private void cargarAsignaturas() {
         List<Asignaturas> asignaturas = Controlador.getListaAsignaturas();
         cmbAsignaturas.removeAllItems();
@@ -131,6 +153,9 @@ public class FormularioHistorialAcademicoProfesor extends JFrame {
         }
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo registro de historial académico.
+     */
     private void insertarHistorialAcademicoValido() {
 
         if (cmbEstudiante.getSelectedItem() == null ||

@@ -10,14 +10,17 @@ import java.awt.*;
 import static BackUtil.Encriptador.encryptMD5;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa la ventana para actualizar los datos de un tutor en la interfaz del tutor.
+ */
 public class ActualizarTutoresTutor extends JFrame {
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JLabel titulo;
+    private JPanel panelBotones;
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblDNI = new JLabel("DNI: ");
     private JLabel lblNombre = new JLabel("Nombre: ");
     private JLabel lblApellido = new JLabel("Apellido: ");
@@ -26,7 +29,6 @@ public class ActualizarTutoresTutor extends JFrame {
     private JLabel lblEmail = new JLabel("Email: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblEstado = new JLabel("Estado: ");
-
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -35,9 +37,12 @@ public class ActualizarTutoresTutor extends JFrame {
     private JTextField txtEmail = crearTextField();
     private JTextField txtTelefono = crearTextField();
     private JComboBox<Tutores.EstadoTutor> cmbEstado = new JComboBox<>(Tutores.EstadoTutor.values());
-
     private Tutores tutor;
 
+    /**
+     * Constructor de la clase ActualizarTutoresTutor.
+     * @param tutor El objeto Tutor que se va a actualizar.
+     */
     public ActualizarTutoresTutor(Tutores tutor) {
         this.tutor = tutor;
         initGUI();
@@ -45,6 +50,9 @@ public class ActualizarTutoresTutor extends JFrame {
         cargarDatosTutor();
     }
 
+    /**
+     * Carga los datos del tutor en los campos correspondientes.
+     */
     private void cargarDatosTutor() {
         txtDNI.setText(tutor.getDni());
         txtNombre.setText(tutor.getNombre());
@@ -56,6 +64,9 @@ public class ActualizarTutoresTutor extends JFrame {
         cmbEstado.setSelectedItem(tutor.getEstado());
     }
 
+    /*
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Actualizar Tutor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -70,7 +81,7 @@ public class ActualizarTutoresTutor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        JLabel titulo = new JLabel("Actualizar Tutor", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Tutor", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -78,18 +89,41 @@ public class ActualizarTutoresTutor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbEstado);
 
-        agregarCampo(lblDNI, txtDNI, 1);
-        agregarCampo(lblNombre, txtNombre, 2);
-        agregarCampo(lblApellido, txtApellido, 3);
-        agregarCampo(lblUsuario, txtUsuario, 4);
-        agregarCampo(lblPassword, txtPassword, 5);
-        agregarCampo(lblEmail, txtEmail, 6);
-        agregarCampo(lblTelefono, txtTelefono, 7);
-        agregarCampo(lblEstado, cmbEstado, 8);
+        agregarComponente(lblDNI, 1, 0);
+        setBordeNaranja(txtDNI);
+        agregarComponente(txtDNI, 1, 1);
 
-        JPanel panelBotones = new JPanel();
+        agregarComponente(lblNombre, 2, 0);
+        setBordeNaranja(txtNombre);
+        agregarComponente(txtNombre, 2, 1);
+
+        agregarComponente(lblApellido, 3, 0);
+        setBordeNaranja(txtApellido);
+        agregarComponente(txtApellido, 3, 1);
+
+        agregarComponente(lblUsuario, 4, 0);
+        setBordeNaranja(txtUsuario);
+        agregarComponente(txtUsuario, 4, 1);
+
+        agregarComponente(lblPassword, 5, 0);
+        setBordeNaranja(txtPassword);
+        agregarComponente(txtPassword, 5, 1);
+
+        agregarComponente(lblEmail, 6, 0);
+        setBordeNaranja(txtEmail);
+        agregarComponente(txtEmail, 6, 1);
+
+        agregarComponente(lblTelefono, 7, 0);
+        setBordeNaranja(txtTelefono);
+        agregarComponente(txtTelefono, 7, 1);
+
+        agregarComponente(lblEstado, 8, 0);
+        setBordeNaranja(cmbEstado);
+        agregarComponente(cmbEstado, 8, 1);
+
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(100, 40));
@@ -105,18 +139,21 @@ public class ActualizarTutoresTutor extends JFrame {
         setVisible(true);
     }
 
-    private void agregarCampo(JLabel label, Component campo, int fila) {
-        agregarComponente(label, fila, 0);
-        setBordeNaranja((JComponent) campo);
-        agregarComponente(campo, fila, 1);
-    }
-
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -124,7 +161,9 @@ public class ActualizarTutoresTutor extends JFrame {
 
     }
 
-
+    /**
+     * Método para validar y actualizar los datos del tutor.
+     */
     private void actualizarTutorValido() {
         String nombre = txtNombre.getText().trim();
         String apellido = txtApellido.getText().trim();
@@ -135,13 +174,11 @@ public class ActualizarTutoresTutor extends JFrame {
         String nuevaPassword = new String(txtPassword.getPassword());
         Tutores.EstadoTutor estado = Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        // Validaciones de campos obligatorios
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || estado == null) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
 
-        // Validaciones específicas
         if (!Tutores.validarDNI(dni)) {
             new CustomDialog(null, "Error", "El DNI ingresado no es válido.", "ONLY_OK").setVisible(true);
             return;
@@ -157,7 +194,6 @@ public class ActualizarTutoresTutor extends JFrame {
             return;
         }
 
-        // Si todo es válido, actualizar el tutor
         tutor.setNombre(nombre);
         tutor.setApellido(apellido);
         tutor.setDni(dni);
@@ -174,8 +210,7 @@ public class ActualizarTutoresTutor extends JFrame {
             Controlador.actualizarControladorTutor(tutor);
             Controlador.actualizarListaTutores();
 
-            VistaPrincipalAdmin vistaPrincipal = (VistaPrincipalAdmin) VistaPrincipalAdmin.getVistaPrincipal();
-            vistaPrincipal.mostrarVistaTutores();
+            dispose();
 
             new CustomDialog(null, "Éxito", "Tutor actualizado correctamente.", "ONLY_OK").setVisible(true);
             dispose();

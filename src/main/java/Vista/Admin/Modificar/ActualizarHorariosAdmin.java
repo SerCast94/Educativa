@@ -24,8 +24,8 @@ public class ActualizarHorariosAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblCurso = new JLabel("Asignatura:");
     private JLabel lblProfesor = new JLabel("Profesor:");
     private JLabel lblDiaSemana = new JLabel("Día de la Semana:");
@@ -77,9 +77,9 @@ public class ActualizarHorariosAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbAsignaturas);
-        customizeComboBox(cmbProfesor);
-        customizeComboBox(cmbDiaSemana);
+        personalizarComboBox(cmbAsignaturas);
+        personalizarComboBox(cmbProfesor);
+        personalizarComboBox(cmbDiaSemana);
 
         agregarComponente(lblCurso, 1, 0);
         setBordeNaranja(cmbAsignaturas);

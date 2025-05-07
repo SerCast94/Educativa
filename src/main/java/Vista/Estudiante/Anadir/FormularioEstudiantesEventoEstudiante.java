@@ -7,21 +7,22 @@ import Mapeo.EstudiantesEventos;
 import Vista.Estudiante.VistaPrincipalEstudiante;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.List;
-
 import static Controlador.Controlador.*;
 import static Vista.Util.EstiloComponentes.*;
 
+/**
+ * Clase que representa el formulario para que un estudiante confirme su asistencia a un evento o excursión.
+ * Permite seleccionar un evento y agregar un comentario.
+ */
 public class FormularioEstudiantesEventoEstudiante extends JFrame {
-
     private Container panel;
     private GridBagLayout gLayout;
     private GridBagConstraints gbc;
-
+    private JLabel titulo;
     private JLabel lblEvento = new JLabel("Evento: ");
     private JLabel lblDescripcion = new JLabel("Descripción:");
     private JLabel lblFechaInicio = new JLabel("Fecha Inicio:");
@@ -30,7 +31,6 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
     private JLabel lblUbicacion = new JLabel("Ubicación:");
     private JLabel lblComentario = new JLabel("Comentario: ");
     private JLabel lblConfirmado = new JLabel("¿Asistirá?: ");
-
     private JComboBox<Eventos> cmbEvento = new JComboBox<>();
     private JLabel valDescripcion = new JLabel();
     private JLabel valFechaInicio = new JLabel();
@@ -39,12 +39,18 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
     private JLabel valUbicacion = new JLabel();
     private JTextField txtComentario = crearTextField();
     private JCheckBox chkConfirmado = new JCheckBox("Sí");
-
-    private JButton btnAceptar = new Boton("Guardar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
-
+    private JPanel panelBotones;
+    private JButton btnAceptar = new Boton("Guardar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private Estudiantes estudiante;
     private Eventos evento;
+
+    /**
+     * Constructor de la clase FormularioEstudiantesEventoEstudiante.
+     * Inicializa la interfaz gráfica, los eventos y carga la lista de eventos.
+     * @param estudiante El estudiante que está confirmando su asistencia.
+     * @param evento     El evento al que el estudiante está confirmando su asistencia.
+     */
 
     public FormularioEstudiantesEventoEstudiante(Estudiantes estudiante, Eventos evento) {
         this.estudiante = estudiante;
@@ -54,6 +60,9 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         initEventos();
     }
 
+    /**
+     * Método para inicializar los componentes gráficos principales.
+     */
     private void initGUI() {
         setTitle("Confirmar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -68,7 +77,7 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        JLabel titulo = new JLabel("Responder a Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Responder a Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));
@@ -76,7 +85,7 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEvento);
+        personalizarComboBox(cmbEvento);
         agregarComponente(lblEvento, 1, 0);
         agregarComponente(cmbEvento, 1, 1);
 
@@ -104,7 +113,7 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         chkConfirmado.setBackground(new Color(251, 234, 230));
         agregarComponente(chkConfirmado, 8, 1);
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAceptar.setPreferredSize(new Dimension(120, 40));
@@ -120,12 +129,21 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para agregar un componente al panel principal con las restricciones de diseño.
+     * @param componente El componente a agregar.
+     * @param fila La fila donde se agregará.
+     * @param columna La columna donde se agregará.
+     */
     private void agregarComponente(Component componente, int fila, int columna) {
         gbc.gridx = columna;
         gbc.gridy = fila;
         panel.add(componente, gbc);
     }
 
+    /**
+     * Método para inicializar los eventos de los botones.
+     */
     private void initEventos() {
         btnCancelar.addActionListener(e -> dispose());
 
@@ -142,6 +160,9 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         });
     }
 
+    /**
+     * Método para cargar la lista de eventos en el combo box.
+     */
     private void cargarEvento() {
         cmbEvento.removeAllItems();
         List<Eventos> todosEventos = Controlador.getListaEventos();
@@ -153,6 +174,10 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         mostrarInformacionEvento(evento);
     }
 
+    /**
+     * Método para mostrar la información del evento seleccionado.
+     * @param evento El evento a mostrar.
+     */
     private void mostrarInformacionEvento(Eventos evento) {
         valDescripcion.setText(evento.getDescripcion());
         valFechaInicio.setText(evento.getFechaInicio().toString());
@@ -161,6 +186,9 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
         valUbicacion.setText(evento.getUbicacion());
     }
 
+    /**
+     * Método que valida los campos e inserta un nuevo estudiante en el evento.
+     */
     private void agregarEstudianteValido(){
 
         String comentario = txtComentario.getText().trim();

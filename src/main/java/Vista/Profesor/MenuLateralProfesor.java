@@ -1,46 +1,61 @@
 package Vista.Profesor;
 
 import Vista.Util.Boton;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * MenuLateralProfesor es la clase que representa el menú lateral de la interfaz gráfica para el profesor.
+ * Contiene botones para navegar entre diferentes secciones de la aplicación.
+ */
 public class MenuLateralProfesor extends JPanel {
     private Map<String, JButton> botonesMenu;
     private JPanel panelBotones;
+    private JPanel panelLogo;
+    private JLabel logoLabel;
+    private ImageIcon iconoSuperior;
+    private Boton boton;
+    private JPanel panelInferior;
+    private Boton botonModificarPerfil;
+    private ImageIcon iconoInferior;
 
+    /**
+     * Constructor de la clase MenuLateralProfesor.
+     * Inicializa el menú lateral y sus componentes.
+     * @param listener ActionListener para manejar los eventos de los botones.
+     */
     public MenuLateralProfesor(ActionListener listener) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(250, 0));
 
-        // Panel superior para el logo
-        JPanel panelLogo = new JPanel();
+        panelLogo = new JPanel();
         panelLogo.setPreferredSize(new Dimension(250, 150));
         panelLogo.setBackground(new Color(251, 234, 230));
 
 
-        JLabel logoLabel = new JLabel(new ImageIcon( Objects.requireNonNull(getClass().getResource("/img/logomini.png"))));
+        logoLabel = new JLabel(new ImageIcon( Objects.requireNonNull(getClass().getResource("/img/logomini.png"))));
         logoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        logoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+        logoLabel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Dashboard"));
             }
 
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
+            public void mouseEntered(MouseEvent e) {
                 logoLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
         });
         panelLogo.setLayout(new BorderLayout());
         panelLogo.add(logoLabel, BorderLayout.CENTER);
 
-        // Panel de botones
         panelBotones = new JPanel();
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.Y_AXIS));
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -55,13 +70,12 @@ public class MenuLateralProfesor extends JPanel {
         };
 
         for (String[] opcion : opciones) {
-            // Cargar y redimensionar icono
-            ImageIcon icono = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
-            icono.setImage(icono.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 
-            // Crear botón
-            Boton boton = new Boton(opcion[0], Boton.ButtonType.PRIMARY);
-            boton.setIcon(icono);
+            iconoSuperior = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/" + opcion[1] + ".png")));
+            iconoSuperior.setImage(iconoSuperior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+
+            boton = new Boton(opcion[0], Boton.tipoBoton.PRIMARY);
+            boton.setIcon(iconoSuperior);
             boton.setAlignmentX(Component.CENTER_ALIGNMENT);
             boton.setPreferredSize(new Dimension(230, 40));
             boton.setMinimumSize(new Dimension(230, 40));
@@ -74,15 +88,15 @@ public class MenuLateralProfesor extends JPanel {
             panelBotones.add(boton);
         }
 
-        JPanel panelInferior = new JPanel();
+        panelInferior = new JPanel();
         panelInferior.setLayout(new BoxLayout(panelInferior, BoxLayout.Y_AXIS));
         panelInferior.setBackground(new Color(251, 234, 230));
         panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        Boton botonModificarPerfil = new Boton("   Modificar Perfil", Boton.ButtonType.PRIMARY);
-        ImageIcon iconoPerfil = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/opciones.png")));
-        iconoPerfil.setImage(iconoPerfil.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
-        botonModificarPerfil.setIcon(iconoPerfil);
+        botonModificarPerfil = new Boton("   Modificar Perfil", Boton.tipoBoton.PRIMARY);
+        iconoInferior = new ImageIcon(Objects.requireNonNull(getClass().getResource("/icons/opciones.png")));
+        iconoInferior.setImage(iconoInferior.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+        botonModificarPerfil.setIcon(iconoInferior);
         botonModificarPerfil.setAlignmentX(Component.CENTER_ALIGNMENT);
         botonModificarPerfil.setPreferredSize(new Dimension(230, 40));
         botonModificarPerfil.setMinimumSize(new Dimension(230, 40));
@@ -99,7 +113,4 @@ public class MenuLateralProfesor extends JPanel {
         add(panelInferior, BorderLayout.SOUTH);
     }
 
-    public JButton getBoton(String nombre) {
-        return botonesMenu.get(nombre);
-    }
 }

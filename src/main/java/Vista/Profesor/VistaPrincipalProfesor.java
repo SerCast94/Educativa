@@ -5,19 +5,25 @@ import Vista.Profesor.Tablas.GestionAsistenciaProfesor;
 import Vista.Profesor.Tablas.GestionHistorialAcademicoProfesor;
 import Vista.Profesor.Tablas.GestionHorarioProfesor;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import static Controlador.ControladorLogin.profesorLogeado;
 
+/**
+ * VistaPrincipalProfesor es la clase principal de la interfaz gráfica para el profesor.
+ * Desde esta clase se muestra un menú lateral y se permite la navegación entre diferentes vistas.
+ */
 public class VistaPrincipalProfesor extends JFrame {
     private MenuLateralProfesor menu;
     private JPanel contentPanel;
     private static VistaPrincipalProfesor instancia;
 
+    /**
+     * Constructor de la clase VistaPrincipalProfesor.
+     * Inicializa la ventana principal y configura el menú lateral.
+     */
     public VistaPrincipalProfesor() {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
@@ -35,10 +41,17 @@ public class VistaPrincipalProfesor extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método que devuelve la instancia de la ventana principal.
+     * @return instancia de VistaPrincipalProfesor.
+     */
     public static JFrame getVistaPrincipal() {
         return instancia;
     }
 
+    /**
+     * Método que muestra la vista del dashboard del profesor.
+     */
     public  void mostrarVistaDashboardProfesor() {
         contentPanel.removeAll();
         contentPanel.add(new DashboardProfesor());
@@ -46,6 +59,9 @@ public class VistaPrincipalProfesor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de estudiantes.
+     */
     public void mostrarVistaHistorialAcademico() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHistorialAcademicoProfesor());
@@ -53,6 +69,9 @@ public class VistaPrincipalProfesor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de asistencia.
+     */
     public void mostrarVistaAsistencia() {
         contentPanel.removeAll();
         contentPanel.add(new GestionAsistenciaProfesor());
@@ -60,6 +79,9 @@ public class VistaPrincipalProfesor extends JFrame {
         contentPanel.repaint();
     }
 
+    /**
+     * Método que muestra la vista de gestión de horarios.
+     */
     public void mostrarVistaHorarios() {
         contentPanel.removeAll();
         contentPanel.add(new GestionHorarioProfesor());
@@ -67,23 +89,27 @@ public class VistaPrincipalProfesor extends JFrame {
         contentPanel.repaint();
     }
 
-
+    /**
+     * Método que muestra la vista de modificación del perfil del profesor.
+     */
     public void mostrarVistaModificarPerfilProfesor() {
         new ActualizarProfesoresProfesor(profesorLogeado);
     }
 
 
-
+    /**
+     * Clase interna que maneja los eventos de los botones del menú lateral.
+     */
     private class MenuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
 
             if (source instanceof JButton) {
-                JButton button = (JButton) source;
-                String actionCommand = button.getText().trim();
+                JButton boton = (JButton) source;
+                String accionMenu = boton.getText().trim();
 
-                switch (actionCommand) {
+                switch (accionMenu) {
                     case "Historial Académico":
                         mostrarVistaHistorialAcademico();
                         break;

@@ -67,7 +67,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
         panelBoton = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelBoton.setOpaque(false);
 
-        btnReservar = new Boton("Reservar Hora", Boton.ButtonType.PRIMARY);
+        btnReservar = new Boton("Reservar Hora", Boton.tipoBoton.PRIMARY);
         btnReservar.setPreferredSize(new Dimension(160, 30));
 
         datePicker = new CustomDatePicker();
@@ -213,7 +213,7 @@ public class GestionExtraescolaresAdmin extends JPanel {
         popupMenu.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         popupMenu.setOpaque(false);
 
-        Boton eliminarItembtn = new Boton("Eliminar", Boton.ButtonType.DELETE);
+        Boton eliminarItembtn = new Boton("Eliminar", Boton.tipoBoton.DELETE);
         configurarBotonPopup(eliminarItembtn);
         eliminarItembtn.addActionListener(e -> eliminarReserva());
 

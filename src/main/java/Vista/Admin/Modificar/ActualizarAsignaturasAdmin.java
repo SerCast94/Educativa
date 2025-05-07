@@ -28,8 +28,8 @@ public class ActualizarAsignaturasAdmin extends JFrame {
     private JTextField txtDescripcion = crearTextField();
     private JComboBox<Profesores> cmbProfesor = new JComboBox<>();
     private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activa", "inactiva"});
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private Asignaturas asignatura;
 
     /**
@@ -80,8 +80,8 @@ public class ActualizarAsignaturasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbProfesor);
-        customizeComboBox(cmbEstado);
+        personalizarComboBox(cmbProfesor);
+        personalizarComboBox(cmbEstado);
 
         setBordeNaranja(txtNombre);
         setBordeNaranja(txtDescripcion);

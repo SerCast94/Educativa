@@ -112,11 +112,9 @@ public class loginGUI extends JFrame {
         PanelSuperior.add(nombreAppLabel, BorderLayout.EAST);
         ventana.add(PanelSuperior, BorderLayout.NORTH);
 
-        // Panel principal dividido en dos columnas
         panelPrincipal = new JPanel(new GridLayout(1, 2));
         ventana.add(panelPrincipal, BorderLayout.CENTER);
 
-        // Panel izquierdo
         panelIzquierda = new JPanel(new BorderLayout());
         panelIzquierda.setBackground(new Color(241, 198, 177));
         panelIzquierda.setBorder(BorderFactory.createEmptyBorder(60, 60, 60, 60));
@@ -152,7 +150,6 @@ public class loginGUI extends JFrame {
         panelIzquierda.add(logoLabel, BorderLayout.NORTH);
         panelIzquierda.add(centroIzquierdaPanel, BorderLayout.CENTER);
 
-        // Panel derecho
         panelDerecha = new JPanel(new GridBagLayout());
         panelDerecha.setBackground(Color.WHITE);
         panelDerecha.setBorder(BorderFactory.createEmptyBorder(20, 80, 0, 80));
@@ -165,13 +162,11 @@ public class loginGUI extends JFrame {
         gbc.weightx = 1.0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        // Título LOGIN
         loginTitulo = new JLabel("LOGIN", SwingConstants.CENTER);
         loginTitulo.setFont(new Font("Arial", Font.BOLD, 28));
         loginTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
         panelDerecha.add(loginTitulo, gbc);
 
-        // Usuario
         usuarioLabel = new JLabel("Usuario");
         usuarioLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         panelDerecha.add(usuarioLabel, gbc);
@@ -184,7 +179,6 @@ public class loginGUI extends JFrame {
         panelDerecha.add(campoUsuario, gbc);
         panelDerecha.add(Box.createVerticalStrut(20), gbc);
 
-        // Contraseña
         passwordLabel = new JLabel("Contraseña");
         passwordLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         panelDerecha.add(passwordLabel, gbc);
@@ -196,15 +190,13 @@ public class loginGUI extends JFrame {
         ));
         panelDerecha.add(campoPassword, gbc);
 
-        // ¿Olvidaste tu contraseña?
         olvidoPasswordLabel = new JLabel("¿Olvidaste tu contraseña?", SwingConstants.CENTER);
         olvidoPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         olvidoPasswordLabel.setForeground(new Color(100, 100, 100));
         panelDerecha.add(olvidoPasswordLabel, gbc);
         panelDerecha.add(Box.createVerticalStrut(30), gbc);
 
-        // Botón
-        botonIngresar = new Boton("Ingresar",Boton.ButtonType.PRIMARY);
+        botonIngresar = new Boton("Ingresar", Boton.tipoBoton.PRIMARY);
         botonIngresar.setFont(new Font("Arial", Font.BOLD, 16));
         botonIngresar.setBackground(new Color(230, 108, 81));
         botonIngresar.setForeground(Color.BLACK);
@@ -259,7 +251,7 @@ public class loginGUI extends JFrame {
             for (Estudiantes estudiante : Controlador.getListaEstudiantes()) {
                 if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + estudiante.getNombre(), "ONLY_OK").setVisible(true);
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + estudiante, "ONLY_OK").setVisible(true);
                     ventana.dispose();
                     abrirVentanaPrincipalEstudiante();
                     return true;
@@ -270,7 +262,7 @@ public class loginGUI extends JFrame {
             for (Profesores profesor : Controlador.getListaProfesores()) {
                 if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + profesor.getNombre(), "ONLY_OK").setVisible(true);
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + profesor, "ONLY_OK").setVisible(true);
                     ventana.dispose();
                     abrirVentanaPrincipalProfesor();
                     return true;
@@ -280,7 +272,7 @@ public class loginGUI extends JFrame {
             for (Administradores admin : Controlador.getListaAdministradores()) {
                 if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(null,"Bienvenido","Bienvenido, " + admin.toString(),"ONLY_OK").setVisible(true);
+                    new CustomDialog(null,"Bienvenido","Bienvenido, " + admin,"ONLY_OK").setVisible(true);
                     ventana.dispose();
                     abrirVentanaPrincipalAdmin();
                     return true;
@@ -290,11 +282,12 @@ public class loginGUI extends JFrame {
             for (Tutores tutor : Controlador.getListaTutores()) {
                 if (tutor.getUsuario().equals(usuario) && tutor.getContrasena().equals(passwordHash)) {
 
-                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + tutor.getNombre(), "ONLY_OK").setVisible(true);
+                    new CustomDialog(ventana, "Bienvenido", "Bienvenido, " + tutor, "ONLY_OK").setVisible(true);
                     abrirVentanaPrincipalTutor();
                     return true;
                 }
             }
+
         }
         new CustomDialog(ventana, "Error", "Usuario o contraseña incorrectos", "ONLY_OK").setVisible(true);
         return false;

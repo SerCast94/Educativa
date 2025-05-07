@@ -21,8 +21,8 @@ public class ActualizarBecasAdmin extends JFrame {
     private GridBagConstraints gbc;
     private JLabel titulo;
     private JPanel panelBotones;
-    private JButton btnAceptar = new Boton("Actualizar", Boton.ButtonType.PRIMARY);
-    private JButton btnCancelar = new Boton("Cancelar", Boton.ButtonType.DELETE);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
+    private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private JLabel lblEstudiante = new JLabel("Estudiante: ");
     private JLabel lblTipoBeca = new JLabel("Tipo de Beca: ");
     private JLabel lblMonto = new JLabel("Monto: ");
@@ -75,9 +75,9 @@ public class ActualizarBecasAdmin extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        customizeComboBox(cmbEstudiantes);
-        customizeComboBox(cmbTipoBeca);
-        customizeComboBox(cmbEstadoBeca);
+        personalizarComboBox(cmbEstudiantes);
+        personalizarComboBox(cmbTipoBeca);
+        personalizarComboBox(cmbEstadoBeca);
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiantes, 1, 1);
