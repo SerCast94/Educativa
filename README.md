@@ -46,11 +46,11 @@ Ideal tanto para instituciones reales como para fines académicos o de desarroll
 
 ### Login
 
-![Login](docs/screenshots/dashboardScreenshot.png)
+![Login](docs/screenshots/loginScreenshot.png)
 
 ### Dashboard o Panel de mando
 
-![Dashboard](docs/screenshots/loginScreenshot.png)
+![Dashboard](docs/screenshots/dashboardScreenshot.png)
 
 ## 🤝 Contribuir
 
