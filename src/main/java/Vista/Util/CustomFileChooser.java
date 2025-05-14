@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * Clase personalizada para JFileChooser con un Look and Feel específico y colores personalizados.
  */
-public class CustomFileChooser {
+public class CustomFileChooser extends JFileChooser {
 
     /**
      * Aplica el Look and Feel Nimbus y personaliza los colores del UIManager.
@@ -29,14 +29,40 @@ public class CustomFileChooser {
     }
 
     /**
+     * Traduce los textos del JFileChooser al español.
+     */
+    public static void traducirCustomFileChooser(){
+        UIManager.put("FileChooser.approveButtonText", "Guardar");
+        UIManager.put("FileChooser.saveButtonText", "Guardar");
+        UIManager.put("FileChooser.saveDialogTitleText", "Guardar como");
+        UIManager.put("FileChooser.cancelButtonTitleText", "Cancelar");
+        UIManager.put("FileChooser.cancelButtonText", "Cancelar");
+        UIManager.put("FileChooser.lookInLabelText", "Buscar en:");
+        UIManager.put("FileChooser.fileNameLabelText", "Nombre de carpeta:");
+        UIManager.put("FileChooser.filesOfTypeLabelText", "Tipo de archivo:");
+        UIManager.put("FileChooser.upFolderToolTipText", "Subir un nivel");
+        UIManager.put("FileChooser.homeFolderToolTipText", "Carpeta personal");
+        UIManager.put("FileChooser.newFolderToolTipText", "Crear carpeta");
+        UIManager.put("FileChooser.listViewButtonToolTipText", "Vista de lista");
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", "Vista de detalles");
+        UIManager.put("FileChooser.fileNameHeaderText", "Nombre");
+        UIManager.put("FileChooser.fileSizeHeaderText", "Tamaño");
+        UIManager.put("FileChooser.fileTypeHeaderText", "Tipo");
+        UIManager.put("FileChooser.fileDateHeaderText", "Fecha de modificación");
+        UIManager.put("FileChooser.fileNameLabelText", "Nombre de carpeta:");
+        UIManager.put("FileChooser.folderNameLabelText", "Nombre de carpeta:");
+        UIManager.put("FileChooser.allFilesLabelText", "Todo");
+    }
+
+    /**
      * Método principal para crear el JFileChooser personalizado.
      */
-    public static JFileChooser createFileChooser(String dialogTitle, String approveButtonText) {
+    public static JFileChooser createFileChooser(String dialogTitle) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(dialogTitle);
-        fileChooser.setApproveButtonText(approveButtonText);
         fileChooser.setApproveButtonToolTipText("Guardar archivo seleccionado");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setAcceptAllFileFilterUsed(false);
         return fileChooser;
     }
 }

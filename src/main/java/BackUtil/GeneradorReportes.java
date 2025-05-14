@@ -44,6 +44,7 @@ public class GeneradorReportes {
 
         try {
             CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
@@ -59,9 +60,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser(
-                    "Seleccionar ubicación para guardar el boletín", "Guardar"
-            );
+            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Seleccionar ubicación para guardar el boletín" );
 
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
@@ -106,10 +105,9 @@ public class GeneradorReportes {
         }
 
         CustomFileChooser.applyNimbusLookAndFeel();
+        CustomFileChooser.traducirCustomFileChooser();
 
-        JFileChooser fileChooser = CustomFileChooser.createFileChooser(
-                "Seleccionar ubicación para guardar los boletines", "Seleccionar"
-        );
+        JFileChooser fileChooser = CustomFileChooser.createFileChooser("Seleccionar ubicación para guardar los boletines");
 
         int resultado = fileChooser.showSaveDialog(null);
         if (resultado != JFileChooser.APPROVE_OPTION) {
@@ -176,6 +174,7 @@ public class GeneradorReportes {
 
         try {
             CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaBeca.pdf"));
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
@@ -190,7 +189,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de beca", "Guardar");
+            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de beca");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();
@@ -225,6 +224,7 @@ public class GeneradorReportes {
 
         try {
             CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaConvalidacion.pdf"));
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
@@ -239,7 +239,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de convalidación", "Guardar");
+            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de convalidación");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();

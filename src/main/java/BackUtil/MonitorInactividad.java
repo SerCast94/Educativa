@@ -29,7 +29,7 @@ public class MonitorInactividad {
     }
 
     /**
-     * Configura el escuchador global de eventos del teclado y ratón.
+     * Configura el listener global de eventos del teclado y ratón.
      */
     private void configurarEscuchador() {
         listener = evento -> {
