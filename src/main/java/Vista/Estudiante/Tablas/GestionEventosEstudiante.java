@@ -6,6 +6,7 @@ import Mapeo.Eventos;
 import Vista.Estudiante.Anadir.FormularioEstudiantesEventoEstudiante;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEventoEstudiante;
 import Vista.Estudiante.VistaPrincipalEstudiante;
+import Vista.Tutor.VistaPrincipalTutor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 import javax.swing.*;
@@ -345,12 +346,20 @@ public class GestionEventosEstudiante extends JPanel {
                 for (EstudiantesEventos estudianteEvento : listaEstudiantesEventos) {
                     if (estudianteEvento.getEvento().equals(eventoSeleccionado)) {
                         Controlador.eliminarControladorEstudianteEvento(estudianteEvento);
-                    }else new CustomDialog(null, "Error", "No se pudo eliminar el evento.", "ONLY_OK").setVisible(true);
+                    }
                 }
                 Controlador.actualizarListaEstudiantesEventos();
 
-                VistaPrincipalEstudiante vistaPrincipalEstudiante = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
-                vistaPrincipalEstudiante.mostrarVistaEventos();
+                VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
+                if (vistaPrincipal != null) {
+                    vistaPrincipal.mostrarVistaEventos();
+                }else{
+                    VistaPrincipalTutor vistaPrincipalTutor = (VistaPrincipalTutor) VistaPrincipalTutor.getVistaPrincipal();
+                    if (vistaPrincipalTutor != null) {
+                        vistaPrincipalTutor.mostrarVistaEventos();
+                    }
+                }
+
                 new CustomDialog(null, "Evento Eliminado", "Inscripción eliminada correctamente.", "ONLY_OK").setVisible(true);
 
             } else {

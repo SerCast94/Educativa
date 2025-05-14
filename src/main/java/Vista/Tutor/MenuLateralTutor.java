@@ -1,5 +1,6 @@
 package Vista.Tutor;
 
+import Controlador.ControladorLogin;
 import Vista.Util.Boton;
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,9 @@ public class MenuLateralTutor extends JPanel {
     private Boton botonSuperior;
     private Boton botonInferior;
     private JPanel panelInferior;
+    private JLabel usuarioLogeado;
+    private JLabel estudianteGestionado;
+
 
     /**
      * Constructor de la clase MenuLateralTutor.
@@ -113,6 +117,22 @@ public class MenuLateralTutor extends JPanel {
             panelInferior.add(Box.createVerticalStrut(5));
             panelInferior.add(botonInferior);
         }
+
+        estudianteGestionado = new JLabel("Estudiante: " + ControladorLogin.estudianteLogeado);
+        estudianteGestionado.setFont(new Font("Arial", Font.PLAIN, 12));
+        estudianteGestionado.setForeground(new Color(0, 0, 0));
+        estudianteGestionado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelInferior.add(Box.createVerticalStrut(10));
+        panelInferior.add(estudianteGestionado);
+
+
+        usuarioLogeado = new JLabel("Usuario: " + ControladorLogin.tutorLogeado);
+        usuarioLogeado.setFont(new Font("Arial", Font.PLAIN, 12));
+        usuarioLogeado.setForeground(new Color(0, 0, 0));
+        usuarioLogeado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelInferior.add(Box.createVerticalStrut(10));
+        panelInferior.add(usuarioLogeado);
+
 
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);

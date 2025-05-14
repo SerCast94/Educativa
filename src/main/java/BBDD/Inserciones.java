@@ -2,12 +2,16 @@ package BBDD;
 
 import org.hibernate.Session;
 import Mapeo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Esta clase contiene métodos para insertar diferentes entidades en la base de datos.
  */
 
 public class Inserciones {
+
+    private static final Logger logger = LoggerFactory.getLogger(Inserciones.class);
 
     /**
      * Inserta un estudiante en la base de datos.
@@ -19,10 +23,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(estudiante);
         nuevaSesion.getTransaction().commit();
+        logger.info("Estudiante insertado: " + estudiante);
     }
 
     /**
-     * Inserta un tutor en la base de datos.
+     * Inserta un profesor en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param profesor    El objeto profesor a insertar.
@@ -31,6 +36,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(profesor);
         nuevaSesion.getTransaction().commit();
+        logger.info("Profesor insertado: " + profesor);
     }
 
     /**
@@ -43,6 +49,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(curso);
         nuevaSesion.getTransaction().commit();
+        logger.info("Curso insertado: " + curso.getNombre());
     }
 
     /**
@@ -55,6 +62,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(matricula);
         nuevaSesion.getTransaction().commit();
+        logger.info("El estudiante: "+ matricula.getEstudiante() + " ha sido matriculado en el curso: " + matricula.getCurso().getNombre());
     }
 
     /**
@@ -67,6 +75,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(asignatura);
         nuevaSesion.getTransaction().commit();
+        logger.info("Asignatura insertada: " + asignatura.getNombre());
     }
 
     /**
@@ -79,10 +88,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(asistencia);
         nuevaSesion.getTransaction().commit();
+        logger.info("El estudiante: " + asistencia.getEstudiante() + " no ha asistido a la clase el día " + asistencia.getFecha());
     }
 
     /**
-     * Inserta una asistencia en la base de datos.
+     * Inserta una beca en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param beca       El objeto Beca a insertar.
@@ -91,6 +101,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(beca);
         nuevaSesion.getTransaction().commit();
+        logger.info("Se ha aprobado una beca para el estudiante: " + beca.getEstudiante() + " con un importe de: " + beca.getMonto());
     }
 
     /**
@@ -103,10 +114,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(convalidacion);
         nuevaSesion.getTransaction().commit();
+        logger.info("El estudiante: " + convalidacion.getEstudiante() + " ha solicitado una convalidación de la asignatura: " + convalidacion.getAsignaturaOriginal().getNombre());
     }
 
     /**
-     * Inserta un curso en la base de datos.
+     * Inserta un curso-asignatura en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param cursosAsignaturas El objeto CursosAsignaturas a insertar.
@@ -115,10 +127,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(cursosAsignaturas);
         nuevaSesion.getTransaction().commit();
+        logger.info("Curso Asignatura insertado: " + cursosAsignaturas);
     }
 
     /**
-     * Inserta un administrador en la base de datos.
+     * Inserta un estudianteseventos en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param estudiantesEventos El objeto EstudiantesEventos a insertar.
@@ -127,10 +140,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(estudiantesEventos);
         nuevaSesion.getTransaction().commit();
+        logger.info("Estudiantes Eventos insertado: " + estudiantesEventos);
     }
 
     /**
-     * Inserta un administrador en la base de datos.
+     * Inserta un evento en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param eventos       El objeto Eventos a insertar.
@@ -139,10 +153,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(eventos);
         nuevaSesion.getTransaction().commit();
+        logger.info("Se ha creado el evento: " + eventos.getNombre());
     }
 
     /**
-     * Inserta un administrador en la base de datos.
+     * Inserta una extraescolar en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param extraescolares El objeto Extraescolares a insertar.
@@ -151,10 +166,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(extraescolares);
         nuevaSesion.getTransaction().commit();
+        logger.info("Se ha reservado: " + extraescolares.getPista() + " para el día: " + extraescolares.getFechaReserva() + " a la hora: " + extraescolares.getHora());
     }
 
     /**
-     * Inserta un administrador en la base de datos.
+     * Inserta un historial académico en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param historialAcademico El objeto HistorialAcademico a insertar.
@@ -163,10 +179,11 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(historialAcademico);
         nuevaSesion.getTransaction().commit();
+        logger.info("El estudiante " + historialAcademico.getEstudiante() + " en la asignatura de " + historialAcademico.getAsignatura().getNombre() + "tiene una nota de " + historialAcademico.getNotaFinal());
     }
 
     /**
-     * Inserta un administrador en la base de datos.
+     * Inserta un horario en la base de datos.
      *
      * @param nuevaSesion La sesión de Hibernate.
      * @param horarios       El objeto Horarios a insertar.
@@ -175,6 +192,7 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(horarios);
         nuevaSesion.getTransaction().commit();
+        logger.info("Horario insertado: " + horarios);
     }
 
     /**
@@ -187,5 +205,6 @@ public class Inserciones {
         nuevaSesion.beginTransaction();
         nuevaSesion.save(tutores);
         nuevaSesion.getTransaction().commit();
+        logger.info("Tutor insertado: " + tutores);
     }
 }

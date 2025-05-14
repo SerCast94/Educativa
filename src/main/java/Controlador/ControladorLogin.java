@@ -4,6 +4,9 @@ import Mapeo.Estudiantes;
 import Mapeo.Profesores;
 import Mapeo.Administradores;
 import Mapeo.Tutores;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -13,6 +16,7 @@ import java.util.List;
  */
 public class ControladorLogin {
 
+    private static final Logger logger = LoggerFactory.getLogger(ControladorLogin.class);
     public static Estudiantes estudianteLogeado;
     public static Profesores profesorLogeado;
     public static Administradores adminLogeado;
@@ -37,6 +41,7 @@ public class ControladorLogin {
         for (Estudiantes estudiante : listaEstudiantes) {
             if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(password)) {
                 estudianteLogeado = estudiante;
+                logger.info("Estudiante Logeado: " + estudianteLogeado);
                 return 1;
             }
         }
@@ -47,6 +52,7 @@ public class ControladorLogin {
         for (Profesores profesor : listaProfesores) {
             if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(password)) {
                 profesorLogeado = profesor;
+                logger.info("Profesor Logeado: " + profesorLogeado);
                 return 2;
             }
         }
@@ -57,6 +63,7 @@ public class ControladorLogin {
         for (Administradores admin : listaAdministradores) {
             if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(password)) {
                 adminLogeado = admin;
+                logger.info("Administrador Logeado: " + adminLogeado);
                 return 3;
             }
         }
@@ -67,11 +74,13 @@ public class ControladorLogin {
         for (Tutores tutor : listaTutores) {
             if (tutor.getUsuario().equals(usuario) && tutor.getContrasena().equals(password)) {
                 tutorLogeado = tutor;
+                logger.info("Tutor Logeado: " + tutorLogeado);
                 return 4;
             }
         }
 
         // Credenciales incorrectas
+        logger.warn("Credenciales incorrectas para el usuario: " + usuario);
         return 0;
     }
 

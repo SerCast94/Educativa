@@ -1,6 +1,8 @@
 package Vista.Admin;
 
 import Controlador.ControladorDashBoard;
+import Controlador.ControladorLogin;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

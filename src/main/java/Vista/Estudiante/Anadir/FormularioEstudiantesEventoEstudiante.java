@@ -5,6 +5,7 @@ import Mapeo.Estudiantes;
 import Mapeo.Eventos;
 import Mapeo.EstudiantesEventos;
 import Vista.Estudiante.VistaPrincipalEstudiante;
+import Vista.Tutor.VistaPrincipalTutor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 import javax.swing.*;
@@ -207,7 +208,15 @@ public class FormularioEstudiantesEventoEstudiante extends JFrame {
                 actualizarListaEstudiantesEventos();
 
                 VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEventos();
+                if (vistaPrincipal != null) {
+                    vistaPrincipal.mostrarVistaEventos();
+                }else{
+                    VistaPrincipalTutor vistaPrincipalTutor = (VistaPrincipalTutor) VistaPrincipalTutor.getVistaPrincipal();
+                    if (vistaPrincipalTutor != null) {
+                        vistaPrincipalTutor.mostrarVistaEventos();
+                    }
+                }
+
 
                 new CustomDialog(null, "Éxito", "Inscripción en evento realizada correctamente.", "ONLY_OK").setVisible(true);
                 dispose();

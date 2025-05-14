@@ -28,7 +28,7 @@ import static Controlador.ControladorLogin.tutorLogeado;
  * Esta clase se encarga de crear la ventana de inicio de sesión y gestionar
  * los eventos relacionados con el inicio de sesión.
  */
-public class loginGUI extends JFrame {
+public class LoginGUI extends JFrame {
     private JFrame ventana;
     private JPanel panelPrincipal;
     private JPanel panelIzquierda;
@@ -53,7 +53,7 @@ public class loginGUI extends JFrame {
      * Constructor de la clase loginGUI.
      * Inicializa la ventana de inicio de sesión y carga las listas necesarias.
      */
-    public loginGUI() {
+    public LoginGUI() {
         controlador = new Controlador();
         controlador.cargarListas();
         controladorLogin = new ControladorLogin();
@@ -246,8 +246,8 @@ public class loginGUI extends JFrame {
         String usuario = campoUsuario.getText();
         String password = new String(campoPassword.getPassword());
         String passwordHash = encryptMD5(password);
-
-        if (getControladorLogin().comprobarLogin(usuario, passwordHash) == 1) {
+        int rolUsuario = getControladorLogin().comprobarLogin(usuario, passwordHash);
+        if (rolUsuario == 1) {
             for (Estudiantes estudiante : Controlador.getListaEstudiantes()) {
                 if (estudiante.getUsuario().equals(usuario) && estudiante.getContrasena().equals(passwordHash)) {
 
@@ -257,7 +257,7 @@ public class loginGUI extends JFrame {
                     return true;
                 }
             }
-        }else if (getControladorLogin().comprobarLogin(usuario, passwordHash) == 2) {
+        }else if (rolUsuario == 2) {
 
             for (Profesores profesor : Controlador.getListaProfesores()) {
                 if (profesor.getUsuario().equals(usuario) && profesor.getContrasena().equals(passwordHash)) {
@@ -268,7 +268,7 @@ public class loginGUI extends JFrame {
                     return true;
                 }
             }
-        }else if (getControladorLogin().comprobarLogin(usuario, passwordHash) == 3) {
+        }else if (rolUsuario == 3) {
             for (Administradores admin : Controlador.getListaAdministradores()) {
                 if (admin.getUsuario().equals(usuario) && admin.getContrasena().equals(passwordHash)) {
 
@@ -278,7 +278,7 @@ public class loginGUI extends JFrame {
                     return true;
                 }
             }
-        }else if (getControladorLogin().comprobarLogin(usuario, passwordHash) == 4) {
+        }else if (rolUsuario == 4) {
             for (Tutores tutor : Controlador.getListaTutores()) {
                 if (tutor.getUsuario().equals(usuario) && tutor.getContrasena().equals(passwordHash)) {
 

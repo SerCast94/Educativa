@@ -1,5 +1,6 @@
 package Vista.Estudiante;
 
+import Controlador.ControladorLogin;
 import Vista.Util.Boton;
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,8 @@ public class MenuLateralEstudiante extends JPanel {
     private JPanel panelInferior;
     private Boton botonModificarPerfil;
     private ImageIcon iconoInferior;
+    private JLabel usuarioLogeado;
+
 
     /**
      * Constructor de la clase MenuLateralEstudiante
@@ -110,6 +113,13 @@ public class MenuLateralEstudiante extends JPanel {
 
         panelInferior.add(Box.createVerticalStrut(10));
         panelInferior.add(botonModificarPerfil);
+
+        usuarioLogeado = new JLabel("Usuario: " + ControladorLogin.estudianteLogeado);
+        usuarioLogeado.setFont(new Font("Arial", Font.PLAIN, 12));
+        usuarioLogeado.setForeground(new Color(0, 0, 0));
+        usuarioLogeado.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelInferior.add(Box.createVerticalStrut(10));
+        panelInferior.add(usuarioLogeado);
 
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);

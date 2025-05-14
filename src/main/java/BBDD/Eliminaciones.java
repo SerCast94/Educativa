@@ -3,12 +3,16 @@ package BBDD;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import Mapeo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clase que contiene métodos para eliminar diferentes entidades en la base de datos.
  */
 
 public class Eliminaciones {
+
+    private static final Logger logger = LoggerFactory.getLogger(Eliminaciones.class);
 
     /**
      * Elimina un tutor de la base de datos.
@@ -23,6 +27,7 @@ public class Eliminaciones {
             session.delete(tutorEnSesion);
         }
         transaction.commit();
+        logger.info("Tutor eliminado: " + tutor);
     }
 
     /**
@@ -38,6 +43,7 @@ public class Eliminaciones {
             session.delete(profesorEnSesion);
         }
         transaction.commit();
+        logger.info("Profesor eliminado: " + profesor);
     }
 
     /**
@@ -53,6 +59,7 @@ public class Eliminaciones {
             session.delete(extraescolarEnSesion);
         }
         transaction.commit();
+        logger.info("Se ha eliminado la reserva: " + extraescolar.getPista() + " para el día: " + extraescolar.getFechaReserva() + " a la hora: " + extraescolar.getHora());
     }
 
     /**
@@ -68,6 +75,7 @@ public class Eliminaciones {
             session.delete(cursoEnSesion);
         }
         transaction.commit();
+        logger.info("Curso eliminado: " + curso.getNombre());
     }
 
     /**
@@ -83,6 +91,7 @@ public class Eliminaciones {
             session.delete(asignaturaEnSesion);
         }
         transaction.commit();
+        logger.info("Asignatura eliminada: " + asignatura.getNombre());
     }
 
     /**
@@ -98,6 +107,7 @@ public class Eliminaciones {
             session.delete(estudianteEnSesion);
         }
         transaction.commit();
+        logger.info("Estudiante eliminado: " + estudiante);
     }
 
     /**
@@ -113,6 +123,7 @@ public class Eliminaciones {
             session.delete(matriculaEnSesion);
         }
         transaction.commit();
+        logger.info("Se ha borrado la matricula del estudiante: "+ matricula.getEstudiante() + " en el curso: " + matricula.getCurso().getNombre());
     }
 
     /**
@@ -128,6 +139,7 @@ public class Eliminaciones {
             session.delete(historialEnSesion);
         }
         transaction.commit();
+        logger.info("Se ha borrado la nota del estudiante " + historial.getEstudiante() + " en la asignatura de " + historial.getAsignatura().getNombre() + "donde tenía una nota de " + historial.getNotaFinal());
     }
 
     /**
@@ -143,6 +155,8 @@ public class Eliminaciones {
             session.delete(asistenciaEnSesion);
         }
         transaction.commit();
+        logger.info("Se ha eliminado la asistencia del estudiante: " + asistencia.getEstudiante() + " del día " + asistencia.getFecha());
+
     }
 
     /**
@@ -158,6 +172,7 @@ public class Eliminaciones {
             session.delete(eventoEnSesion);
         }
         transaction.commit();
+        logger.info("Evento eliminado: " + evento.getNombre());
     }
 
     /**
@@ -183,6 +198,7 @@ public class Eliminaciones {
         }
 
         transaction.commit();
+        logger.info("Inscripción eliminada del estudiante " + estudianteEvento.getEstudiante() + " para el evento " + estudianteEvento.getEvento().getNombre());
     }
 
     /**
@@ -198,6 +214,7 @@ public class Eliminaciones {
             session.delete(horarioEnSesion);
         }
         transaction.commit();
+        logger.info("Horario eliminado: " + horario);
     }
 
     /**
@@ -213,6 +230,7 @@ public class Eliminaciones {
             session.delete(becaEnSesion);
         }
         transaction.commit();
+        logger.info("Beca eliminada: " + beca.getEstudiante() + " con un importe de: " + beca.getMonto());
     }
 
     /**
@@ -228,6 +246,7 @@ public class Eliminaciones {
             session.delete(convalidacionEnSesion);
         }
         transaction.commit();
+        logger.info("Convalidación eliminada: " + convalidacion.getEstudiante() + " para la asignatura: " + convalidacion.getAsignaturaOriginal().getNombre());
     }
 
     /**
@@ -243,5 +262,6 @@ public class Eliminaciones {
             session.delete(administradorEnSesion);
         }
         transaction.commit();
+        logger.info("Administrador eliminado: " + administrador);
     }
 }

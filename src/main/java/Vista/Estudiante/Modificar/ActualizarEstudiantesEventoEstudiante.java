@@ -5,6 +5,7 @@ import Mapeo.Estudiantes;
 import Mapeo.EstudiantesEventos;
 import Mapeo.Eventos;
 import Vista.Estudiante.VistaPrincipalEstudiante;
+import Vista.Tutor.VistaPrincipalTutor;
 import Vista.Util.Boton;
 import Vista.Util.CustomDialog;
 import javax.swing.*;
@@ -238,8 +239,16 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
                 }
 
                 actualizarListaEstudiantesEventos();
+
                 VistaPrincipalEstudiante vistaPrincipal = (VistaPrincipalEstudiante) VistaPrincipalEstudiante.getVistaPrincipal();
-                vistaPrincipal.mostrarVistaEventos();
+                if (vistaPrincipal != null) {
+                    vistaPrincipal.mostrarVistaEventos();
+                }else{
+                    VistaPrincipalTutor vistaPrincipalTutor = (VistaPrincipalTutor) VistaPrincipalTutor.getVistaPrincipal();
+                    if (vistaPrincipalTutor != null) {
+                        vistaPrincipalTutor.mostrarVistaEventos();
+                    }
+                }
                 dispose();
 
             } catch (Exception ex) {

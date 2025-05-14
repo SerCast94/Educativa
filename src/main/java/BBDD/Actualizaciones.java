@@ -2,12 +2,16 @@ package BBDD;
 
 import org.hibernate.Session;
 import Mapeo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clase que contiene métodos para actualizar diferentes entidades en la base de datos.
  */
 
 public class Actualizaciones {
+
+    private static final Logger logger = LoggerFactory.getLogger(Actualizaciones.class);
 
     /**
      * Actualiza un tutor en la base de datos.
@@ -19,6 +23,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(tutorActualizado);
         sesion.getTransaction().commit();
+        logger.info("Tutor actualizado: " + tutorActualizado);
     }
 
     /**
@@ -32,6 +37,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(profesorActualizado);
         sesion.getTransaction().commit();
+        logger.info("Profesor actualizado: " + profesorActualizado);
     }
 
     /**
@@ -45,6 +51,8 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(extraescolarActualizado);
         sesion.getTransaction().commit();
+        logger.info("Se ha actualizado la reserva: " + extraescolarActualizado.getPista() + " para el día: " + extraescolarActualizado.getFechaReserva() + " a la hora: " + extraescolarActualizado.getHora());
+
     }
 
     /**
@@ -58,6 +66,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(cursoActualizado);
         sesion.getTransaction().commit();
+        logger.info("Curso actualizado: " + cursoActualizado.getNombre());
     }
 
     /**
@@ -71,6 +80,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(asignaturaActualizada);
         sesion.getTransaction().commit();
+        logger.info("Asignatura actualizada: " + asignaturaActualizada.getNombre());
     }
 
     /**
@@ -84,6 +94,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(estudianteActualizado);
         sesion.getTransaction().commit();
+        logger.info("Estudiante actualizado: " + estudianteActualizado);
     }
 
     /**
@@ -97,6 +108,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(matriculaActualizada);
         sesion.getTransaction().commit();
+        logger.info("Se ha actualizado la matricula del estudiante: "+ matriculaActualizada.getEstudiante() + " en el curso: " + matriculaActualizada.getCurso().getNombre());
     }
 
     /**
@@ -110,6 +122,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(historialActualizado);
         sesion.getTransaction().commit();
+        logger.info("Se ha actualizado la nota del estudiante " + historialActualizado.getEstudiante() + " en la asignatura de " + historialActualizado.getAsignatura().getNombre() + "donde tenía una nota de " + historialActualizado.getNotaFinal());
     }
 
     /**
@@ -123,6 +136,8 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(asistenciaActualizada);
         sesion.getTransaction().commit();
+        logger.info("Se ha actualizado la asistencia del estudiante: " + asistenciaActualizada.getEstudiante() + " del día " + asistenciaActualizada.getFecha());
+
     }
 
     /**
@@ -136,6 +151,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(eventoActualizado);
         sesion.getTransaction().commit();
+        logger.info("Se ha actualizado el evento: " + eventoActualizado.getNombre());
     }
 
     /**
@@ -149,6 +165,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(estudianteEventoActualizado);
         sesion.getTransaction().commit();
+        logger.info("Inscripción actualizada del estudiante " + estudianteEventoActualizado.getEstudiante() + " para el evento " + estudianteEventoActualizado.getEvento().getNombre());
     }
 
     /**
@@ -162,6 +179,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(horarioActualizado);
         sesion.getTransaction().commit();
+        logger.info("Horario actualizado: " + horarioActualizado);
     }
 
     /**
@@ -175,6 +193,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(becaActualizada);
         sesion.getTransaction().commit();
+        logger.info("Beca actualizada: " + becaActualizada.getEstudiante() + " con un importe de: " + becaActualizada.getMonto());
     }
 
     /**
@@ -188,6 +207,8 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(convalidacionActualizada);
         sesion.getTransaction().commit();
+        logger.info("Convalidación actualizada: " + convalidacionActualizada.getEstudiante() + " para la asignatura: " + convalidacionActualizada.getAsignaturaOriginal().getNombre());
+
     }
 
     /**
@@ -201,6 +222,7 @@ public class Actualizaciones {
         sesion.beginTransaction();
         sesion.merge(administradorActualizado);
         sesion.getTransaction().commit();
+        logger.info("Administrador actualizado: " + administradorActualizado);
     }
 
 }

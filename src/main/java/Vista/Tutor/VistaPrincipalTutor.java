@@ -1,14 +1,20 @@
 package Vista.Tutor;
 
+import BackUtil.MonitorInactividad;
 import Vista.Estudiante.DashboardEstudiante;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEstudiante;
 import Vista.Estudiante.Tablas.*;
 import Vista.Tutor.Modificar.ActualizarTutoresTutor;
 import Vista.Util.CustomDialog;
+import Vista.LoginGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import static Controlador.ControladorLogin.estudianteLogeado;
 import static Controlador.ControladorLogin.tutorLogeado;
 
@@ -20,6 +26,8 @@ public class VistaPrincipalTutor extends JFrame {
     private MenuLateralTutor menu;
     private JPanel contentPanel;
     private static VistaPrincipalTutor instancia;
+    private MonitorInactividad temporizadorInactividad;
+
 
     /**
      * Constructor de la clase VistaPrincipalTutor.
@@ -42,8 +50,32 @@ public class VistaPrincipalTutor extends JFrame {
         mostrarVistaDashboardEstudiante();
         instancia = this;
         setVisible(true);
+        initEventos();
     }
 
+    /**
+     * Método que inicializa los eventos, en concreto volver a la ventana de login al cerrar
+     * y manejar la inactividad del usuario.
+     */
+    void initEventos(){
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    new LoginGUI();
+                });
+            }
+        });
+
+        temporizadorInactividad = new MonitorInactividad(2 * 60 * 1000, () -> {
+            SwingUtilities.invokeLater(() -> {
+                temporizadorInactividad.detener();
+                new CustomDialog(null, "Inactividad", "Has estado inactivo durante 2 minutos. Se cerrará la sesión.", "ONLY_OK").setVisible(true);
+                temporizadorInactividad.detener();
+                dispose();
+            });
+        });
+    }
     /**
      * Método que devuelve la instancia de la ventana principal.
      * @return instancia de VistaPrincipalTutor.
