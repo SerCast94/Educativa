@@ -28,7 +28,7 @@ Ideal tanto para instituciones reales como para fines académicos o de desarroll
 - Maven
 - Hibernate ORM
 - MySQL
-- FlatLaf (diseño de interfaz)
+- JavaSwing (diseño de interfaz)
 - LGoodDatePicker / JCalendar (selección de fechas)
 - Apache PDFBox (generación de PDFs)
 - JNA (integración con librerías nativas)
