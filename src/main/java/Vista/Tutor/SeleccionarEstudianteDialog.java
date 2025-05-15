@@ -131,6 +131,7 @@ public class SeleccionarEstudianteDialog extends JDialog {
         if (seleccionado != null) {
             estudianteSeleccionado = seleccionado;
             setEstudianteLogeado(seleccionado);
+
             dispose();
         } else {
             new CustomDialog(null, "Advertencia", "Debe seleccionar un estudiante.", "ONLY_OK").setVisible(true);

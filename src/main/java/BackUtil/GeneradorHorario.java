@@ -14,7 +14,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Clase que genera un horario en formato XML y HTML
@@ -32,11 +31,11 @@ public class GeneradorHorario {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.aplicarEstiloFileChooser();
 
             CustomFileChooser.traducirCustomFileChooser();
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Selecciona dónde guardar el horario");
+            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
 
             int resultado = fileChooser.showSaveDialog(null);
 
@@ -89,10 +88,10 @@ public class GeneradorHorario {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Selecciona dónde guardar el horario");
+            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
             int resultado = fileChooser.showSaveDialog(null);
 
             if (resultado == JFileChooser.APPROVE_OPTION) {

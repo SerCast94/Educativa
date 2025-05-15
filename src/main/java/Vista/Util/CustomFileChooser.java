@@ -12,7 +12,7 @@ public class CustomFileChooser extends JFileChooser {
     /**
      * Aplica el Look and Feel Nimbus y personaliza los colores del UIManager.
      */
-    public static void applyNimbusLookAndFeel() {
+    public static void aplicarEstiloFileChooser() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 
@@ -57,9 +57,9 @@ public class CustomFileChooser extends JFileChooser {
     /**
      * Método principal para crear el JFileChooser personalizado.
      */
-    public static JFileChooser createFileChooser(String dialogTitle) {
+    public static JFileChooser crearFileChooser(String titulo) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle(dialogTitle);
+        fileChooser.setDialogTitle(titulo);
         fileChooser.setApproveButtonToolTipText("Guardar archivo seleccionado");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);

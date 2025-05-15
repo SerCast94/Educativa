@@ -333,6 +333,7 @@ public class LoginGUI extends JFrame {
             dispose();
         } else {
             new CustomDialog(ventana, "Advertencia", "Debe seleccionar un estudiante para continuar.", "ONLY_OK").setVisible(true);
+            new LoginGUI();
         }
     }
 }

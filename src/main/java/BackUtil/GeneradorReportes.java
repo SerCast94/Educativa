@@ -43,7 +43,7 @@ public class GeneradorReportes {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
@@ -60,7 +60,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Seleccionar ubicación para guardar el boletín" );
+            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar el boletín" );
 
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
@@ -104,14 +104,19 @@ public class GeneradorReportes {
             return;
         }
 
-        CustomFileChooser.applyNimbusLookAndFeel();
+        CustomFileChooser.aplicarEstiloFileChooser();
         CustomFileChooser.traducirCustomFileChooser();
 
-        JFileChooser fileChooser = CustomFileChooser.createFileChooser("Seleccionar ubicación para guardar los boletines");
+        JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar los boletines");
 
         int resultado = fileChooser.showSaveDialog(null);
+
         if (resultado != JFileChooser.APPROVE_OPTION) {
-            new CustomDialog(null, "Error", "No se seleccionó ninguna ubicación. Operación cancelada.", "ONLY_OK").setVisible(true);
+            try {
+                UIManager.setLookAndFeel(lookAndFeelActual);
+            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
             return;
         }
 
@@ -120,6 +125,11 @@ public class GeneradorReportes {
 
         if (!directorioCurso.exists() && !directorioCurso.mkdirs()) {
             new CustomDialog(null, "Error", "No se pudo crear la carpeta para el curso.", "ONLY_OK").setVisible(true);
+            try {
+                UIManager.setLookAndFeel(lookAndFeelActual);
+            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
             return;
         }
 
@@ -173,7 +183,7 @@ public class GeneradorReportes {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaBeca.pdf"));
@@ -189,7 +199,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de beca");
+            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de beca");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();
@@ -223,7 +233,7 @@ public class GeneradorReportes {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
-            CustomFileChooser.applyNimbusLookAndFeel();
+            CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
             PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaConvalidacion.pdf"));
@@ -239,7 +249,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.createFileChooser("Guardar certificado de convalidación");
+            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de convalidación");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();

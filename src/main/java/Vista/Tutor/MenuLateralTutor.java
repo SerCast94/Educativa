@@ -26,6 +26,8 @@ public class MenuLateralTutor extends JPanel {
     private JPanel panelInferior;
     private JLabel usuarioLogeado;
     private JLabel estudianteGestionado;
+    private JPanel usuarioPanel;
+    private JPanel estudiantePanel;
 
 
     /**
@@ -107,9 +109,9 @@ public class MenuLateralTutor extends JPanel {
             botonInferior = new Boton(opcion[0], Boton.tipoBoton.PRIMARY);
             botonInferior.setIcon(iconoInferior);
             botonInferior.setAlignmentX(Component.CENTER_ALIGNMENT);
-            botonInferior.setPreferredSize(new Dimension(230, 40));
-            botonInferior.setMinimumSize(new Dimension(230, 40));
-            botonInferior.setMaximumSize(new Dimension(230, 40));
+            botonInferior.setPreferredSize(new Dimension(260, 40));
+            botonInferior.setMinimumSize(new Dimension(260, 40));
+            botonInferior.setMaximumSize(new Dimension(260, 40));
             botonInferior.setHorizontalAlignment(SwingConstants.LEFT);
             botonInferior.setActionCommand(opcion[0]);
             botonInferior.addActionListener(listener);
@@ -118,24 +120,36 @@ public class MenuLateralTutor extends JPanel {
             panelInferior.add(botonInferior);
         }
 
-        estudianteGestionado = new JLabel("Estudiante: " + ControladorLogin.estudianteLogeado);
+        estudianteGestionado = new JLabel(" Estudiante: " + ControladorLogin.estudianteLogeado);
         estudianteGestionado.setFont(new Font("Arial", Font.PLAIN, 12));
         estudianteGestionado.setForeground(new Color(0, 0, 0));
-        estudianteGestionado.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        estudiantePanel = new JPanel(new BorderLayout());
+        estudiantePanel.setOpaque(false);
+        estudiantePanel.setMaximumSize(new Dimension(250, 20));
+        estudiantePanel.add(estudianteGestionado, BorderLayout.WEST);
         panelInferior.add(Box.createVerticalStrut(10));
-        panelInferior.add(estudianteGestionado);
+        panelInferior.add(estudiantePanel);
 
-
-        usuarioLogeado = new JLabel("Usuario: " + ControladorLogin.tutorLogeado);
+        usuarioLogeado = new JLabel(" Usuario: " + ControladorLogin.tutorLogeado);
         usuarioLogeado.setFont(new Font("Arial", Font.PLAIN, 12));
         usuarioLogeado.setForeground(new Color(0, 0, 0));
-        usuarioLogeado.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        usuarioPanel = new JPanel(new BorderLayout());
+        usuarioPanel.setOpaque(false);
+        usuarioPanel.setMaximumSize(new Dimension(250, 20));
+        usuarioPanel.add(usuarioLogeado, BorderLayout.WEST);
         panelInferior.add(Box.createVerticalStrut(10));
-        panelInferior.add(usuarioLogeado);
+        panelInferior.add(usuarioPanel);
+
 
 
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);
         add(panelInferior, BorderLayout.SOUTH);
+    }
+
+    public void actualizarEstudianteGestionado(String nuevoEstudiante) {
+        estudianteGestionado.setText(" Estudiante: " + nuevoEstudiante);
     }
 }

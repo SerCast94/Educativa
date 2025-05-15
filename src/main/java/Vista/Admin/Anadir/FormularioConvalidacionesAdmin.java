@@ -54,7 +54,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();
@@ -74,8 +74,17 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         gbc.gridwidth = 1;
 
         personalizarComboBox(cmbEstudiante);
+        cmbEstudiante.setPreferredSize(new Dimension(200, cmbEstudiante.getPreferredSize().height));
         personalizarComboBox(cmbAsignaturaOriginal);
+        cmbAsignaturaOriginal.setPreferredSize(new Dimension(200, cmbAsignaturaOriginal.getPreferredSize().height));
         personalizarComboBox(cmbEstado);
+        cmbEstado.setPreferredSize(new Dimension(200, cmbEstado.getPreferredSize().height));
+
+        setBordeNaranja(txtComentarios);
+        txtComentarios.setPreferredSize(new Dimension(200, txtComentarios.getPreferredSize().height));
+
+        EspaciadoEnDatePicker(datePickerConvalidacion);
+        datePickerConvalidacion.setPreferredSize(new Dimension(200, datePickerConvalidacion.getPreferredSize().height));
 
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
@@ -84,7 +93,6 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         agregarComponente(cmbAsignaturaOriginal, 2, 1);
 
         agregarComponente(lblFecha, 3, 0);
-        EspaciadoEnDatePicker(datePickerConvalidacion);
         agregarComponente(datePickerConvalidacion, 3, 1);
 
         agregarComponente(lblEstado, 4, 0);
@@ -96,6 +104,8 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
         panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        btnAceptar.setPreferredSize(new Dimension(100, 40));
+        btnCancelar.setPreferredSize(new Dimension(100, 40));
         panelBotones.add(btnAceptar);
         panelBotones.add(btnCancelar);
 
@@ -106,6 +116,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
 
         setVisible(true);
     }
+
 
     /**
      * Método para inicializar los eventos de los botones.

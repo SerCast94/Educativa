@@ -34,7 +34,7 @@ public class VistaPrincipalEstudiante extends JFrame {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         contentPanel = new JPanel(new BorderLayout());
 

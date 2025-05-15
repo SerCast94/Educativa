@@ -25,6 +25,7 @@ public class MenuLateralAdmin extends JPanel {
     private Boton botonModificarPerfil;
     private ImageIcon iconoInferior;
     private JLabel usuarioLogeado;
+    private JPanel usuarioPanel;
 
     /**
      * Constructor de la clase MenuLateralAdmin.
@@ -122,9 +123,14 @@ public class MenuLateralAdmin extends JPanel {
         usuarioLogeado = new JLabel("Usuario: " + ControladorLogin.adminLogeado);
         usuarioLogeado.setFont(new Font("Arial", Font.PLAIN, 12));
         usuarioLogeado.setForeground(new Color(0, 0, 0));
-        usuarioLogeado.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        usuarioPanel = new JPanel(new BorderLayout());
+        usuarioPanel.setOpaque(false);
+        usuarioPanel.setMaximumSize(new Dimension(250, 20));
+        usuarioPanel.add(usuarioLogeado, BorderLayout.WEST);
+
         panelInferior.add(Box.createVerticalStrut(10));
-        panelInferior.add(usuarioLogeado);
+        panelInferior.add(usuarioPanel);
 
         add(panelLogo, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);

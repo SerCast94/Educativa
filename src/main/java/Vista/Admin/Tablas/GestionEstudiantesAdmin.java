@@ -335,7 +335,7 @@ public class GestionEstudiantesAdmin extends JPanel {
                     estudiante.getTelefono(),
                     estudiante.getEmail(),
                     estudiante.getFechaMatricula().toString(),
-                    estudiante.getTutor().getNombre() + " " + estudiante.getTutor().getApellido(),
+                    estudiante.getTutor(),
                     estudiante.getUsuario(),
                     estudiante.getEstado(),
                     estudiante

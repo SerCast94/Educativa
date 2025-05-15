@@ -1,6 +1,8 @@
 package Vista.Tutor;
 
 import BackUtil.MonitorInactividad;
+import Controlador.ControladorLogin;
+import Mapeo.Estudiantes;
 import Vista.Estudiante.DashboardEstudiante;
 import Vista.Estudiante.Modificar.ActualizarEstudiantesEstudiante;
 import Vista.Estudiante.Tablas.*;
@@ -39,7 +41,7 @@ public class VistaPrincipalTutor extends JFrame {
         setTitle("Colegio Salesiano San Francisco de Sales - EDUCATIVA");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         contentPanel = new JPanel(new BorderLayout());
 
@@ -151,7 +153,10 @@ public class VistaPrincipalTutor extends JFrame {
         SeleccionarEstudianteDialog dialog = new SeleccionarEstudianteDialog(tutorLogeado);
         dialog.setModal(true);
         dialog.setVisible(true);
+
+        menu.actualizarEstudianteGestionado(ControladorLogin.estudianteLogeado.toString());
         mostrarVistaDashboardEstudiante();
+
         new CustomDialog(null, "Perfil Modificado", "El perfil del estudiante ha sido modificado correctamente", "OK_CANCEL");
     }
 
