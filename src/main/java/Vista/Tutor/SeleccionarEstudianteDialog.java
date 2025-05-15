@@ -41,50 +41,41 @@ public class SeleccionarEstudianteDialog extends JDialog {
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
-        setSize(400, 200);
+        setSize(400, 220);
         setTitle("Seleccionar Estudiante");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         panel = getContentPane();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(new Color(251, 234, 230));
-        panel.setLayout(new GridBagLayout());
-        gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        ((JComponent) panel).setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
         lblTitulo = new JLabel("Seleccione un Estudiante", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
-        lblTitulo.setForeground(new Color(70, 70, 70));
-        gbc.gridwidth = 2;
-        agregarComponente(lblTitulo, 0, 0);
-        gbc.gridwidth = 1;
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTitulo.setForeground(new Color(50, 50, 50));
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(lblTitulo);
+        panel.add(Box.createVerticalStrut(15));
 
         personalizarComboBox(cmbEstudiantes);
         setBordeNaranja(cmbEstudiantes);
-        agregarComponente(cmbEstudiantes, 1, 0);
+        cmbEstudiantes.setMaximumSize(new Dimension(250, 35));
+        cmbEstudiantes.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(cmbEstudiantes);
+        panel.add(Box.createVerticalStrut(20));
 
-        panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelBotones = new JPanel();
+        panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 0));
         panelBotones.setBackground(new Color(251, 234, 230));
-        btnAceptar.setPreferredSize(new Dimension(100, 40));
-        btnCancelar.setPreferredSize(new Dimension(100, 40));
+
+        btnAceptar.setPreferredSize(new Dimension(120, 40));
+        btnCancelar.setPreferredSize(new Dimension(120, 40));
+
         panelBotones.add(btnAceptar);
         panelBotones.add(btnCancelar);
-
-        gbc.gridwidth = 2;
-        agregarComponente(panelBotones, 2, 0);
-    }
-
-    /**
-     * Método para agregar un componente al panel principal con las restricciones de diseño.
-     * @param componente El componente a agregar.
-     * @param fila       La fila donde se agregará.
-     * @param columna    La columna donde se agregará.
-     */
-    private void agregarComponente(Component componente, int fila, int columna) {
-        gbc.gridx = columna;
-        gbc.gridy = fila;
-        panel.add(componente, gbc);
+        panel.add(panelBotones);
     }
 
     /**
