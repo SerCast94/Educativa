@@ -8,7 +8,7 @@ import org.junit.jupiter.api.*;
 import java.sql.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EstudianteIntegrationTest {
+public class EstudianteIntegracionTest {
 
     private static SessionFactory sessionFactory;
     private Session sesion;
