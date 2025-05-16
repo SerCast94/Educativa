@@ -6,9 +6,9 @@ CREATE DATABASE IF NOT EXISTS educativa;
 USE educativa;
 
 -- Crear el usuario 'desarrollador' con permisos desde local y remoto
---CREATE USER IF NOT EXISTS 'desarrollador'@'%' IDENTIFIED BY 'pass';
---GRANT ALL PRIVILEGES ON educativa.* TO 'desarrollador'@'%' WITH GRANT OPTION;
---GRANT ALL PRIVILEGES ON educativa.* TO 'desarrollador'@'localhost' WITH GRANT OPTION;
+-- CREATE USER IF NOT EXISTS 'desarrollador'@'%' IDENTIFIED BY 'pass';
+-- GRANT ALL PRIVILEGES ON educativa.* TO 'desarrollador'@'%' WITH GRANT OPTION;
+-- GRANT ALL PRIVILEGES ON educativa.* TO 'desarrollador'@'localhost' WITH GRANT OPTION;
 
 -- Tabla: Tutores
 CREATE TABLE IF NOT EXISTS tutores (
