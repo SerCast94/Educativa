@@ -35,21 +35,29 @@ public class EstudianteIntegrationTest {
         sessionFactory.close();
     }
 
+
     @Test
-    void testGuardarEstudiante() {
+    void testGuardarYBorrarEstudiante() {
+        String usuarioUnico = "usuario_" + System.currentTimeMillis();
         Estudiantes estudiante = new Estudiantes(
                 "Juan", "Pérez", "12345678Z", Date.valueOf("2000-01-01"), "Calle Falsa 123",
-                "600111222", "juan@test.com", Date.valueOf("2023-09-01"), null, "juanp",
+                "600111222", "juan@test.com", Date.valueOf("2023-09-01"), null, usuarioUnico,
                 "123456", Estudiantes.EstadoEstudiante.activo
         );
-        sesion.save(estudiante);
 
+        sesion.save(estudiante);
         sesion.flush();
         sesion.clear();
-
 
         Estudiantes resultado = sesion.get(Estudiantes.class, estudiante.getIdEstudiante());
         assertNotNull(resultado);
         assertEquals("Juan", resultado.getNombre());
+
+        sesion.delete(resultado);
+        sesion.flush();
+        sesion.clear();
+
+        Estudiantes estudianteEliminado = sesion.get(Estudiantes.class, estudiante.getIdEstudiante());
+        assertNull(estudianteEliminado);
     }
 }
