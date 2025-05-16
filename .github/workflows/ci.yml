@@ -8,12 +8,32 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
-
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: Educativa
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
       - name: Checkout codigo
         uses: actions/checkout@v3
+
+      - name: Esperar MySQL y ejecutar script
+        env:
+          MYSQL_PWD: root
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          mysql -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS testdb;"
+          mysql -h 127.0.0.1 -u root testdb < ./scriptDB/scriptEducativa.sql
 
       - name: Configurar Java
         uses: actions/setup-java@v3
