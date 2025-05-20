@@ -56,7 +56,8 @@ public class FormularioBecasAdmin extends JFrame {
     private void initGUI() {
         setTitle("Asignar Beca");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 550);
+        establecerIcono(this);
+        setSize(600, 500);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();

@@ -13,8 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import static Controlador.ControladorLogin.profesorLogeado;
+import static Vista.Util.EstiloComponentes.establecerIcono;
 
 /**
  * VistaPrincipalProfesor es la clase principal de la interfaz gráfica para el profesor.
@@ -36,6 +36,7 @@ public class VistaPrincipalProfesor extends JFrame {
         setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setLayout(new BorderLayout());
         contentPanel = new JPanel(new BorderLayout());
 

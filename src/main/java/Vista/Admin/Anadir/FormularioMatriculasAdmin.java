@@ -52,8 +52,9 @@ public class FormularioMatriculasAdmin extends JFrame {
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
-        setTitle("Registrar Matrícula");
+        setTitle("Agregar Matrícula");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 
@@ -65,7 +66,7 @@ public class FormularioMatriculasAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        titulo = new JLabel("Registrar Matrícula", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Matrícula", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));

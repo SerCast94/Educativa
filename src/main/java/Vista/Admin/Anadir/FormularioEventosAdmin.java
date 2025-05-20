@@ -52,8 +52,9 @@ public class FormularioEventosAdmin extends JFrame {
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
-        setTitle("Registrar Evento");
+        setTitle("Agregar Evento");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 500);
         setLocationRelativeTo(null);
 
@@ -65,7 +66,7 @@ public class FormularioEventosAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        titulo = new JLabel("Registrar Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));

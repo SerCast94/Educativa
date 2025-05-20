@@ -58,7 +58,8 @@ public class ActualizarHorariosAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Horario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 550);
+        establecerIcono(this);
+        setSize(600, 400);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();

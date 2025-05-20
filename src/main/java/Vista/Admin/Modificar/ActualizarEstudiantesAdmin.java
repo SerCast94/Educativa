@@ -90,6 +90,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 700);
         setLocationRelativeTo(null);
 
@@ -101,7 +102,7 @@ public class ActualizarEstudiantesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        titulo = new JLabel("Modificar Estudiante", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar Estudiante", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));

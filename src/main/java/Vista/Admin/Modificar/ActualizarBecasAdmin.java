@@ -56,7 +56,8 @@ public class ActualizarBecasAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Beca");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 550);
+        establecerIcono(this);
+        setSize(600, 500);
         setLocationRelativeTo(null);
 
         panel = this.getContentPane();

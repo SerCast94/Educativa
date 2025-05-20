@@ -150,4 +150,9 @@ public class EstiloComponentes {
         checkBox.setSelectedIcon(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/checkonGris.png"))));
         checkBox.setOpaque(true);
     }
+
+    public static void establecerIcono(JFrame ventana){
+        Image icono = new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/logo.png"))).getImage();
+        ventana.setIconImage(icono);
+    }
 }

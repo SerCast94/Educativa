@@ -58,6 +58,7 @@ public class ActualizarHistorialAcademicoAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 450);
         setLocationRelativeTo(null);
 

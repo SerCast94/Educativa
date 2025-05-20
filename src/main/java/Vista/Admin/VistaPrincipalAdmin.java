@@ -4,16 +4,17 @@ import BackUtil.MonitorInactividad;
 import Vista.Admin.Modificar.ActualizarAdministradoresAdmin;
 import Vista.Admin.Tablas.*;
 import Vista.Util.CustomDialog;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Objects;
+import static Vista.Util.EstiloComponentes.establecerIcono;
+
 
 import Vista.LoginGUI;
+
 
 /**
  * VistaPrincipalAdmin es la clase principal de la interfaz gráfica para el administrador.
@@ -35,6 +36,7 @@ public class VistaPrincipalAdmin extends JFrame {
         setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setLayout(new BorderLayout());
         principalPanel = new JPanel(new BorderLayout());
 

@@ -3,6 +3,7 @@ package Vista.Util;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Clase personalizada para JFileChooser con un Look and Feel específico y colores personalizados.
@@ -57,12 +58,22 @@ public class CustomFileChooser extends JFileChooser {
     /**
      * Método principal para crear el JFileChooser personalizado.
      */
-    public static JFileChooser crearFileChooser(String titulo) {
-        JFileChooser fileChooser = new JFileChooser();
+    public static CustomFileChooser crearFileChooser(String titulo) {
+        CustomFileChooser fileChooser = new CustomFileChooser();
         fileChooser.setDialogTitle(titulo);
         fileChooser.setApproveButtonToolTipText("Guardar archivo seleccionado");
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
         return fileChooser;
+    }
+
+    /**
+     * Sobrecarga del método createDialog para establecer un icono personalizado en el JDialog.
+     */
+    @Override
+    protected JDialog createDialog(Component parent) throws HeadlessException {
+        JDialog dialog = super.createDialog(parent);
+        dialog.setIconImage(new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/logo.png"))).getImage());
+        return dialog;
     }
 }

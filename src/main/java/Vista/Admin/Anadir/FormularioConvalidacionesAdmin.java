@@ -54,6 +54,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 
@@ -65,7 +66,7 @@ public class FormularioConvalidacionesAdmin extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        titulo = new JLabel("Agregar Convalidación", SwingConstants.CENTER);
+        titulo = new JLabel("Asignar Convalidación", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));

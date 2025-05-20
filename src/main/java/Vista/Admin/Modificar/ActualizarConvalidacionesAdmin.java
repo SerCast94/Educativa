@@ -58,6 +58,7 @@ public class ActualizarConvalidacionesAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Convalidación");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 

@@ -41,7 +41,7 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
     private JLabel valUbicacion = new JLabel();
     private JTextField txtComentario = crearTextField();
     private JCheckBox chkConfirmado = new JCheckBox("Sí");
-    private JButton btnAceptar = new Boton("Guardar", Boton.tipoBoton.PRIMARY);
+    private JButton btnAceptar = new Boton("Actualizar", Boton.tipoBoton.PRIMARY);
     private JButton btnCancelar = new Boton("Cancelar", Boton.tipoBoton.DELETE);
     private Estudiantes estudiante;
     private Eventos evento;
@@ -64,8 +64,9 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
-        setTitle("Confirmar Asistencia");
+        setTitle("Actualizar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(500, 500);
         setLocationRelativeTo(null);
 
@@ -77,7 +78,7 @@ public class ActualizarEstudiantesEventoEstudiante extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        titulo = new JLabel("Responder a Evento", SwingConstants.CENTER);
+        titulo = new JLabel("Actualizar inscripción a Evento", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         titulo.setForeground(new Color(70, 70, 70));

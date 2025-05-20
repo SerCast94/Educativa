@@ -59,8 +59,9 @@ public class FormularioAsistenciaProfesor extends JFrame {
      * Método para inicializar los componentes gráficos principales.
      */
     private void initGUI() {
-        setTitle("Registrar Asistencia");
+        setTitle("Agregar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 
@@ -72,7 +73,7 @@ public class FormularioAsistenciaProfesor extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        titulo = new JLabel("Registrar Asistencia", SwingConstants.CENTER);
+        titulo = new JLabel("Agregar Asistencia", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 24));
         titulo.setForeground(new Color(70, 70, 70));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));

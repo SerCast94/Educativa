@@ -61,6 +61,7 @@ public class ActualizarAsignaturasAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Asignatura");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(500, 400);
         setLocationRelativeTo(null);
 

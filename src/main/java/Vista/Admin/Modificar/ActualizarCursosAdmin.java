@@ -61,6 +61,7 @@ public class ActualizarCursosAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Curso");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 
@@ -70,7 +71,7 @@ public class ActualizarCursosAdmin extends JFrame {
         gbc = new GridBagConstraints();
         panel.setLayout(gLayout);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10); // Coincide con FormularioCursoAdmin
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         titulo = new JLabel("Actualizar Curso", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));

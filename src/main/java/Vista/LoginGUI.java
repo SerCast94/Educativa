@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 import static BackUtil.Encriptador.encryptMD5;
 import static Controlador.ControladorLogin.tutorLogeado;
+import static Vista.Util.EstiloComponentes.establecerIcono;
 
 /**
  * Clase que representa la interfaz gráfica de inicio de sesión.
@@ -87,6 +88,7 @@ public class LoginGUI extends JFrame {
         ventana.setSize(1920, 1080);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
+        establecerIcono(ventana);
         ventana.setLayout(new BorderLayout());
 
         // Panel superior para el nombre de la aplicación

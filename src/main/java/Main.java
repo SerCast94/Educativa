@@ -1,8 +1,11 @@
 import Vista.LoginGUI;
 
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
-
-        new LoginGUI();
+        SwingUtilities.invokeLater(() -> {
+                new LoginGUI();
+        });
     }
 }

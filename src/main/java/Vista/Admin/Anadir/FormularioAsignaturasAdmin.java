@@ -51,6 +51,7 @@ public class FormularioAsignaturasAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Asignatura");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(500, 400);
         setLocationRelativeTo(null);
 

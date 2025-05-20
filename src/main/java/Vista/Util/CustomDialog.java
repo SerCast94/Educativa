@@ -3,6 +3,9 @@ package Vista.Util;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Objects;
+
+import static Vista.Util.EstiloComponentes.establecerIcono;
 
 /**
  * CustomDialog es una clase que extiende JDialog para crear un cuadro de diálogo personalizado.
@@ -16,6 +19,9 @@ public class CustomDialog extends JDialog {
         super(padre, titulo, true);
 
         aceptar = false;
+
+        Image icono = new ImageIcon(Objects.requireNonNull(EstiloComponentes.class.getResource("/icons/logo.png"))).getImage();
+        setIconImage(icono);
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -72,7 +78,7 @@ public class CustomDialog extends JDialog {
 
         if (tipoBoton.equalsIgnoreCase("OK_CANCEL")) {
             Boton okBoton = new Boton("Aceptar", Boton.tipoBoton.PRIMARY);
-            Boton cancelarBoton = new Boton("Cancelar", Boton.tipoBoton.PRIMARY);
+            Boton cancelarBoton = new Boton("Cancelar", Boton.tipoBoton.DELETE);
 
             okBoton.addActionListener(e -> {
                 aceptar = true;

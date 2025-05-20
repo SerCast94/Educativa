@@ -35,7 +35,8 @@ public class GeneradorHorario {
 
             CustomFileChooser.traducirCustomFileChooser();
 
-            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
+
 
             int resultado = fileChooser.showSaveDialog(null);
 
@@ -91,7 +92,7 @@ public class GeneradorHorario {
             CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
-            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Selecciona dónde guardar el horario");
             int resultado = fileChooser.showSaveDialog(null);
 
             if (resultado == JFileChooser.APPROVE_OPTION) {

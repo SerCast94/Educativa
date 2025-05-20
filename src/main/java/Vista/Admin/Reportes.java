@@ -83,10 +83,10 @@ public class Reportes extends JPanel {
         personalizarComboBox(cbEstudianteBeca);
         personalizarComboBox(cbEstudianteConvalidacion);
 
-        gridPanel.add(crearCajaReportes("Boletín de notas de Estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
-        gridPanel.add(crearCajaReportes("Boletín de notas de Clase", cbCurso, "Descargar", e -> descargarNotasClase()));
-        gridPanel.add(crearCajaReportes("Certificado de Beca para Estudiante", cbEstudianteBeca, "Descargar", e -> descargarBecaEstudiante()));
-        gridPanel.add(crearCajaReportes("Certificado de Convalidación para Estudiante", cbEstudianteConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
+        gridPanel.add(crearCajaReportes("Boletín de notas de estudiante", cbEstudiante, "Descargar", e -> descargarNotasEstudiante()));
+        gridPanel.add(crearCajaReportes("Boletín de notas de clase", cbCurso, "Descargar", e -> descargarNotasClase()));
+        gridPanel.add(crearCajaReportes("Certificado de beca para estudiante", cbEstudianteBeca, "Descargar", e -> descargarBecaEstudiante()));
+        gridPanel.add(crearCajaReportes("Certificado de convalidación para estudiante", cbEstudianteConvalidacion, "Descargar", e -> descargarConvalidacionEstudiante()));
 
         panelConMargen.add(gridPanel, BorderLayout.CENTER);
         add(panelConMargen, BorderLayout.CENTER);

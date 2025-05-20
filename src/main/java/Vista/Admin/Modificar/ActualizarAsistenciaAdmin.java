@@ -68,6 +68,7 @@ public class ActualizarAsistenciaAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Asistencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 

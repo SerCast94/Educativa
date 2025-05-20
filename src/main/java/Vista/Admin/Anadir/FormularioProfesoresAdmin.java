@@ -56,6 +56,7 @@ public class FormularioProfesoresAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Profesor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 600);
         setLocationRelativeTo(null);
 

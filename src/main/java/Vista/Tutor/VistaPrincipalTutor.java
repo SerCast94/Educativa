@@ -19,6 +19,7 @@ import java.awt.event.WindowEvent;
 
 import static Controlador.ControladorLogin.estudianteLogeado;
 import static Controlador.ControladorLogin.tutorLogeado;
+import static Vista.Util.EstiloComponentes.establecerIcono;
 
 /**
  * VistaPrincipalTutor es la clase principal de la interfaz gráfica para el tutor.
@@ -42,6 +43,7 @@ public class VistaPrincipalTutor extends JFrame {
         setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setLayout(new BorderLayout());
         contentPanel = new JPanel(new BorderLayout());
 

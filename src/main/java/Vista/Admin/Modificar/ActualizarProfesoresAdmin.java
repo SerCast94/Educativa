@@ -74,6 +74,7 @@ public class ActualizarProfesoresAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Profesor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 600);
         setLocationRelativeTo(null);
 

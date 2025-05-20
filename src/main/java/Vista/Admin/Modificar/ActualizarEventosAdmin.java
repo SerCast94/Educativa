@@ -66,6 +66,7 @@ public class ActualizarEventosAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Evento");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 500);
         setLocationRelativeTo(null);
 

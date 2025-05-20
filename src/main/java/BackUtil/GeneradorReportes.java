@@ -60,7 +60,8 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar el boletín" );
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar el boletín" );
+
 
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
@@ -107,7 +108,7 @@ public class GeneradorReportes {
         CustomFileChooser.aplicarEstiloFileChooser();
         CustomFileChooser.traducirCustomFileChooser();
 
-        JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar los boletines");
+        CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar los boletines");
 
         int resultado = fileChooser.showSaveDialog(null);
 
@@ -199,7 +200,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de beca");
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de beca");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();
@@ -249,7 +250,7 @@ public class GeneradorReportes {
                 }
             }
 
-            JFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de convalidación");
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Guardar certificado de convalidación");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();

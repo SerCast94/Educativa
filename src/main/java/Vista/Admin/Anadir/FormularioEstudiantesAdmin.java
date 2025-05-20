@@ -69,6 +69,7 @@ public class FormularioEstudiantesAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Estudiante");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 700);
         setLocationRelativeTo(null);
 

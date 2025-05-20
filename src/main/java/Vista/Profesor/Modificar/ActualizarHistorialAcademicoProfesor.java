@@ -25,7 +25,7 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
     private JLabel titulo;
     private JPanel panelBotones;
     private JLabel lblEstudiante = new JLabel("Estudiante:");
-    private JLabel lblCurso = new JLabel("Curso:");
+    private JLabel lblAsignatura = new JLabel("Asignatura:");
     private JLabel lblNotaFinal = new JLabel("Nota Final:");
     private JLabel lblFechaAprobacion = new JLabel("Fecha:");
     private JLabel lblComentarios = new JLabel("Comentarios:");
@@ -58,6 +58,7 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 450);
         setLocationRelativeTo(null);
 
@@ -86,7 +87,7 @@ public class ActualizarHistorialAcademicoProfesor extends JFrame {
         agregarComponente(lblEstudiante, 1, 0);
         agregarComponente(cmbEstudiante, 1, 1);
 
-        agregarComponente(lblCurso, 2, 0);
+        agregarComponente(lblAsignatura, 2, 0);
         agregarComponente(cmbAsignaturas, 2, 1);
 
         agregarComponente(lblNotaFinal, 3, 0);

@@ -51,6 +51,7 @@ public class FormularioCursoAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Curso");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 

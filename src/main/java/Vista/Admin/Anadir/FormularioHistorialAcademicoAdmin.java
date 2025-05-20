@@ -54,6 +54,7 @@ public class FormularioHistorialAcademicoAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Historial Académico");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 450);
         setLocationRelativeTo(null);
 

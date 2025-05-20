@@ -65,6 +65,7 @@ public class ActualizarMatriculasAdmin extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Matrícula");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 400);
         setLocationRelativeTo(null);
 

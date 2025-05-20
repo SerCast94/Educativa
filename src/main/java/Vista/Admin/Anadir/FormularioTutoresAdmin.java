@@ -54,6 +54,7 @@ public class FormularioTutoresAdmin extends JFrame {
     private void initGUI() {
         setTitle("Agregar Tutor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 550);
         setLocationRelativeTo(null);
 

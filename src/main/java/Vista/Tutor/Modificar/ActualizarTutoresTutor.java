@@ -70,6 +70,7 @@ public class ActualizarTutoresTutor extends JFrame {
     private void initGUI() {
         setTitle("Actualizar Tutor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        establecerIcono(this);
         setSize(600, 550);
         setLocationRelativeTo(null);
 
