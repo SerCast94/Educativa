@@ -84,14 +84,13 @@ public class LoginGUI extends JFrame {
     public void initGUI() {
 
         ventana = new JFrame();
-        ventana.setTitle("Login - Colegio Salesiano San Francisco de Sales");
+        ventana.setTitle("Inicio de sesión - Colegio Salesiano San Francisco de Sales");
         ventana.setSize(1920, 1080);
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setLocationRelativeTo(null);
         establecerIcono(ventana);
         ventana.setLayout(new BorderLayout());
 
-        // Panel superior para el nombre de la aplicación
         PanelSuperior = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -164,7 +163,7 @@ public class LoginGUI extends JFrame {
         gbc.weightx = 1.0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        loginTitulo = new JLabel("LOGIN", SwingConstants.CENTER);
+        loginTitulo = new JLabel("Inicio de sesión", SwingConstants.CENTER);
         loginTitulo.setFont(new Font("Arial", Font.BOLD, 28));
         loginTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 30, 0));
         panelDerecha.add(loginTitulo, gbc);

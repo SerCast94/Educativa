@@ -404,4 +404,14 @@ public class ControladorDashBoard {
         }
         return eventosActivos;
     }
+
+    public static int numInscritosEventosEstudiante(Eventos evento) {
+        int contador = 0;
+        for (EstudiantesEventos ee : getListaEstudiantesEventos()) {
+            if (ee.getEvento().equals(evento)) {
+                contador++;
+            }
+        }
+        return contador;
+    }
 }

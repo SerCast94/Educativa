@@ -28,7 +28,6 @@ public class ActualizarTutoresTutor extends JFrame {
     private JLabel lblPassword = new JLabel("Contraseña: ");
     private JLabel lblEmail = new JLabel("Email: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
-    private JLabel lblEstado = new JLabel("Estado: ");
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
     private JTextField txtApellido = crearTextField();
@@ -36,7 +35,6 @@ public class ActualizarTutoresTutor extends JFrame {
     private JPasswordField txtPassword = crearPasswordField();
     private JTextField txtEmail = crearTextField();
     private JTextField txtTelefono = crearTextField();
-    private JComboBox<Tutores.EstadoTutor> cmbEstado = new JComboBox<>(Tutores.EstadoTutor.values());
     private Tutores tutor;
 
     /**
@@ -61,7 +59,6 @@ public class ActualizarTutoresTutor extends JFrame {
         txtPassword.setText("");
         txtEmail.setText(tutor.getEmail());
         txtTelefono.setText(tutor.getTelefono());
-        cmbEstado.setSelectedItem(tutor.getEstado());
     }
 
     /*
@@ -90,8 +87,6 @@ public class ActualizarTutoresTutor extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        personalizarComboBox(cmbEstado);
-
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
         agregarComponente(txtDNI, 1, 1);
@@ -119,10 +114,6 @@ public class ActualizarTutoresTutor extends JFrame {
         agregarComponente(lblTelefono, 7, 0);
         setBordeNaranja(txtTelefono);
         agregarComponente(txtTelefono, 7, 1);
-
-        agregarComponente(lblEstado, 8, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 8, 1);
 
         panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -173,9 +164,8 @@ public class ActualizarTutoresTutor extends JFrame {
         String correo = txtEmail.getText().trim();
         String usuario = txtUsuario.getText().trim();
         String nuevaPassword = new String(txtPassword.getPassword());
-        Tutores.EstadoTutor estado = Tutores.EstadoTutor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty() || estado == null) {
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || usuario.isEmpty()) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
@@ -201,7 +191,6 @@ public class ActualizarTutoresTutor extends JFrame {
         tutor.setTelefono(telefono);
         tutor.setEmail(correo);
         tutor.setUsuario(usuario);
-        tutor.setEstado(estado);
 
         if (!nuevaPassword.isEmpty()) {
             tutor.setContrasena(encryptMD5(nuevaPassword));

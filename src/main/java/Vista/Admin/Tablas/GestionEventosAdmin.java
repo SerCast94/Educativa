@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
 import static Controlador.Controlador.listaEventos;
+import static Controlador.ControladorDashBoard.numInscritosEventosEstudiante;
 
 /**
  * Panel para la gestión de eventos en la vista del administrador.
@@ -85,7 +86,7 @@ public class GestionEventosAdmin extends JPanel {
     * Método para incializar la tabla de eventos o excursiones.
     */
     private void initTabla() {
-        String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo","Objeto"};
+        String[] columnas = {"Nombre", "Descripción", "Fecha Inicio", "Fecha Fin", "Ubicación", "Tipo","Inscritos","Objeto"};
         modelo = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -332,6 +333,7 @@ public class GestionEventosAdmin extends JPanel {
                     evento.getFechaFin().toString(),
                     evento.getUbicacion() != null ? evento.getUbicacion() : "-",
                     evento.getTipoEvento().toString().toUpperCase(),
+                    numInscritosEventosEstudiante(evento),
                     evento
             };
             modelo.addRow(fila);

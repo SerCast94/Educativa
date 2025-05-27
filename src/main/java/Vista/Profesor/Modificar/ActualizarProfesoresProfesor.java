@@ -29,7 +29,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
     private JLabel lblEmail = new JLabel("Email: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblDireccion = new JLabel("Dirección: ");
-    private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JTextField txtDNI = crearTextField();
     private JTextField txtNombre = crearTextField();
@@ -39,7 +38,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
     private Profesores profesor;
 
     /**
@@ -66,7 +64,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
         txtEmail.setText(profesor.getEmail());
         txtTelefono.setText(profesor.getTelefono());
         txtDireccion.setText(profesor.getDireccion());
-        cmbEstado.setSelectedItem(profesor.getEstado().name().toLowerCase());
     }
 
     /**
@@ -94,8 +91,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
         gbc.gridwidth = 2;
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
-
-        personalizarComboBox(cmbEstado);
 
         agregarComponente(lblDNI, 1, 0);
         setBordeNaranja(txtDNI);
@@ -128,10 +123,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
         agregarComponente(lblDireccion, 8, 0);
         setBordeNaranja(txtDireccion);
         agregarComponente(txtDireccion, 8, 1);
-
-        agregarComponente(lblEstado, 9, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 9, 1);
 
         panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -182,9 +173,8 @@ public class ActualizarProfesoresProfesor extends JFrame {
         String direccion = txtDireccion.getText().trim();
         String usuario = txtUsuario.getText().trim();
         String nuevaPassword = new String(txtPassword.getPassword());
-        Profesores.EstadoProfesor estado = Profesores.EstadoProfesor.valueOf(cmbEstado.getSelectedItem().toString());
 
-        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty() || estado == null) {
+        if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || telefono.isEmpty() || correo.isEmpty() || direccion.isEmpty() || usuario.isEmpty()) {
             new CustomDialog(null, "Error", "Todos los campos son obligatorios.", "ONLY_OK").setVisible(true);
             return;
         }
@@ -216,7 +206,6 @@ public class ActualizarProfesoresProfesor extends JFrame {
         profesor.setEmail(correo);
         profesor.setDireccion(direccion);
         profesor.setUsuario(usuario);
-        profesor.setEstado(estado);
 
         if (!nuevaPassword.isEmpty()) {
             profesor.setContrasena(encryptMD5(nuevaPassword));

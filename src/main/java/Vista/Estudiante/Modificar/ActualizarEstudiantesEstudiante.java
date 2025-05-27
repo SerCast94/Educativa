@@ -34,7 +34,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
     private JLabel lblEmail = new JLabel("Email: ");
     private JLabel lblTelefono = new JLabel("Teléfono: ");
     private JLabel lblDireccion = new JLabel("Dirección: ");
-    private JLabel lblEstado = new JLabel("Estado: ");
     private JLabel lblFechaMatricula = new JLabel("Fecha de Matrícula: ");
     private JLabel lblUsuario = new JLabel("Usuario: ");
     private JLabel lblTutor = new JLabel("Tutor: ");
@@ -46,7 +45,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
     private JTextField txtTelefono = crearTextField();
     private JTextField txtDireccion = crearTextField();
     private JTextField txtUsuario = crearTextField();
-    private JComboBox<String> cmbEstado = new JComboBox<>(new String[]{"activo", "inactivo"});
     private JComboBox<Tutores> cmbTutor = new JComboBox<>();
     private CustomDatePicker datePickerNacimiento = new CustomDatePicker();
     private CustomDatePicker datePickerMatricula = new CustomDatePicker();
@@ -80,7 +78,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         txtEmail.setText(estudiante.getEmail());
         txtTelefono.setText(estudiante.getTelefono());
         txtDireccion.setText(estudiante.getDireccion());
-        cmbEstado.setSelectedItem(estudiante.getEstado().name().toLowerCase());
         cmbTutor.setSelectedItem(estudiante.getTutor());
     }
 
@@ -110,7 +107,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         agregarComponente(titulo, 0, 0);
         gbc.gridwidth = 1;
 
-        personalizarComboBox(cmbEstado);
         personalizarComboBox(cmbTutor);
 
         agregarComponente(lblDNI, 1, 0);
@@ -157,9 +153,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         setBordeNaranja(txtDireccion);
         agregarComponente(txtDireccion, 12, 1);
 
-        agregarComponente(lblEstado, 13, 0);
-        setBordeNaranja(cmbEstado);
-        agregarComponente(cmbEstado, 13, 1);
 
         panelBotones = new JPanel();
         panelBotones.setBackground(new Color(251, 234, 230));
@@ -225,7 +218,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
         String contrasena = new String(txtPassword.getPassword()).trim();
         LocalDate fechaNacimiento = datePickerNacimiento.getDate();
         LocalDate fechaMatricula = datePickerMatricula.getDate();
-        Estudiantes.EstadoEstudiante estado = Estudiantes.EstadoEstudiante.valueOf(cmbEstado.getSelectedItem().toString());
 
         if (nombre.isEmpty() || apellido.isEmpty() || dni.isEmpty() || usuario.isEmpty() ||
             correo.isEmpty() || telefono.isEmpty() || fechaNacimiento == null || fechaMatricula == null
@@ -273,7 +265,6 @@ public class ActualizarEstudiantesEstudiante extends JFrame {
             estudiante.setTelefono(telefono);
             estudiante.setFechaNacimiento(Date.valueOf(fechaNacimiento));
             estudiante.setFechaMatricula(Date.valueOf(fechaMatricula));
-            estudiante.setEstado(estado);
 
             if (!contrasena.isEmpty()) {
                 estudiante.setContrasena(encryptMD5(contrasena));
