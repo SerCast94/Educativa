@@ -132,6 +132,4 @@ public class Boton extends JButton {
         super.paintComponent(g2);
         g2.dispose();
     }
-
 }
-

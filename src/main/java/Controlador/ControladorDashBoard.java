@@ -145,7 +145,7 @@ public class ControladorDashBoard {
      * @return el número total de estudiantes sin matrícula activa.
      */
     public static int numAlumnosSinMatricula() {
-        return Controlador.getListaMatriculas().size() - Controlador.getListaBecas().size();
+        return Controlador.getListaEstudiantes().size() - Controlador.getListaMatriculas().size();
     }
 
     /**
