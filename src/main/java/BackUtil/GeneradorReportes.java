@@ -8,13 +8,16 @@ import Vista.Util.CustomFileChooser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import static Controlador.ControladorReportes.enviarInfoParaBoletin;
 
 /**
@@ -22,9 +25,6 @@ import static Controlador.ControladorReportes.enviarInfoParaBoletin;
  */
 public class GeneradorReportes {
 
-    /**
-     * Desactiva los mensajes de advertencia de PDFBox
-     */
     static {
         Logger.getLogger("org.apache.pdfbox").setLevel(Level.SEVERE);
         for (java.util.logging.Handler manejador : Logger.getLogger("").getHandlers()) {
@@ -34,22 +34,21 @@ public class GeneradorReportes {
         }
     }
 
-    /**
-     * Genera un boletín de notas en formato PDF
-     * @param datos mapa con los datos a incluir en el boletín
-     */
     public static void generarBoletin(Map<String, String> datos) {
-
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
         try {
             CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
-            PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
+            InputStream plantillaStream = GeneradorReportes.class.getResourceAsStream("/plantillas/plantillaNotas.pdf");
+            if (plantillaStream == null) {
+                throw new IOException("No se encontró plantillaNotas.pdf en el classpath");
+            }
+
+            PDDocument documento = PDDocument.load(plantillaStream);
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
-            // sustitución y bloqueo de campos
             if (acroForm != null) {
                 for (Map.Entry<String, String> entry : datos.entrySet()) {
                     PDField field = acroForm.getField(entry.getKey());
@@ -60,25 +59,18 @@ public class GeneradorReportes {
                 }
             }
 
-            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar el boletín" );
-
-
+            CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar el boletín");
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();
-                try {
-                    String nombreArchivo = "Boletin_" + (datos.get("nombre") != null ? datos.get("nombre").trim() : "sin_nombre") + ".pdf";
-                    nombreArchivo = nombreArchivo.replaceAll(" ", "_");
+                String nombreArchivo = "Boletin_" + (datos.get("nombre") != null ? datos.get("nombre").trim() : "sin_nombre") + ".pdf";
+                nombreArchivo = nombreArchivo.replaceAll(" ", "_");
 
-                    File archivoFinal = new File(ruta, nombreArchivo);
+                File archivoFinal = new File(ruta, nombreArchivo);
+                documento.save(archivoFinal.getAbsolutePath());
+                documento.close();
 
-                    documento.save(archivoFinal.getAbsolutePath());
-                    documento.close();
-
-                    new CustomDialog(null, "Éxito", "Boletín guardado correctamente en: " + archivoFinal.getAbsolutePath(), "ONLY_OK").setVisible(true);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                new CustomDialog(null, "Éxito", "Boletín guardado correctamente en: " + archivoFinal.getAbsolutePath(), "ONLY_OK").setVisible(true);
             }
 
         } catch (IOException e) {
@@ -86,16 +78,11 @@ public class GeneradorReportes {
         } finally {
             try {
                 UIManager.setLookAndFeel(lookAndFeelActual);
-            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    /**
-     * Genera boletines de notas para todos los estudiantes de un curso
-     * @param curso el curso del cual se generarán los boletines
-     */
 
     public static void generarBoletinesPorCurso(Cursos curso) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
@@ -107,15 +94,13 @@ public class GeneradorReportes {
 
         CustomFileChooser.aplicarEstiloFileChooser();
         CustomFileChooser.traducirCustomFileChooser();
-
         CustomFileChooser fileChooser = CustomFileChooser.crearFileChooser("Seleccionar ubicación para guardar los boletines");
 
         int resultado = fileChooser.showSaveDialog(null);
-
         if (resultado != JFileChooser.APPROVE_OPTION) {
             try {
                 UIManager.setLookAndFeel(lookAndFeelActual);
-            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return;
@@ -126,11 +111,6 @@ public class GeneradorReportes {
 
         if (!directorioCurso.exists() && !directorioCurso.mkdirs()) {
             new CustomDialog(null, "Error", "No se pudo crear la carpeta para el curso.", "ONLY_OK").setVisible(true);
-            try {
-                UIManager.setLookAndFeel(lookAndFeelActual);
-            } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
             return;
         }
 
@@ -138,13 +118,12 @@ public class GeneradorReportes {
             Estudiantes estudiante = matricula.getEstudiante();
             Map<String, String> datos = enviarInfoParaBoletin(estudiante);
 
-            try {
-                String nombreArchivo = "Boletin_" + (datos.get("nombre") != null ? datos.get("nombre").trim() : "sin_nombre") + ".pdf";
-                nombreArchivo = nombreArchivo.replaceAll(" ", "_");
+            try (InputStream plantillaStream = GeneradorReportes.class.getResourceAsStream("/plantillas/plantillaNotas.pdf")) {
+                if (plantillaStream == null) {
+                    throw new IOException("No se encontró plantillaNotas.pdf en el classpath");
+                }
 
-                File archivoFinal = new File(directorioCurso, nombreArchivo);
-
-                PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaNotas.pdf"));
+                PDDocument documento = PDDocument.load(plantillaStream);
                 PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
                 if (acroForm != null) {
@@ -157,6 +136,10 @@ public class GeneradorReportes {
                     }
                 }
 
+                String nombreArchivo = "Boletin_" + (datos.get("nombre") != null ? datos.get("nombre").trim() : "sin_nombre") + ".pdf";
+                nombreArchivo = nombreArchivo.replaceAll(" ", "_");
+
+                File archivoFinal = new File(directorioCurso, nombreArchivo);
                 documento.save(archivoFinal.getAbsolutePath());
                 documento.close();
 
@@ -167,18 +150,7 @@ public class GeneradorReportes {
         }
 
         new CustomDialog(null, "Éxito", "Boletines generados correctamente en: " + directorioCurso.getAbsolutePath(), "ONLY_OK").setVisible(true);
-
-        try {
-            UIManager.setLookAndFeel(lookAndFeelActual);
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
-
-    /**
-     * Genera un certificado de beca en formato PDF
-     * @param datos mapa con los datos a incluir en el certificado
-     */
 
     public static void generarCertificadoBeca(Map<String, String> datos) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
@@ -187,7 +159,12 @@ public class GeneradorReportes {
             CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
-            PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaBeca.pdf"));
+            InputStream plantillaStream = GeneradorReportes.class.getResourceAsStream("/plantillas/plantillaBeca.pdf");
+            if (plantillaStream == null) {
+                throw new IOException("No se encontró plantillaBeca.pdf en el classpath");
+            }
+
+            PDDocument documento = PDDocument.load(plantillaStream);
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
             if (acroForm != null) {
@@ -204,7 +181,8 @@ public class GeneradorReportes {
             int resultado = fileChooser.showSaveDialog(null);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 File ruta = fileChooser.getSelectedFile();
-                String nombreArchivo = "Certificado_Beca_" + (datos.get("nombreEstudiante") != null ? datos.get("nombreEstudiante").trim() : "sin_nombre") + ".pdf";
+                String nombreArchivo = "Certificado_Beca_" +
+                        (datos.get("nombreEstudiante") != null ? datos.get("nombreEstudiante").trim() : "sin_nombre") + ".pdf";
                 nombreArchivo = nombreArchivo.replaceAll(" ", "_");
 
                 File archivoFinal = new File(ruta, nombreArchivo);
@@ -225,11 +203,6 @@ public class GeneradorReportes {
         }
     }
 
-    /**
-     * Genera un certificado de convalidación en formato PDF
-     * @param datos mapa con los datos a incluir en el certificado
-     */
-
     public static void generarCertificadoConvalidacion(Map<String, String> datos) {
         String lookAndFeelActual = UIManager.getLookAndFeel().getClass().getName();
 
@@ -237,7 +210,12 @@ public class GeneradorReportes {
             CustomFileChooser.aplicarEstiloFileChooser();
             CustomFileChooser.traducirCustomFileChooser();
 
-            PDDocument documento = PDDocument.load(new File("src/main/resources/plantillas/plantillaConvalidacion.pdf"));
+            InputStream plantillaStream = GeneradorReportes.class.getResourceAsStream("/plantillas/plantillaConvalidacion.pdf");
+            if (plantillaStream == null) {
+                throw new IOException("No se encontró plantillaConvalidacion.pdf en el classpath");
+            }
+
+            PDDocument documento = PDDocument.load(plantillaStream);
             PDAcroForm acroForm = documento.getDocumentCatalog().getAcroForm();
 
             if (acroForm != null) {
@@ -262,8 +240,7 @@ public class GeneradorReportes {
                 documento.save(archivoFinal.getAbsolutePath());
                 documento.close();
 
-                new CustomDialog(null, "Éxito",
-                        "Certificado de convalidación guardado en: " + archivoFinal.getAbsolutePath(), "ONLY_OK").setVisible(true);
+                new CustomDialog(null, "Éxito", "Certificado de convalidación guardado en: " + archivoFinal.getAbsolutePath(), "ONLY_OK").setVisible(true);
             }
 
         } catch (IOException e) {
@@ -276,7 +253,4 @@ public class GeneradorReportes {
             }
         }
     }
-
-
-
 }

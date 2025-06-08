@@ -669,7 +669,6 @@ VALUES
 (12, 14, 'Colaboraré con mi clase', TRUE),
 (13, 15, 'Interesado en los ponentes', TRUE);
 
-
 -- insert administradores
 INSERT INTO administradores (nombre, apellido, dni, email, telefono, usuario, contrasena, estado)
 VALUES 
