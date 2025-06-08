@@ -40,7 +40,15 @@ Ideal tanto para instituciones reales como para fines académicos o de desarroll
 1. Clona este repositorio:
 
    ```bash
-   git clone https://github.com/SerCast94/educativa.git
+   git clone https://github.com/SerCast94
+   
+2. Ejecuta el script contenido en scriptDB para crear la base de datos
+
+3. Asegúrate de tener instalado **Java21** y **Maven** en tu sistema.
+
+4. Ejecuta el proyecto o a través del .exe del directorio out.
+
+
 
 ## 🖼️ Capturas de pantalla
 
